@@ -48,3 +48,10 @@ The `sys.argv` returns parameters in list:<br >
   3. e.g. `(venv) uv run pipeline.py 12`: `sys.argv = ['pipeline.py', 12]`<br >
 ### VS code extension: Python Debugger<br >
 - A useful hint: <ins>Python Debugger Extension</ins> prompt user with syntax.<br >
+### uv<br >
+uv is a python package manager, like pip<br >
+  1. To install uv: `pip install uv`<br >
+  2. To initialize python project with uv: `cd` in the folder and `uv init --python=3.13`<br >
+  3. To create <ins>.venv</ins> folder: uv will create .venv folder for activate virtual environment when either<br >
+    1. when the first time run `uv run python pipeline.py` to execute file.<br >
+    2. or when the first time run `uv add pandas pyarrow` to install library in venv.<br >
