@@ -46,4 +46,5 @@ The `sys.argv` returns parameters in list:<br >
   1. First parameter = script name we run<br >
   2. Rest = rest parameters we inpu<br >
   3. e.g. `(venv) uv run pipeline.py 12`: `sys.argv = ['pipeline.py', 12]`<br >
-
+### VS code extension: Python Debugger<br >
+- A useful hint: <ins>Python Debugger Extension</ins> prompt user with syntax.<br >
