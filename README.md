@@ -35,3 +35,15 @@ Workshop Codespaces
     2. when local files change, it change in container immediately, so we don't need to exit, edit file, and rerun a new container<br >
   - <ins>Volume</ins> in CS means data storage unit, we use <ins>Volume</ins> means it is independent from container, and <ins>Volume Mount</ins> means we mount data storage unit from local to container<br >
   - To keep code organized, we use <ins>/app</ins> or <ins>/src</ins> to link local directory, e.g. `-v $(pwd)/test:/app/test`<br >
+## Venv and Data Pipeline<br >
+### sys.argv<br >
+```
+import sys
+system_argv = sys.argv
+month = int(sys.argv[1])
+```
+The `sys.argv` returns parameters in list:<br >
+  1. First parameter = script name we run<br >
+  2. Rest = rest parameters we inpu<br >
+  3. e.g. `(venv) uv run pipeline.py 12`: `sys.argv = ['pipeline.py', 12]`<br >
+
