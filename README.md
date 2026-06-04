@@ -62,3 +62,19 @@ To select python intepreter in vs code:<br >
 ### Include <ins>parquet</ins> file in .gitignore<br >
 1. I can add `*.parquet` in .gitignore (whereever in file)<br >
 2. Wait for .parquet file to turn gray, means git exclude it in record.<br >
+## Dockerfile<br >
+### 5W1H<br >
+1. What is Dockerfile: Dockerfile is a <ins>text document</ins> contains script of instructions for building a Docker image.<br >
+2. Why do we use Dockerfile:<br >
+   1. To <ins>automatically</ins> configure system environment instead of do it manually.<br >
+   2. To create <ins>absolute replicate</ins> of system environment, so local machine and cloud production will get same result when running Python script.<br >
+3. Who use Dockerfile:<br >
+   1. Data engineer uses Dockerfile to orchestrate (manage, schedule, monitor) data pipeline on cloud service.<br >
+   2. Software engineer uses Dockerfile to build CI/CD pipeline which <ins>automatically test, build, and deploy applications</ins> on cloud service.<br >
+4. When to use Dockerfile:<br >
+   1. During development: <ins>when adding new system dependency</ins>, e.g. install new python library, we add the new library in Dockerfile.<br >
+   2. During deployment or CI/CD: when pushing latest code, the <ins>Dockerfile gets updated and automatically compiles a new environment</ins>.<br >
+5. Where to use Dockerfile:
+   1. Version Control (Git): Dockerfile saved in <ins>root directory of project</ins> as a environment configuration.<br >
+
+
