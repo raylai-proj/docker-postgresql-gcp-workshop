@@ -129,5 +129,36 @@ To select python intepreter in vs code:<br >
    2. `docker run -it --entrypoint=bash --rm test:pandas`: Here `--rm` is `<option/flag>` and `test:pandas` is `<target>`: docker run container `test:pandas` with options `-it`=interactive, `--entrypoint=bash`=enterypoint as bash, and `--rm`=remove the container once stopped.<br >
    3. `docker container prune --filter "until=24h"`: prune remove container with filter only stopped for more than 24 hours.<br >
 6. `docker run -it --entrypoint-bash --rm test:pandas`: `test` is image name, `pandas` is tag name, `test:pandas` will be the whole thing how it will be called.<br >
+### Latest Dockerfile:<br >
+```
+# Dockerfile with uv
+# docker image based on python:3.13.11-slim
+FROM python:3.13.11-slim
+
+# install uv by copying uv binary from official distroless Docker image
+# system package manager dependency
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+# set up work directory in container
+WORKDIR /app
+
+# ENV setup environment variable PATH
+# Add virtual environment path into PATH, so we can use packages installed in venv, and refer to variable in venv first
+ENV PATH="/app/.venv/bin:$PATH"
+
+# copy app dependency to directory /app WORKDIR (for better layer caching)
+# ./ confirm the destination is a folder
+COPY "pyproject.toml" "uv.lock" ".python-version" ./
+
+# run command uv sync --locked to install dependencies
+# --locked checked and make sure pyproject.toml and uv.lock matched; if not matched, build fails
+RUN uv sync --locked
+
+# copy source code
+COPY pipeline.py pipeline.py
+
+# define first command when run container
+ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
+```
 
 
