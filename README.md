@@ -74,7 +74,44 @@ To select python intepreter in vs code:<br >
 4. When to use Dockerfile:<br >
    1. During development: <ins>when adding new system dependency</ins>, e.g. install new python library, we add the new library in Dockerfile.<br >
    2. During deployment or CI/CD: when pushing latest code, the <ins>Dockerfile gets updated and automatically compiles a new environment</ins>.<br >
-5. Where to use Dockerfile:
+5. Where to use Dockerfile:<br >
    1. Version Control (Git): Dockerfile saved in <ins>root directory of project</ins> as a environment configuration.<br >
+7. How to use Dockerfile:<br >
+   1. Dockerfile use <ins>Layered Cache</ins>: means if one line change, rest below lins have to <ins>rebuild</ins>, so Dockerfile follows <ins>least-to-most frequent change</ins> order.<br >
+   2. General order of commands in Dockerfile:<br >
+   ```
+   FROM
+   WORKDIR
+   ENV
+   RUN (install OS dependencies)
+   COPY (App dependencies only)
+   RUN (install App dependencies)
+   COPY (rest source code)
+   RUN (any complication)
+   ENTRYPOINT
+   ```
+   3. Dockerfile syntax:<br >
+      1. `FROM python:3.13.11-slim`: Dockerfile always start with <ins>FROM</ins>: means what do we base on and we will build Docker image base on it.<br >
+      2. `WORKDIR /app`: Setup work directory in the container.<br >
+      3. `ENV PATH="/app/.venv/bin:$PATH"`:<br >
+         1. Setup environment variable for container: prepend `/app/.venv/bin` in front of original `$PATH`, so system look up python version from virtual environment folder first.<br >
+         2. `$PATH` in linux refer to a list of folders, which are in PATH environment variable.<br >
+            1. The `$PATH` variable is separated by `:` which is the delimiter<br >
+            2. The `$PATH` variable has order of a list directory, the system will follow the order to look up command in each directory.<br >
+      4. `RUN pip install pandas pyarrow`: Run command to setup our image by installing prerequisites, e.g. pandas, pyarrow.<br >
+      5. `COPY pipeline.py .`:<br >
+         1. `COPY [source] [destination]`: Copy the script to the container.<br >
+         2. `COPY . .`:<br >
+            - Source `.` means current directory in host machine = everything in this folder.<br >
+            - Destination `.` means current directory in docker image = keep original filename.<br >
+         3. `COPY "pyproject.toml" "uv.lock" ".python-version" ./`<br >
+            1. In linux, <ins>the last argument is always `[destination]`</ins><br >
+            2. `.` means current folder, `/` confirms destination is a directory, `./` is a safety way to say `[destination]` is a directory<br >
+         4. `COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/`<br >
+            1. With `--from` flag, docker download uv image from `ghcr.io/astral-sh/uv:latest`<br >
+            2. In downloaded uv image, docker copy `/uv` and `/uvx` files to `/bin/` folder (destination)<br >
+      6. `ENTRYPOINT ["python", "pipeline.py"]`:<br >
+         1. `ENTRYPOINT` define the first command to run when the container runs<br >
+         2. This `ENTRYPOINT` will execute `python pipeline.py`<br >
 
 
