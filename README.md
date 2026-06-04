@@ -76,7 +76,7 @@ To select python intepreter in vs code:<br >
    2. During deployment or CI/CD: when pushing latest code, the <ins>Dockerfile gets updated and automatically compiles a new environment</ins>.<br >
 5. Where to use Dockerfile:<br >
    1. Version Control (Git): Dockerfile saved in <ins>root directory of project</ins> as a environment configuration.<br >
-7. How to use Dockerfile:<br >
+6. How to use Dockerfile:<br >
    1. Dockerfile use <ins>Layered Cache</ins>: means if one line change, rest below lins have to <ins>rebuild</ins>, so Dockerfile follows <ins>least-to-most frequent change</ins> order.<br >
    2. General order of commands in Dockerfile:<br >
    ```
