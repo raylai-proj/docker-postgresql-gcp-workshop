@@ -160,12 +160,64 @@ COPY pipeline.py pipeline.py
 # define first command when run container
 ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
 ```
+## Running PostgreSQL with Docker<sub>[4]</sub><br >
+1. Q: Why Docker can run PostgreSQL without installation?<br >
+   A: Docker has library <ins>Docker Hub which includes PostgreSQL image</ins>, so Docker can run PostgreSQL without installation.<br >
+2. Docker run Postgre container setup:<br >
+   1. Create a new directory to store Postgre data:<br >
+   ```console
+   mkdir ny_taxi_postgres_data
+   ```
+   2. Docker run Postgre container:<br >
+   ```console
+   docker run -it --rm \
+   -e POSTGRES_USER=root \
+   -e POSTGRES_PASSWORD=root \
+   -e POSTGRES_DB=ny_taxi \
+   -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql \
+   -p 5432:5432 \
+   postgres:18
+   ```
+   3. syntax:<br >
+      1. `-e` = set environment variables, e.g. `POSTGRES_USER=[username]`, `POSTGRES_PASSWORD=[password]`, `POSTGRES_DB=[database name]`<br >
+      2. `-v` = create a <ins>volume</ins>, e.g. `-v [folder in host machine to store data]:[default folder in container to store postgres data]`<br >
+         1. 5W1H Docker volume:<br >
+            1. What is Docker volume? Docker volume is a persistent exist folder to map to container and let postgres store data on host machine.<br >
+            2. Why we use Docker volume? To prevent data disappear. Default place to store postgres data in container will disappear when the container updated, stopped, or deleted.<br >
+            3. Who use Docker volume? Data engineer (to store data as local data warehouse), DevOps (to store log data, application states, configuration data for deployment).<br >
+            4. When we use Docker volume? When we need application <ins>always remember data</ins> over time (called stateful application)<br >
+            5. Where does Docker volume store? At local host machine: `$(pwd)/[folder_name]`, In container: `/var/lib/postgres`<br >
+            6. How does Docker volume work? Docker volume setup the local machine directory, so everytime whene postgres save data inside container, <ins>the docker intercept it and save data to the local host machine directory.</ins><br > 
+         2. Lesson learned:<br >
+            - Issue: Both recommendations `/var/lib/postgresql` vs. `/var/lib/postgresql/data` were saw when setting docker volume.<br >
+            - Solution:<br >
+              1. `postgres:18`: Use `/var/lib/postgresql`, in `postgres:18`, the official upgrade and now only require `/var/lib/postgresql` in `-v`.<sub>[5]</sub><br >
+              2. `postgres:17` or lower: Use `/var/lib/postgresql/data`, in `postgres:17` or lower, the default folder where postgres store data at `/var/lib/postgresql/data`, so docker will store data into local machine instead of `/var/lib/postgresql/data`. This provide advantages:<br >
+                 1. Precision, to only store data from postgres and exclude server log and configurations.<br >
+                 2. Avoid Permission Conflict, if set volume from `/var/lib/postgresql`, it may trigger permission conflict when other system try to write into `/var/lib/postgresql`.<br >
+      3. `-p` = map host port to container port, syntax: `-p [host port]:[container port]`. When setup `pgcli` to connect postgres server, use <inv>`[host port]`</inv>.<br >
+      4. `-d` = detached mode: postgres will run in the background, and terminal won't constantly stream postgres server log.<br >
+         1. If want to keep postgres server streaming log, <ins>Open the Second Terminal</ins> and problem solved.<br >
+         2. In detached mode, postgres server stop when container stop. To stop container:<br >
+            ```console
+            docker ps    # to find container id
+            docker stop [container_id]
+            ```
+      5. `postgres:18` = use PostgreSQL version 18.<br >
+3. 5W1H `pgcli`
+4. `pgcli` lesson learned:
+5. `pgcli` query example:
+## PostgreSQL
+This section decribes PostgreSQL database setup as well as query, phrase, operator,...etc. that differ from MySQL. To review basic SQL, refer to [SQL_review_note](https://github.com/raylai-proj/SQL_review_note).
+1. Download sample database and restore it to local database with pgcli and docker container
 
 ## Reference
 [1] [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)<br >
 [2] [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)<br >
 [3] [Dockerizing the Pipeline](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/03-dockerizing-pipeline.md)<br >
 [4] [Running PostgreSQL with Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/04-postgres-docker.md)<br >
-[5] [Install PostgreSQL Linux - Load the sample database](https://neon.com/postgresql/getting-started/install-postgresql-linux#load-the-sample-database)<br >
-[6] [PostgreSQL SELECT](https://neon.com/postgresql/tutorial/select)<br >
-[7] [Introduction to PostgreSQL CONCAT() function](https://neon.com/postgresql/string-functions/concat-function#introduction-to-postgresql-concat-function)<br >
+[5] [Upgrading between major versions? #37](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)<br >
+[6] [SQL_review_note](https://github.com/raylai-proj/SQL_review_note)<br >
+[7] [Install PostgreSQL Linux - Load the sample database](https://neon.com/postgresql/getting-started/install-postgresql-linux#load-the-sample-database)<br >
+[8] [PostgreSQL SELECT](https://neon.com/postgresql/tutorial/select)<br >
+[9] [Introduction to PostgreSQL CONCAT() function](https://neon.com/postgresql/string-functions/concat-function#introduction-to-postgresql-concat-function)<br >
