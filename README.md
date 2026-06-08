@@ -1,6 +1,6 @@
 # docker-postgresql-gcp-workshop
 Workshop Codespaces
-## docker<br >
+## docker<sub>[1]</sub><br >
 1. docker is a containerization software, means can create container to let us isolate software like simple version of virtual machines.<br >
 2. a docker image is a snapshot of a container, which we can run our data pipeline in it. Additionally, we can export docker images to cloud service, e.g. AWS or Google Cloud Platform (GCP) and run our container on it.<br >
 3. `docker --version`		#check if docker installed and version<br >
@@ -35,7 +35,7 @@ Workshop Codespaces
     2. when local files change, it change in container immediately, so we don't need to exit, edit file, and rerun a new container<br >
   - <ins>Volume</ins> in CS means data storage unit, we use <ins>Volume</ins> means it is independent from container, and <ins>Volume Mount</ins> means we mount data storage unit from local to container<br >
   - To keep code organized, we use <ins>/app</ins> or <ins>/src</ins> to link local directory, e.g. `-v $(pwd)/test:/app/test`<br >
-## Venv and Data Pipeline<br >
+## Venv and Data Pipeline<sub>[2]</sub><br >
 ### sys.argv<br >
 ```
 import sys
@@ -62,7 +62,7 @@ To select python intepreter in vs code:<br >
 ### Include <ins>parquet</ins> file in .gitignore<br >
 1. I can add `*.parquet` in .gitignore (whereever in file)<br >
 2. Wait for .parquet file to turn gray, means git exclude it in record.<br >
-## Dockerfile<br >
+## Dockerfile<sub>[3]</sub><br >
 ### 5W1H<br >
 1. What is Dockerfile: Dockerfile is a <ins>text document</ins> contains script of instructions for building a Docker image.<br >
 2. Why do we use Dockerfile:<br >
@@ -161,4 +161,11 @@ COPY pipeline.py pipeline.py
 ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
 ```
 
-
+## Reference
+[1] [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)<br >
+[2] [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)<br >
+[3] [Dockerizing the Pipeline](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/03-dockerizing-pipeline.md)<br >
+[4] [Running PostgreSQL with Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/04-postgres-docker.md)<br >
+[5] [Install PostgreSQL Linux - Load the sample database](https://neon.com/postgresql/getting-started/install-postgresql-linux#load-the-sample-database)<br >
+[6] [PostgreSQL SELECT](https://neon.com/postgresql/tutorial/select)<br >
+[7] [Introduction to PostgreSQL CONCAT() function](https://neon.com/postgresql/string-functions/concat-function#introduction-to-postgresql-concat-function)<br >
