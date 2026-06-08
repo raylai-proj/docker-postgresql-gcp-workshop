@@ -216,8 +216,14 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
       ```
       1. syntax: `pgcli -h [the host] -p [local machine port] -u [POSTGRES_USER] -d [POSTGRES_DB]`<br >
       2. Because `[the host]` for `pgcli` is local machine, `[the host]` = `localhost`<br >
-5. `pgcli` lesson learned:
-6. `pgcli` query example:
+5. `pgcli` lesson learned:<br >
+   1. Issue: To turn on <ins>Multiline</ins> in `pgcli`, press <ins>F3</ins>, but vs code has keyword binding F3 = search in terminal, so press F3 won't turn on Multiline in `pgcli`<br >
+   2. Solution:<br >
+      1. <ins>Ctrl+k</ins> then <ins>Ctrl+s</ins> to open keyboard shortcut.<br >
+      2. search for <ins>terminal.find</ins>.<br >
+      3. change keybinding from <ins>F3</ins> to <ins>ctrl+shift+f</ins>.<br >
+      4. restart vs code, next reconnect `pgcli`, then press F3 to turn on Multiline.<br >
+7. `pgcli` query example:
 ## PostgreSQL
 This section decribes PostgreSQL database setup as well as query, phrase, operator,...etc. that differ from MySQL. To review basic SQL, refer to [SQL_review_note](https://github.com/raylai-proj/SQL_review_note).
 1. Download sample database and restore it to local database with pgcli and docker container
