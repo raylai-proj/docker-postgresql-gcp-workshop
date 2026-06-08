@@ -244,7 +244,7 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
    ```
 ## PostgreSQL<br >
 This section decribes PostgreSQL database setup as well as query, phrase, operator,...etc. that differ from MySQL. To review basic SQL, refer to [SQL_review_note](https://github.com/raylai-proj/SQL_review_note)<sub>[6]</sub>.<br >
-### Download sample database and restore it to local database with pgcli and docker container:<br >
+### 1. Download sample database and restore it to local database with pgcli and docker container:<br >
    1. Create new Postgres container for PostgreSQL workshop:<br >
       ```console
       mkdir dvdrental_postgres_data
@@ -292,7 +292,17 @@ This section decribes PostgreSQL database setup as well as query, phrase, operat
       DESCRIBE customer;
       --  Show columns detail of table customer
       ```
-### Concatenation operator `||`
+### 2. Concatenation operator `||`<sub>[8][9]</sub>
+```sql
+SELECT
+  first_name || ' ' || last_name AS full_name,
+  email
+FROM
+  customer;
+
+-- || is concatenation operator to concatenate columns
+-- syntax: [column1] || [delimiter] || [column2]
+```
 
 ## Reference
 [1] [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)<br >
