@@ -223,7 +223,25 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
       2. search for <ins>terminal.find</ins>.<br >
       3. change keybinding from <ins>F3</ins> to <ins>ctrl+shift+f</ins>.<br >
       4. restart vs code, next reconnect `pgcli`, then press F3 to turn on Multiline.<br >
-7. `pgcli` query example:
+7. `pgcli` query example (`\dt`, `\q`):
+   ```
+   \dt
+   --  List tables
+
+   CREATE TABLE test (
+     id INTEGER,
+     name VARCHAR(50)
+   );
+   --  Create a test table
+
+   INSERT INTO test VALUES (
+     1, 'Hello Docker'
+   );
+   --  Insert data
+
+   \q
+   --  Exit pgcli = Ctrl+D
+   ```
 ## PostgreSQL
 This section decribes PostgreSQL database setup as well as query, phrase, operator,...etc. that differ from MySQL. To review basic SQL, refer to [SQL_review_note](https://github.com/raylai-proj/SQL_review_note).
 1. Download sample database and restore it to local database with pgcli and docker container
