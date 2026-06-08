@@ -282,6 +282,9 @@ This section decribes PostgreSQL database setup as well as query, phrase, operat
       ```console
       docker exec -i dvdrental_database pg_restore -U root -d dvdrental < dvdrental.tar
       ```
+      1. `docker exec` vs. `docker run`: `docker run` create and start a new container, and `docker exec` reach a current running container to execute rest command.<br >
+      2. Why `-i`, not `-it`, or omit `-i`: `-i` keeps the Standard Input (stdin) open, so the `dvdrental.tar` can stream from <ins>outside</ins> of container to <ins>inside</ins> of container. If use `-it`, the `-t` will wrap original data with ANSI Escape Codes which will corrupt the binary data stream. If omit `-i`, the Standard Input (stdin) will close before `dvdrental.tar` can stream to the inside of container, so `pg_restore` inside of container will fail.<br >
+      3. what does `pg_restore < dvdrental.tar` do: The `<` is a <ins>Linux input redirection operator</ins> which pass data from `dvdrental.tar` through stdin (keep being opened by `-i`), go inside of container (dvdrental_database by `docker exec`), and finally stream to `pg_restore` to restore to database `-d dvdrental`.<br > 
    5. `pgcli` verify new downloaded database restored:<br >
       ```console
       uv run pgcli -p 5433 -u root -d dvdrental
