@@ -204,9 +204,20 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
             docker stop [container_id]
             ```
       5. `postgres:18` = use PostgreSQL version 18.<br >
-3. 5W1H `pgcli`
-4. `pgcli` lesson learned:
-5. `pgcli` query example:
+3. 5W1H `pgcli`<br >
+   1. What is `pgcli`? `pgcli` is PostgreSQL Command Line Interface.<br >
+   2. Why use `pgcli`? `pgcli` has <ins>auto-completion</ins> and <ins>syntax highlight</ins> to reduce typo and speed up querying, which `psql` doesn't have these features.<br >
+   3. Who use `pgcli`? Data engineer & analyst to query database<br >
+   4. When use `pgcli`? Development & Debugging to verify <ins>pipeline successfully run</ins>, <ins>check schema definitions</ins>, or <ins>test queries</ins>.<br >
+   5. Where to install `pgcli`? Install `pgcli` in local machine, not in docker container.<br >
+   6. How to use `pgcli` to connect postgreSQL in docker container?<br >
+      ```console
+      pgcli -h localhost -p 5432 -u root -d ny_taxi
+      ```
+      1. syntax: `pgcli -h [the host] -p [local machine port] -u [POSTGRES_USER] -d [POSTGRES_DB]`<br >
+      2. Because `[the host]` for `pgcli` is local machine, `[the host]` = `localhost`<br >
+5. `pgcli` lesson learned:
+6. `pgcli` query example:
 ## PostgreSQL
 This section decribes PostgreSQL database setup as well as query, phrase, operator,...etc. that differ from MySQL. To review basic SQL, refer to [SQL_review_note](https://github.com/raylai-proj/SQL_review_note).
 1. Download sample database and restore it to local database with pgcli and docker container
