@@ -128,7 +128,7 @@ To select python intepreter in vs code:<br >
    1. `docker rm $(docker ps -aq)`: Here `rm` is `<command>` to remove container, syntax: `docker <command> <options> <target>`<br >
    2. `docker run -it --entrypoint=bash --rm test:pandas`: Here `--rm` is `<option/flag>` and `test:pandas` is `<target>`: docker run container `test:pandas` with options `-it`=interactive, `--entrypoint=bash`=enterypoint as bash, and `--rm`=remove the container once stopped.<br >
    3. `docker container prune --filter "until=24h"`: prune remove container with filter only stopped for more than 24 hours.<br >
-6. `docker run -it --entrypoint-bash --rm test:pandas`: `test` is image name, `pandas` is tag name, `test:pandas` will be the whole thing how it will be called.<br >
+6. `docker run -it --entrypoint=bash --rm test:pandas`: `test` is image name, `pandas` is tag name, `test:pandas` will be the whole thing how it will be called.<br >
 ### Latest Dockerfile:<br >
 ```
 # Dockerfile with uv
