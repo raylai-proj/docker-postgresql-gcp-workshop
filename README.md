@@ -1,6 +1,6 @@
 # docker-postgresql-gcp-workshop
 Workshop Codespaces
-## docker<sub>[1]</sub><br >
+## 1. Docker<sub>[1]</sub><br >
 1. docker is a containerization software, means can create container to let us isolate software like simple version of virtual machines.<br >
 2. a docker image is a snapshot of a container, which we can run our data pipeline in it. Additionally, we can export docker images to cloud service, e.g. AWS or Google Cloud Platform (GCP) and run our container on it.<br >
 3. `docker --version`		#check if docker installed and version<br >
@@ -35,7 +35,7 @@ Workshop Codespaces
     2. when local files change, it change in container immediately, so we don't need to exit, edit file, and rerun a new container<br >
   - <ins>Volume</ins> in CS means data storage unit, we use <ins>Volume</ins> means it is independent from container, and <ins>Volume Mount</ins> means we mount data storage unit from local to container<br >
   - To keep code organized, we use <ins>/app</ins> or <ins>/src</ins> to link local directory, e.g. `-v $(pwd)/test:/app/test`<br >
-## Venv and Data Pipeline<sub>[2]</sub><br >
+## 2. Venv and Data Pipeline<sub>[2]</sub><br >
 ### sys.argv<br >
 ```
 import sys
@@ -62,7 +62,7 @@ To select python intepreter in vs code:<br >
 ### Include <ins>parquet</ins> file in .gitignore<br >
 1. I can add `*.parquet` in .gitignore (whereever in file)<br >
 2. Wait for .parquet file to turn gray, means git exclude it in record.<br >
-## Dockerfile<sub>[3]</sub><br >
+## 3. Dockerfile<sub>[3]</sub><br >
 ### 5W1H<br >
 1. What is Dockerfile: Dockerfile is a <ins>text document</ins> contains script of instructions for building a Docker image.<br >
 2. Why do we use Dockerfile:<br >
@@ -160,7 +160,7 @@ COPY pipeline.py pipeline.py
 # define first command when run container
 ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
 ```
-## Running PostgreSQL with Docker<sub>[4]</sub><br >
+## 4. Running PostgreSQL with Docker<sub>[4]</sub><br >
 1. Q: Why Docker can run PostgreSQL without installation?<br >
    A: Docker has library <ins>Docker Hub which includes PostgreSQL image</ins>, so Docker can run PostgreSQL without installation.<br >
 2. Docker run Postgre container setup:<br >
@@ -242,7 +242,7 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
    \q
    --  Exit pgcli = Ctrl+D
    ```
-## PostgreSQL<br >
+## 5. PostgreSQL<br >
 This section decribes PostgreSQL database setup as well as query, phrase, operator,...etc. that differ from MySQL. To review basic SQL, refer to [SQL_review_note](https://github.com/raylai-proj/SQL_review_note)<sub>[6]</sub>.<br >
 ### 1. Download sample database and restore it to local database with pgcli and docker container:<br >
    1. Create new Postgres container for PostgreSQL workshop:<br >
