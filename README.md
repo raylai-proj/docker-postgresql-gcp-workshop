@@ -223,8 +223,8 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
       2. search for <ins>terminal.find</ins>.<br >
       3. change keybinding from <ins>F3</ins> to <ins>ctrl+shift+f</ins>.<br >
       4. restart vs code, next reconnect `pgcli`, then press F3 to turn on Multiline.<br >
-7. `pgcli` query example (`\dt`, `\q`):
-   ```
+7. `pgcli` query example (`\dt`, `\q`): <br >
+   ```sql
    \dt
    --  List tables
 
@@ -242,9 +242,57 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
    \q
    --  Exit pgcli = Ctrl+D
    ```
-## PostgreSQL
-This section decribes PostgreSQL database setup as well as query, phrase, operator,...etc. that differ from MySQL. To review basic SQL, refer to [SQL_review_note](https://github.com/raylai-proj/SQL_review_note).
-1. Download sample database and restore it to local database with pgcli and docker container
+## PostgreSQL<br >
+This section decribes PostgreSQL database setup as well as query, phrase, operator,...etc. that differ from MySQL. To review basic SQL, refer to [SQL_review_note](https://github.com/raylai-proj/SQL_review_note)<sub>[6]</sub>.<br >
+### Download sample database and restore it to local database with pgcli and docker container:<br >
+   1. Create new Postgres container for PostgreSQL workshop:<br >
+      ```console
+      mkdir dvdrental_postgres_data
+      # create new folder for postgers server to store data in local machine
+
+      docker run -it --rm \
+      --name dvdrental_database \
+      -e POSTGRES_USER=root \
+      -e POSTGRES_PASSWORD=root \
+      -e POSTGRES_DB=dvdrental \
+      -v $(pwd)/dvdrental_postgres_data:/var/lib/postgresql \
+      -p 5433:5432 \
+      postgres:18
+      ```
+   2. Download sample database<sub>[7]</sub>:<br >
+      1. Download sample data zip archive:<br >
+         ```console
+         curl -O https://neon.com/postgresqltutorial/dvdrental.zip
+         ```
+      2. Extract the zip to get the raw dvdrental.tar file:<br >
+         ```console
+         unzip dvdrental.zip
+         ```
+   3. `pgcli` create new database:<br >
+      ```console
+      uv run pgcli -p 5433 -u root -d dvdtental
+      ```
+      ```sql
+      CREATE DATABASE dvdrental;
+      --  create new empty database dvdrental
+      \q
+      --  exit = ctrl+D
+      ```
+   4. Restore downloaded database to new database:<br >
+      ```console
+      docker exec -i dvdrental_database pg_restore -U root -d dvdrental < dvdrental.tar
+      ```
+   5. `pgcli` verify new downloaded database restored:<br >
+      ```console
+      uv run pgcli -p 5433 -u root -d dvdrental
+      ```
+      ```sql
+      \dt
+      --  List tables
+      DESCRIBE customer;
+      --  Show columns detail of table customer
+      ```
+### Concatenation operator `||`
 
 ## Reference
 [1] [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)<br >
