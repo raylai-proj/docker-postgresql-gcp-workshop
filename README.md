@@ -270,7 +270,7 @@ This section decribes PostgreSQL database setup as well as query, phrase, operat
          ```
    3. `pgcli` create new database:<br >
       ```console
-      uv run pgcli -p 5433 -u root -d dvdtental
+      uv run pgcli -h localhost -p 5433 -u root -d dvdtental
       ```
       ```sql
       CREATE DATABASE dvdrental;
@@ -287,7 +287,7 @@ This section decribes PostgreSQL database setup as well as query, phrase, operat
       3. what does `pg_restore < dvdrental.tar` do: The `<` is a <ins>Linux input redirection operator</ins> which pass data from `dvdrental.tar` through stdin (keep being opened by `-i`), go inside of container (dvdrental_database by `docker exec`), and finally stream to `pg_restore` to restore to database `-d dvdrental`.<br > 
    5. `pgcli` verify new downloaded database restored:<br >
       ```console
-      uv run pgcli -p 5433 -u root -d dvdrental
+      uv run pgcli -h localhost -p 5433 -u root -d dvdrental
       ```
       ```sql
       \dt
@@ -295,6 +295,18 @@ This section decribes PostgreSQL database setup as well as query, phrase, operat
       DESCRIBE customer;
       --  Show columns detail of table customer
       ```
+   6. Lesson learned:<br >
+      1. Issue:<br >
+      ```console
+      (pipeline) > uv run pgcli -p 5433 -u root -d dvdrental
+      connection is bad: connection to server on socket "/var/run/postgresql/.s.PGSQL.5433" failed: No such file or directory
+      Is the server running locally and accepting connections on that socket?
+      ```
+      2. Reason: Without `-h localhost`, pgcli defaults to socket-mode.<br >
+      3. Solution: add `-h localhost` flag to force pgcli through docker port mapping.<br >
+         ```console
+         uv run pgcli -h localhost -p 5433 -u root -d dvdrental
+         ```
 ### 2. Concatenation operator `||`<sub>[8][9]</sub>
 ```sql
 SELECT
