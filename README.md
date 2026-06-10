@@ -318,7 +318,14 @@ FROM
 -- || is concatenation operator to concatenate columns
 -- syntax: [column1] || [delimiter] || [column2]
 ```
-
+### 3. NULLS FIRST | NULLS LAST<br >
+```sql
+SELECT num
+FROM sort_demo
+ORDER BY num DESC NULLS LAST;
+```
+1. syntax: `ORDER BY [column | expression] [ASC | DESC] [NULLS FIRST | NULLS LAST]`<br >
+2. when sorting ascending (`ASC`), sql default show `NULLS LAST`; whereas sorting descending (`DESC`), sql default show `NULLS FIRST`<sub>[10]</sub></sub><br >
 ## Reference
 [1] [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)<br >
 [2] [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)<br >
@@ -329,3 +336,4 @@ FROM
 [7] [Install PostgreSQL Linux - Load the sample database](https://neon.com/postgresql/getting-started/install-postgresql-linux#load-the-sample-database)<br >
 [8] [PostgreSQL SELECT](https://neon.com/postgresql/tutorial/select)<br >
 [9] [Introduction to PostgreSQL CONCAT() function](https://neon.com/postgresql/string-functions/concat-function#introduction-to-postgresql-concat-function)<br >
+[10] [51-2. ORDER BY IS NULL](https://github.com/raylai-proj/SQL_review_note#51-2-order-by-is-null)<br >
