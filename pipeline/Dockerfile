@@ -28,7 +28,8 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /app
 
 # ENV setup environment variable PATH
-# Add virtual environment path into PATH, so we can use packages installed in venv, and refer to variable in venv first
+# Add virtual environment path into PATH, so we can use packages installed in venv, 
+# and refer to variable in venv first
 ENV PATH="/app/.venv/bin:$PATH"
 
 # copy app dependency to directory /app WORKDIR (for better layer caching)
@@ -43,4 +44,4 @@ RUN uv sync --locked
 COPY pipeline.py pipeline.py
 
 # define first command when run container
-ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
+ENTRYPOINT ["python", "pipeline.py"]
