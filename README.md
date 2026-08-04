@@ -121,7 +121,7 @@ To select python intepreter in vs code:<br >
    - `--frozen`: assume pyproject.toml and uv.lock matched and <ins>directly install dependencies from uv.lock.</ins> (good for docker)<br >
 3. `docker build -t test:pandas .`:<br >
    1. `.` means Docker looks for Dockerfile in current directory, if you have line like COPY in Dockerfile, e.g. `COPY . .`, the first `.` = `.` in `docker build -t test:pandas .` = current directory<br >
-   2. `-t test:pandas` means Docker build an image from Dockerfile with <ins>tag</ins> as `test:pandas`<br >
+   2. `-t test:pandas` means Docker build an image from Dockerfile with `<repository_name>:<tag_name/version_name>` as `test:pandas` (can be `test:v1`, `test:v2`...etc.)<br >
 4. After `docker build -t test:pandas .`, check by `docker image ls`, remove image by `docker rmi <IMAGE>`<br >
    1. `docker build`: docker build create an image (bludprint)<br >
    2. `docker run`: docker run create a container (instance)<br >
