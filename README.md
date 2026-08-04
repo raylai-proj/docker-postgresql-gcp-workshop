@@ -56,9 +56,13 @@ uv is a python package manager, like pip<br >
     1. when the first time run `uv run python pipeline.py` to execute file.<br >
     2. or when the first time run `uv add pandas pyarrow` to install library in venv.<br >
 ### Python intepreter selection<br >
-To select python intepreter in vs code:<br >
-  1. `ctrl + shift + p` and select <ins>python intepreter</ins><br >
-  2. select python version in .venv<br >
+To change python intepreter in vs code:<br >
+  1. `uv run which python` in folder and copy `python directory`<br >
+  2. `ctrl + shift + p` and type: <ins>Python: select interpreter</ins><br >
+  3. click: `Enter interpreter path`<br >
+  4. click: `Find`<br >
+  5. paste `python directory` from `uv run which python`<br >
+  6. select `Python` in `.venv/bin/python`<br >
 ### Include <ins>parquet</ins> file in .gitignore<br >
 1. I can add `*.parquet` in .gitignore (whereever in file)<br >
 2. Wait for .parquet file to turn gray, means git exclude it in record.<br >
