@@ -286,6 +286,14 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
       "tpep_dropoff_datetime"
    ]
    ```
+   3. Double check if pandas exist
+   ```
+   pd.__file__
+   ```
+   4. Download ny_taxi data
+   ```
+   df = pd.read_csv(DATA_SOURCE_PREFIX+DATA_VERSION)
+   ```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
