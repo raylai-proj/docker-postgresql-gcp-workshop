@@ -257,6 +257,35 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    from sqlalchemy import create_engine
    from tqdm.auto import tqdm
    ```
+   2. Define Macro to download and normalize data type in schema
+   ```
+   # Macro for download data
+   DATA_SOURCE_PREFIX = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
+   DATA_VERSION = 'yellow_tripdata_2021-01.csv.gz'
+   # Macro for correct schema's data type
+   DTYPE = {
+      "VendorID": "Int64",
+       "passenger_count": "Int64",
+       "trip_distance": "Float64",
+       "RatecodeID": "Int64",
+       "store_and_fwd_flag": "str",
+       "PULocationID": "Int64",
+       "DOLocationID": "Int64",
+       "payment_type": "Int64",
+       "fare_amount": "Float64",
+       "extra": "Float64",
+       "mta_tax": "Float64",
+       "tip_amount": "Float64",
+       "tolls_amount": "Float64",
+       "improvement_surcharge": "Float64",
+       "total_amount": "Float64",
+       "congestion_surcharge": "Float64",
+   }
+   PARSE_DATE = [
+      "tpep_pickup_datetime",
+      "tpep_dropoff_datetime"
+   ]
+   ```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
