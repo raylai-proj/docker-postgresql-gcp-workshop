@@ -223,6 +223,25 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
       2. Search for terminal.find
       3. Change keybinding from F3 to ctrl+shift+f
       4. Restart vs code, and restart pgcli, then press F3 to turn on Multiline.
+## Quick PostgreSQL Demo:
+```
+\dt
+--   List tables
+
+CREATE TABLE test (
+   id INTEGER,
+   name VARCHAR(50)
+);
+--   Create a test table with schema
+
+INSERT INTO test VALUES(
+   1, 'Hello Docker'
+);
+--   Insert data
+
+\q
+--   exit pgcli = ctrl+D
+```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
