@@ -294,6 +294,14 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    ```
    df = pd.read_csv(DATA_SOURCE_PREFIX+DATA_VERSION)
    ```
+   5. I found out the data type in "VendorID", "tpep_pickup_datetime", "tpep_dropoff_datetime" are incorrect. The "VendorID" should be Int64, not float, and "tpep_pickup_datetime", "tpep_dropoff_datetime" should be datetime, not string, so I used Macro to download data again with data type specified.
+   ```
+   df = pd.read_csv(
+      DATA_SOURCE_PREFIX+DATA_VERSION,
+      dtype=DTYPE,
+      parse_dates=PARSE_DATE,
+   )
+   ```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
