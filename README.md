@@ -172,5 +172,30 @@ COPY pipeline.py pipeline.py
 # define first command when run container
 ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
 ```
+## Run postgreSQL on Docker:<br >
+1. Q: Why Docker can run PostgreSQL without installation?<br >
+   A: Docker has library Docker Hub which includes <ins>PostgreSQL image</ins>, so Docker can run PostgreSQL without installation.<br >
+2. Terminal run Docker container with PostgreSQL database:
+3. ```
+   docker run -it --rm \
+   -e POSTGRES_USER="root" \
+   -e POSTGRES_PASSWORD="root" \
+   -e POSTGRES_DB="ny_taxi" \
+   -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql \
+   -p 5432:5432 \
+   postgres:18
+   ```
+   1. -e = set environment variables, e.g. POSTGRES_USER=username, POSTGRES_PASSWORD=password, PROSGRES_DB=database name
+   2. -v = create a volume, syntax: -v [folder in host machine]:[folder in container]
+		5W1H Docker Volume:
+		1. What is Docker Volume? Docker Volume is a persistent exist folder to map to container and let postgres store data on host machine.
+		2. Why we use Docker Volume? To prevent postgres store data in container because the data will disappear if the container updated, stopped, or deleted.
+		3. Who use Docker Volume? Data engineer (to store data as local data warhouse), DevOps (to store log data, application states, configuration data for deployment)
+		4. When we use Docker Volume? When we need application "always remember data" over time (called stateful application)
+		5. Where to store Docker Volume? local host machine: $(pwd)/[folder_name], inside container: /var/lib/postgresql/data (local host machine will create new folder if not exist)
+		6. How does docker volume work? Docker volume setup the local host machine directory, so everytime when postgreSQL save data inside container, the docker intercept it and save data to the local host machine directory.
+4. 
+
+
 
 
