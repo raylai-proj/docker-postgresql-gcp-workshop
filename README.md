@@ -245,6 +245,11 @@ INSERT INTO test VALUES(
 \q
 --   exit pgcli = ctrl+D
 ```
+## Jupyter notebook
+To retrieve and preprocess data, we execute Jupyter notebook, process data, and pass the processed data to PostgreSQL.
+1. Jupyter notebook setup:
+   1. Install Jupyter: `uv add --dev jupyter`
+   2. Create a Jupyter notebook: `uv run jupyter notebook`
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
