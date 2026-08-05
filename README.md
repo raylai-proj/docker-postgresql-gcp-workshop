@@ -309,6 +309,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    !uv add psycopg2-binary
    ```
    7. To insert data into postgres: Setup sqlalchemy engine to connect local postgres database.
+   syntax: `sqlalchemy.create_engine('<postgresql>://<username>:<password>@<host>:<port>/<database>')`
    ```
    # setup sqlalchemy engine
    engine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')
