@@ -329,6 +329,16 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
       if_exists='replace',
    )
    ```
+   10. I want to insert data in batches, so I downloaded data with chunksize to get dataframe iterater (dtype=TextFileReader)
+   ```
+   df_iter = pd.read_csv(
+      DATA_SOURCE_PREFIX+DATA_VERSION,
+      dtype=DTYPE,
+      parse_dates=PARSE_DATE,
+      iterator=True,
+      chunksize=100000,
+   )
+   ```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
