@@ -343,6 +343,15 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    ```
    !uv add tqdm
    ```
+   12. Finally, I pass data into postgres database
+   ```
+   for df_chunk in tqdm(df_iter):
+      df_chunk.to_sql(
+         name='yellow_taxi_data',
+         con=engine,
+         if_exists='append'
+      )
+   ```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
