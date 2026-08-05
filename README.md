@@ -320,6 +320,15 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    # 3. generate "postgresql" statement based on con=engine where engine was created for postgresql database in docker
    print(pd.io.sql.get_schema(df, name='yellow_taxi_data', con=engine))
    ```
+   9. Create empty table with schema only (column name + dtype)
+   ```
+   # df.head(0) return only column names and data types (=schema)
+   df.head(0).to_sql(
+      name='yellow_taxi_data',
+      con=engine,
+      if_exists='replace',
+   )
+   ```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
