@@ -203,7 +203,27 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
          1. Precision, to only store data from PostgreSQL and exclude server log and configurations
          2. Avoid Permission Conflict, if set volume from `/var/lib/postgresql`, it may trigger permission conflict when other system try to write into `/var/lib/postgresql`
       4. Final solution: Since PosgreSQL officially upgrade and now only require `/var/lib/postgresql` in `-v`<sub>[1]</sub>
-## Reference:<br >
+## Run pgcli for Postgres<br >
+1. add pgcli in development dependencies: `uv add --dev pgcli`
+2. run pgcli and link to Postgres: `uv run pgcli -h localhost -p 5432 -u root -d ny_taxi`
+3. 5W1H pgcli:
+   1. What is pgcli? pgcli is postgresql command line tool
+   2. Why use pgcli? pgcli has auto-completion and syntax highlight to reduce typo and speed up querying, which psql doesn't have these features.
+   3. Who use pgcli? Data engineer & analyst to query database.
+   4. When use pgcli? Development & Debugging to verify pipeline successfully run, check schema definitions, or test queries.
+   5. Where does pgcli live? pgcli live on local host machine, not in docker container.
+   6. How to use pgcli to connect postgreSQL in docker container?
+      1. `pgcli -h localhost -p 5432 -u root -d ny_taxi`
+      2. syntax: `pgcli -h [the host] -p [local machine port] -u [postgres username] -d [postgres database name]`
+      3. Because `[the host]` for pgcli is local machine, so it's `-h localhost`
+4. Lesson learned:
+   1. Issue: To turn on Multiline in pgcli, press F3. vs code has keyword binding F3 = search in terminal, so press F3 won't turn on Multiline in pgcli.
+   2. Solution:
+      1. Ctrl+k then Ctrl+s to open keyboard shortcut
+      2. Search for terminal.find
+      3. Change keybinding from F3 to ctrl+shift+f
+      4. Restart vs code, and restart pgcli, then press F3 to turn on Multiline.
+## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
 
