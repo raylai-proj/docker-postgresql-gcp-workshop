@@ -62,6 +62,8 @@ uv is a python package manager, like pip<br >
   3. To create <ins>.venv</ins> folder: uv will create .venv folder for activate virtual environment when either<br >
     1. when the first time run `uv run python pipeline.py` to execute file.<br >
     2. or when the first time run `uv add pandas pyarrow` to install library in venv.<br >
+  4. uv lesson learned:
+     1. `uv run python --version` means: uv execute command <ins>inside the project virtual environment</ins>.
 ### Python intepreter selection<br >
 To change python intepreter in vs code:<br >
   1. `uv run which python` in folder and copy `python directory`<br >
@@ -223,6 +225,7 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
       2. Search for terminal.find
       3. Change keybinding from F3 to ctrl+shift+f
       4. Restart vs code, and restart pgcli, then press F3 to turn on Multiline.
+5. Lesson learned: `uv add --dev pgcli` means: uv add pgcli in dev group <ins>inside the project virtual environment</ins>.
 ## Quick PostgreSQL Demo:
 ```
 \dt
