@@ -313,6 +313,13 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    # setup sqlalchemy engine
    engine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')
    ```
+   8. Preview SQL statement to create table.
+   ```
+   # 1. get schema from dataframe df,
+   # 2. get table name from name='yellow_taxi_data',
+   # 3. generate "postgresql" statement based on con=engine where engine was created for postgresql database in docker
+   print(pd.io.sql.get_schema(df, name='yellow_taxi_data', con=engine))
+   ```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
