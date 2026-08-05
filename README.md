@@ -339,6 +339,10 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
       chunksize=100000,
    )
    ```
+   11. Install tqdm, and from tqdm.auto import tqdm to see progress of inserting data
+   ```
+   !uv add tqdm
+   ```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
