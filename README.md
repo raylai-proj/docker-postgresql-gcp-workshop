@@ -302,11 +302,16 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
       parse_dates=PARSE_DATE,
    )
    ```
-   6. Then, I want to pass preprocessed data to postgres. For that, I installed SQLAIchemy.
+   6. Then, I want to pass preprocessed data to postgres. For that, I installed SQLAlchemy.
    ```
    In jupyter notebook, use uv to add dependencies: SQLAIchemy, psycopg2-binary
    !uv add sqlalchemy
    !uv add psycopg2-binary
+   ```
+   7. To insert data into postgres: Setup sqlalchemy engine to connect local postgres database.
+   ```
+   # setup sqlalchemy engine
+   engine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')
    ```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
