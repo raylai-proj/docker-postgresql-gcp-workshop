@@ -185,16 +185,26 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
    -p 5432:5432 \
    postgres:18
    ```
-   1. -e = set environment variables, e.g. POSTGRES_USER=username, POSTGRES_PASSWORD=password, PROSGRES_DB=database name
-   2. -v = create a volume, syntax: -v [folder in host machine]:[folder in container]
-		5W1H Docker Volume:
-		1. What is Docker Volume? Docker Volume is a persistent exist folder to map to container and let postgres store data on host machine.
-		2. Why we use Docker Volume? To prevent postgres store data in container because the data will disappear if the container updated, stopped, or deleted.
-		3. Who use Docker Volume? Data engineer (to store data as local data warhouse), DevOps (to store log data, application states, configuration data for deployment)
-		4. When we use Docker Volume? When we need application "always remember data" over time (called stateful application)
-		5. Where to store Docker Volume? local host machine: $(pwd)/[folder_name], inside container: /var/lib/postgresql/data (local host machine will create new folder if not exist)
-		6. How does docker volume work? Docker volume setup the local host machine directory, so everytime when postgreSQL save data inside container, the docker intercept it and save data to the local host machine directory.
-4. 
+   1. `-e` = set environment variables, e.g. `POSTGRES_USER=<username>`, `POSTGRES_PASSWORD=<password>`, `PROSGRES_DB=<database name>`
+   2. `-v` = create a volume, syntax: `-v [folder in host machine]:[folder in container]`
+      1. 5W1H Docker Volume:
+         1. What is Docker Volume? Docker Volume is a persistent exist folder to map to container and let postgres store data on host machine.
+         2. Why we use Docker Volume? To prevent postgres store data in container because the data will disappear if the container updated, stopped, or deleted.
+         3. Who use Docker Volume? Data engineer (to store data as local data warhouse), DevOps (to store log data, application states, configuration data for deployment)
+         4. When we use Docker Volume? When we need application "always remember data" over time (called stateful application)
+         5. Where to store Docker Volume? local host machine: `$(pwd)/[folder_name]`, inside container: `/var/lib/postgresql/data` (local host machine will create new folder if not exist)
+         6. How does docker volume work? Docker volume setup the local host machine directory, so everytime when postgreSQL save data inside container, the docker intercept it and save data to the local host machine directory.
+   3. `-p` = map host port to container port, syntax: `-p [host port]:[container port]`, when setup `pgcli`, use <ins>host port</ins>
+   4. `postgres:18` = use PostgreSQL version 18
+   5. lesson learned:
+      1. Issue: `/var/lib/postgresql/data` vs. `/var/lib/postgresql` (note: postgres:18+ upgrade and only require `/var/lib/postgresql`, no /data refer<sub>[1]</sub>
+      2. Explain: `/var/lib/postgresql/data` is the default folder where postgresql store data. `/var/lib/postgresql` is the parent folder also include /data folder, so docker will create a `/data` folder in local machine folder.
+      3. Reason to use `/var/lib/postgresql/data`:
+         1. Precision, to only store data from PostgreSQL and exclude server log and configurations
+         2. Avoid Permission Conflict, if set volume from `/var/lib/postgresql`, it may trigger permission conflict when other system try to write into `/var/lib/postgresql`
+      4. Final solution: Since PosgreSQL officially upgrade and now only require `/var/lib/postgresql` in `-v`<sub>[1]</sub>
+## Reference:<br >
+1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
 
 
