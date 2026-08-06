@@ -45,11 +45,7 @@ PG_DB = "ny_taxi"
 CHUNK_SZ = 100000
 
 # check if pandas exist
-pd.__file__
-
-
-# In[4]:
-
+# pd.__file__
 
 # df = pd.read_csv(DATA_SOURCE_PREFIX+DATA_VERSION, nrows=100)
 df = pd.read_csv(
@@ -62,37 +58,37 @@ df = pd.read_csv(
 # In[5]:
 
 
-df.head()
+# df.head()
 
 
 # In[6]:
 
 
-df['VendorID']
+# df['VendorID']
 
 
 # In[7]:
 
 
-df['tpep_pickup_datetime']
+# df['tpep_pickup_datetime']
 
 
 # In[8]:
 
 
-df.dtypes
+# df.dtypes
 
 
 # In[9]:
 
 
-df.shape
+# df.shape
 
 
 # In[10]:
 
 
-len(df)
+# len(df)
 
 
 # In[11]:
@@ -122,7 +118,7 @@ print(pd.io.sql.get_schema(df, name='yellow_taxi_data', con=engine))
 # In[14]:
 
 
-df.head(0)
+# df.head(0)
 
 
 # In[15]:
@@ -151,7 +147,7 @@ df_iter = pd.read_csv(
 # In[17]:
 
 
-df_iter
+# df_iter
 
 
 # In[18]:
