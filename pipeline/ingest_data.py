@@ -42,6 +42,7 @@ PG_PASSWORD = "root"
 PG_LOCALHOST = "localhost"
 PG_PORT = "5432"
 PG_DB = "ny_taxi"
+CHUNK_SZ = 100000
 
 # check if pandas exist
 pd.__file__
@@ -143,7 +144,7 @@ df_iter = pd.read_csv(
     dtype=DTYPE,
     parse_dates=PARSE_DATE,
     iterator=True,
-    chunksize=100000,
+    chunksize=CHUNK_SZ,
 )
 
 
