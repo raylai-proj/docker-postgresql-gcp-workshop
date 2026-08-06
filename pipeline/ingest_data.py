@@ -45,15 +45,44 @@ PG_DB = "ny_taxi"
 CHUNK_SZ = 100000
 TABLE_NAME = "yellow_taxi_data"
 
+def run():
+    df_iter = pd.read_csv(
+        DATA_SOURCE_PREFIX+DATA_VERSION,
+        dtype=DTYPE,
+        parse_dates=PARSE_DATE,
+        iterator=True,
+        chunksize=CHUNK_SZ,
+    )
+    # create sqlalchemy engine
+    engine = create_engine(f'{POSTGRES}://{PG_USER}:{PG_PASSWORD}@{PG_LOCALHOST}:{PG_PORT}/{PG_DB}')
+
+    # create empty table with schema only (column name + dtype)
+    first_trunk = next(df_iter)
+    first_trunk.head(0).to_sql(
+        name=TABLE_NAME,
+        con=engine,
+        if_exists='replace',
+    )
+
+    # insert chunk of data
+    for df_chunk in tqdm(df_iter):
+        df_chunk.to_sql(
+            name=TABLE_NAME,
+            con=engine,
+            if_exists='append'
+        )
+
+if __name__ == "__main__":
+    run()
 # check if pandas exist
 # pd.__file__
 
 # df = pd.read_csv(DATA_SOURCE_PREFIX+DATA_VERSION, nrows=100)
-df = pd.read_csv(
-    DATA_SOURCE_PREFIX+DATA_VERSION,
-    dtype=DTYPE,
-    parse_dates=PARSE_DATE,
-)
+# df = pd.read_csv(
+#     DATA_SOURCE_PREFIX+DATA_VERSION,
+#     dtype=DTYPE,
+#     parse_dates=PARSE_DATE,
+# )
 
 
 # In[5]:
@@ -102,18 +131,18 @@ df = pd.read_csv(
 # In[12]:
 
 
-# create sqlalchemy engine
-engine = create_engine(f'{POSTGRES}://{PG_USER}:{PG_PASSWORD}@{PG_LOCALHOST}:{PG_PORT}/{PG_DB}')
+# # create sqlalchemy engine
+# engine = create_engine(f'{POSTGRES}://{PG_USER}:{PG_PASSWORD}@{PG_LOCALHOST}:{PG_PORT}/{PG_DB}')
 
 
 # In[13]:
 
 
-# Ppreview SQL statement to create table
-# 1. get schema from dataframe df,
-# 2. get table name from name='yellow_taxi_data',
-# 3. generate "postgresql" statement based on con=engine where engine was created for postgresql database in docker
-print(pd.io.sql.get_schema(df, name='TABLE_NAME', con=engine))
+# # Ppreview SQL statement to create table
+# # 1. get schema from dataframe df,
+# # 2. get table name from name='yellow_taxi_data',
+# # 3. generate "postgresql" statement based on con=engine where engine was created for postgresql database in docker
+# print(pd.io.sql.get_schema(df, name=TABLE_NAME, con=engine))
 
 
 # In[14]:
@@ -125,24 +154,24 @@ print(pd.io.sql.get_schema(df, name='TABLE_NAME', con=engine))
 # In[15]:
 
 
-# create empty table with schema only (column name + dtype)
-df.head(0).to_sql(
-    name='TABLE_NAME',
-    con=engine,
-    if_exists='replace',
-)
+# # create empty table with schema only (column name + dtype)
+# df.head(0).to_sql(
+#     name=TABLE_NAME,
+#     con=engine,
+#     if_exists='replace',
+# )
 
 
 # In[16]:
 
 
-df_iter = pd.read_csv(
-    DATA_SOURCE_PREFIX+DATA_VERSION,
-    dtype=DTYPE,
-    parse_dates=PARSE_DATE,
-    iterator=True,
-    chunksize=CHUNK_SZ,
-)
+# df_iter = pd.read_csv(
+#     DATA_SOURCE_PREFIX+DATA_VERSION,
+#     dtype=DTYPE,
+#     parse_dates=PARSE_DATE,
+#     iterator=True,
+#     chunksize=CHUNK_SZ,
+# )
 
 
 # In[17]:
@@ -161,12 +190,12 @@ df_iter = pd.read_csv(
 # In[19]:
 
 
-for df_chunk in tqdm(df_iter):
-    df_chunk.to_sql(
-        name='TABLE_NAME',
-        con=engine,
-        if_exists='append'
-    )
+# for df_chunk in tqdm(df_iter):
+#     df_chunk.to_sql(
+#         name=TABLE_NAME,
+#         con=engine,
+#         if_exists='append'
+#     )
 
 
 # In[ ]:
