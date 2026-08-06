@@ -36,9 +36,12 @@ PARSE_DATE = [
     "tpep_dropoff_datetime"
 ]
 
-
-# In[3]:
-
+POSTGRES = "postgresql"
+PG_USER = "root"
+PG_PASSWORD = "root"
+PG_LOCALHOST = "localhost"
+PG_PORT = "5432"
+PG_DB = "ny_taxi"
 
 # check if pandas exist
 pd.__file__
@@ -102,7 +105,7 @@ len(df)
 
 
 # create sqlalchemy engine
-engine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')
+engine = create_engine(f'{POSTGRES}://{PG_USER}:{PG_PASSWORD}@{PG_LOCALHOST}:{PG_PORT}/{PG_DB}')
 
 
 # In[13]:
