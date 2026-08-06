@@ -43,6 +43,7 @@ PG_LOCALHOST = "localhost"
 PG_PORT = "5432"
 PG_DB = "ny_taxi"
 CHUNK_SZ = 100000
+TABLE_NAME = "yellow_taxi_data"
 
 # check if pandas exist
 # pd.__file__
@@ -112,7 +113,7 @@ engine = create_engine(f'{POSTGRES}://{PG_USER}:{PG_PASSWORD}@{PG_LOCALHOST}:{PG
 # 1. get schema from dataframe df,
 # 2. get table name from name='yellow_taxi_data',
 # 3. generate "postgresql" statement based on con=engine where engine was created for postgresql database in docker
-print(pd.io.sql.get_schema(df, name='yellow_taxi_data', con=engine))
+print(pd.io.sql.get_schema(df, name='TABLE_NAME', con=engine))
 
 
 # In[14]:
@@ -126,7 +127,7 @@ print(pd.io.sql.get_schema(df, name='yellow_taxi_data', con=engine))
 
 # create empty table with schema only (column name + dtype)
 df.head(0).to_sql(
-    name='yellow_taxi_data',
+    name='TABLE_NAME',
     con=engine,
     if_exists='replace',
 )
@@ -162,7 +163,7 @@ df_iter = pd.read_csv(
 
 for df_chunk in tqdm(df_iter):
     df_chunk.to_sql(
-        name='yellow_taxi_data',
+        name='TABLE_NAME',
         con=engine,
         if_exists='append'
     )
