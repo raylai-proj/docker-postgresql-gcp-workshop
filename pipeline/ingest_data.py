@@ -3,16 +3,16 @@
 
 
 
+import click
 import pandas as pd
 from sqlalchemy import create_engine
 from tqdm.auto import tqdm
 
+YEAR = 2021
+MONTH = 1
 
-YEAR = "2021"
-MONTH = "01"
-
-DATA_SOURCE_PREFIX = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
-DATA_VERSION = f'yellow_tripdata_{YEAR}-{MONTH}.csv.gz'
+DATA_SOURCE_PREFIX = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow'
+# DATA_VERSION = f'yellow_tripdata_{YEAR:04d}-{MONTH:02d}.csv.gz'
 DTYPE = {
     "VendorID": "Int64",
     "passenger_count": "Int64",
@@ -39,27 +39,41 @@ PARSE_DATE = [
 POSTGRES = "postgresql"
 PG_USER = "root"
 PG_PASSWORD = "root"
-PG_LOCALHOST = "localhost"
+PG_HOST = "localhost"
 PG_PORT = "5432"
 PG_DB = "ny_taxi"
 CHUNK_SZ = 100000
 TARGET_TABLE = "yellow_taxi_data"
 
-def run():
+@click.command()
+@click.option('--pg-user', default=PG_USER, help='PostgreSQL user')
+@click.option('--pg-pass', default=PG_PASSWORD, help='PostgreSQL password')
+@click.option('--pg-host', default=PG_HOST, help='PostgreSQL host')
+@click.option('--pg-port', default=PG_PORT, help='PostgreSQL port')
+@click.option('--pg-db', default=PG_DB, help='PostgreSQL database name')
+@click.option('--year', default=YEAR, help='Year of the data')
+@click.option('--month', default=MONTH, type=int, help='Month of the data')
+@click.option('--chunksize', default=CHUNK_SZ, type=int, help='Chunk size for ingestion')
+@click.option('--target-table', default=TARGET_TABLE, help='Target table name')
+def run(pg_user, pg_pass, pg_host, pg_port, pg_db, year, month, chunksize, target_table):
+
+    url_prefix = DATA_SOURCE_PREFIX
+    url = f'{url_prefix}/yellow_tripdata_{year:04d}-{month:02d}.csv.gz'
+    # create sqlalchemy engine
+    engine = create_engine(f'{POSTGRES}://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}')
+
     df_iter = pd.read_csv(
-        DATA_SOURCE_PREFIX+DATA_VERSION,
+        url,
         dtype=DTYPE,
         parse_dates=PARSE_DATE,
         iterator=True,
-        chunksize=CHUNK_SZ,
+        chunksize=chunksize,
     )
-    # create sqlalchemy engine
-    engine = create_engine(f'{POSTGRES}://{PG_USER}:{PG_PASSWORD}@{PG_LOCALHOST}:{PG_PORT}/{PG_DB}')
 
     # create empty table with schema only (column name + dtype)
     first_trunk = next(df_iter)
     first_trunk.head(0).to_sql(
-        name=TARGET_TABLE,
+        name=target_table,
         con=engine,
         if_exists='replace',
     )
@@ -73,7 +87,7 @@ def run():
     # insert chunk of data
     for df_chunk in tqdm(df_iter):
         df_chunk.to_sql(
-            name=TARGET_TABLE,
+            name=target_table,
             con=engine,
             if_exists='append'
         )
