@@ -64,6 +64,12 @@ def run():
         if_exists='replace',
     )
 
+    first_trunk.to_sql(
+        name=target_table,
+        con=engine,
+        if_exists='append',
+    )
+
     # insert chunk of data
     for df_chunk in tqdm(df_iter):
         df_chunk.to_sql(
