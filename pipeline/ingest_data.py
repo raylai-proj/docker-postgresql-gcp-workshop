@@ -43,7 +43,7 @@ PG_LOCALHOST = "localhost"
 PG_PORT = "5432"
 PG_DB = "ny_taxi"
 CHUNK_SZ = 100000
-TABLE_NAME = "yellow_taxi_data"
+TARGET_TABLE = "yellow_taxi_data"
 
 def run():
     df_iter = pd.read_csv(
@@ -59,7 +59,7 @@ def run():
     # create empty table with schema only (column name + dtype)
     first_trunk = next(df_iter)
     first_trunk.head(0).to_sql(
-        name=TABLE_NAME,
+        name=TARGET_TABLE,
         con=engine,
         if_exists='replace',
     )
@@ -67,7 +67,7 @@ def run():
     # insert chunk of data
     for df_chunk in tqdm(df_iter):
         df_chunk.to_sql(
-            name=TABLE_NAME,
+            name=TARGET_TABLE,
             con=engine,
             if_exists='append'
         )
@@ -142,7 +142,7 @@ if __name__ == "__main__":
 # # 1. get schema from dataframe df,
 # # 2. get table name from name='yellow_taxi_data',
 # # 3. generate "postgresql" statement based on con=engine where engine was created for postgresql database in docker
-# print(pd.io.sql.get_schema(df, name=TABLE_NAME, con=engine))
+# print(pd.io.sql.get_schema(df, name=TARGET_TABLE, con=engine))
 
 
 # In[14]:
@@ -156,7 +156,7 @@ if __name__ == "__main__":
 
 # # create empty table with schema only (column name + dtype)
 # df.head(0).to_sql(
-#     name=TABLE_NAME,
+#     name=TARGET_TABLE,
 #     con=engine,
 #     if_exists='replace',
 # )
@@ -192,7 +192,7 @@ if __name__ == "__main__":
 
 # for df_chunk in tqdm(df_iter):
 #     df_chunk.to_sql(
-#         name=TABLE_NAME,
+#         name=TARGET_TABLE,
 #         con=engine,
 #         if_exists='append'
 #     )
