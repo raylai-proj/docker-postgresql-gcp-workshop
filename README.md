@@ -397,6 +397,17 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
      3. `nbconvert` is the tool for Notebook Convert.
      4. `--to=script` is a flag of nbconvert to export input file as a python script.
      5. `notebook.ipynb` is the input file name.
+## Rename python script
+`mv notebook.py ingest_data.py`
+1. Syntax: `mv [source] [destination]`
+2. `mv` can be both rename and move file:
+   1. If destination is a new file name => rename<br >
+      `mv notebook.py ingest_data.py`
+   2. If destination is an exist directory => move<br >
+      `mv notebook.py /src/scripts/`
+   3. If destination is exist directory + new file name => move + rename<br >
+      `mv notebook.py /src/scripts/ingest_data.py`
+
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
