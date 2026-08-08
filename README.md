@@ -407,7 +407,37 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
       `mv notebook.py /src/scripts/`
    3. If destination is exist directory + new file name => move + rename<br >
       `mv notebook.py /src/scripts/ingest_data.py`
-
+## Use `click` to parse the arguments:
+1. uv add click into dependency: `uv add click`
+2. code:
+   ```python
+   import click
+   
+   @click.command()
+   @click.option('--pg-user', default='root', help='PostgreSQL username')
+   @click.option('--pg-pass', default='root', help='PostgreSQL password')
+   @click.option('--pg-host', default='localhost', help='PostgreSQL host')
+   @click.option('--pg-port', default='5432', help='PostgreSQL port')
+   @click.option('--pg-db', default='ny_taxi', help='PostgreSQL database name')
+   @click.option('--year', default=2021, type=int, help='Year of the data')
+   @click.option('--month', default=1, type=int, help='Month of the data')
+   @click.option('--chunksize', default=100000, type=int, help='Chunk size for ingestion')
+   @click.option('--target-table', default='yellow_taxi_data', help='Target table name')
+   def main(pg_user, pg_pass, pg_host, pg_port, pg_db, year, month, chunksize, target_table):
+   ```
+3. terminal execute:
+   ```bash
+   uv run python ingest_data.py \
+   --pg-user=root \
+   --pg-pass=root \
+   --pg-host=localhost \
+   --pg-port=5432 \
+   --pg-db=ny_taxi \
+   --target-table=yellow_taxi_trips \
+   --year=2021 \
+   --month=1 \
+   --chunksize=100000
+   ```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
