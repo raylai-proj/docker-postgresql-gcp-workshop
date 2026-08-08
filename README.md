@@ -330,7 +330,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
       if_exists='replace',
    )
    ```
-   10. I want to insert data in batches, so I downloaded data with chunksize to get dataframe iterater (dtype=TextFileReader)
+   10. I want to insert data in batches, so I downloaded data with chunksize to get dataframe iterator (dtype=TextFileReader)
    ```
    df_iter = pd.read_csv(
       DATA_SOURCE_PREFIX+DATA_VERSION,
@@ -340,6 +340,41 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
       chunksize=100000,
    )
    ```
+   - Lesson learned:
+     - Issue: first trunk of data missed.
+         ```
+         df_iter = pd.read_csv(
+            url,
+            dtype=DTYPE,
+            parse_dates=PARSE_DATE,
+            iterator=True,
+            chunksize=chunksize,
+         )
+      
+          # create empty table with schema only (column name + dtype)
+          first_trunk = next(df_iter)
+          first_trunk.head(0).to_sql(
+              name=target_table,
+              con=engine,
+              if_exists='replace',
+          )
+          # insert chunk of data
+          for df_chunk in tqdm(df_iter):
+              df_chunk.to_sql(
+                  name=target_table,
+                  con=engine,
+                  if_exists='append'
+         )
+         ```
+      - Reason: `pd.read_csv(..., iterator=True)` returns an iterator, which <ins>only moves forward and never resets</ins>. After `first_trunk = next(df_iter)`, `df_iter` already move forward 1 trunk. Therefore, `for df_chunk in tqdm(df_iter):` starts from <ins>second trunk of data</ins>.
+      - Fix: Add first trunk of data `.to_sql` additionally.
+         ```
+         first_trunk.to_sql(
+            name=target_table,
+            con=engine,
+            if_exists='append',
+         )
+         ```
    11. Install tqdm, and from tqdm.auto import tqdm to see progress of inserting data
    ```
    !uv add tqdm
