@@ -388,6 +388,15 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
          if_exists='append'
       )
    ```
+## Convert jupyter notebook to python script
+1. Jupyter notebook provides early stage data pipeline prototyping by interactive platform. When pipeline development almost done, I tend to convert Jupyter notebook to python script for production phase.
+2. Jupyter notebook is <ins>plain text file as a JSON object</inns> and should be converted into python script for production.
+3. Syntax: `uv run jupyter nbconvert --to=script notebook.ipynb`
+     1. uv run command `jupyter nbconvert --to=script notebook.ipynb` to convert `notebook.ipynb` to python script.
+     2. `jupyter` is the entry point for Jupyter package.
+     3. `nbconvert` is the tool for Notebook Convert.
+     4. `--to=script` is a flag of nbconvert to export input file as a python script.
+     5. `notebook.ipynb` is the input file name.
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
