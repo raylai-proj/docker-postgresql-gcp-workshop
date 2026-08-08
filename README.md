@@ -438,6 +438,30 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    --month=1 \
    --chunksize=100000
    ```
+### Verify Data in pgcli:
+1. Start pgcli: `uv run pgcli -h localhost -p 5432 -u root -d ny_taxi`
+2. verify data in postgreSQL: 
+```sql
+SELECT COUNT(*)
+FROM yellow_taxi_data;
+-- Count records
+
+SELECT *
+FROM yellow_taxi_data
+LIMIT 10;
+-- View sample data
+
+SELECT
+   DATE(tpep_pickup_datetime) AS pickup_date,
+   COUNT(*) as trips_count,
+   AVG(total_amount) AS avg_amount
+FROM
+   yellow_taxi_data
+GROUP BY DATE(tpep_pickup_datetime)
+ORDER BY pickup_date;
+-- Sample Analytics
+```
+
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
