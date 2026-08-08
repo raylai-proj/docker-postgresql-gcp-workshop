@@ -62,6 +62,8 @@ uv is a python package manager, like pip<br >
   3. To create <ins>.venv</ins> folder: uv will create .venv folder for activate virtual environment when either<br >
     1. when the first time run `uv run python pipeline.py` to execute file.<br >
     2. or when the first time run `uv add pandas pyarrow` to install library in venv.<br >
+  4. uv lesson learned:
+     1. `uv run python --version` means: uv execute command <ins>inside the project virtual environment</ins>.
 ### Python intepreter selection<br >
 To change python intepreter in vs code:<br >
   1. `uv run which python` in folder and copy `python directory`<br >
@@ -172,5 +174,297 @@ COPY pipeline.py pipeline.py
 # define first command when run container
 ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
 ```
+## Run postgreSQL on Docker:<br >
+1. Q: Why Docker can run PostgreSQL without installation?<br >
+   A: Docker has library Docker Hub which includes <ins>PostgreSQL image</ins>, so Docker can run PostgreSQL without installation.<br >
+2. Terminal run Docker container with PostgreSQL database:
+3. ```
+   docker run -it --rm \
+   -e POSTGRES_USER="root" \
+   -e POSTGRES_PASSWORD="root" \
+   -e POSTGRES_DB="ny_taxi" \
+   -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql \
+   -p 5432:5432 \
+   postgres:18
+   ```
+   1. `-e` = set environment variables, e.g. `POSTGRES_USER=<username>`, `POSTGRES_PASSWORD=<password>`, `PROSGRES_DB=<database name>`
+   2. `-v` = create a volume, syntax: `-v [folder in host machine]:[folder in container]`
+      1. 5W1H Docker Volume:
+         1. What is Docker Volume? Docker Volume is a persistent exist folder to map to container and let postgres store data on host machine.
+         2. Why we use Docker Volume? To prevent postgres store data in container because the data will disappear if the container updated, stopped, or deleted.
+         3. Who use Docker Volume? Data engineer (to store data as local data warhouse), DevOps (to store log data, application states, configuration data for deployment)
+         4. When we use Docker Volume? When we need application "always remember data" over time (called stateful application)
+         5. Where to store Docker Volume? local host machine: `$(pwd)/[folder_name]`, inside container: `/var/lib/postgresql/data` (local host machine will create new folder if not exist)
+         6. How does docker volume work? Docker volume setup the local host machine directory, so everytime when postgreSQL save data inside container, the docker intercept it and save data to the local host machine directory.
+   3. `-p` = map host port to container port, syntax: `-p [host port]:[container port]`, when setup `pgcli`, use <ins>host port</ins>
+   4. `postgres:18` = use PostgreSQL version 18
+   5. lesson learned:
+      1. Issue: `/var/lib/postgresql/data` vs. `/var/lib/postgresql` (note: postgres:18+ upgrade and only require `/var/lib/postgresql`, no /data refer<sub>[1]</sub>
+      2. Explain: `/var/lib/postgresql/data` is the default folder where postgresql store data. `/var/lib/postgresql` is the parent folder also include /data folder, so docker will create a `/data` folder in local machine folder.
+      3. Reason to use `/var/lib/postgresql/data`:
+         1. Precision, to only store data from PostgreSQL and exclude server log and configurations
+         2. Avoid Permission Conflict, if set volume from `/var/lib/postgresql`, it may trigger permission conflict when other system try to write into `/var/lib/postgresql`
+      4. Final solution: Since PosgreSQL officially upgrade and now only require `/var/lib/postgresql` in `-v`<sub>[1]</sub>
+## Run pgcli for Postgres<br >
+1. add pgcli in development dependencies: `uv add --dev pgcli`
+2. run pgcli and link to Postgres: `uv run pgcli -h localhost -p 5432 -u root -d ny_taxi`
+3. 5W1H pgcli:
+   1. What is pgcli? pgcli is postgresql command line tool
+   2. Why use pgcli? pgcli has auto-completion and syntax highlight to reduce typo and speed up querying, which psql doesn't have these features.
+   3. Who use pgcli? Data engineer & analyst to query database.
+   4. When use pgcli? Development & Debugging to verify pipeline successfully run, check schema definitions, or test queries.
+   5. Where does pgcli live? pgcli live on local host machine, not in docker container.
+   6. How to use pgcli to connect postgreSQL in docker container?
+      1. `pgcli -h localhost -p 5432 -u root -d ny_taxi`
+      2. syntax: `pgcli -h [the host] -p [local machine port] -u [postgres username] -d [postgres database name]`
+      3. Because `[the host]` for pgcli is local machine, so it's `-h localhost`
+4. Lesson learned:
+   1. Issue: To turn on Multiline in pgcli, press F3. vs code has keyword binding F3 = search in terminal, so press F3 won't turn on Multiline in pgcli.
+   2. Solution:
+      1. Ctrl+k then Ctrl+s to open keyboard shortcut
+      2. Search for terminal.find
+      3. Change keybinding from F3 to ctrl+shift+f
+      4. Restart vs code, and restart pgcli, then press F3 to turn on Multiline.
+5. Lesson learned: `uv add --dev pgcli` means: uv add pgcli in dev group <ins>inside the project virtual environment</ins>.
+## Quick PostgreSQL Demo:
+```
+\dt
+--   List tables
+
+CREATE TABLE test (
+   id INTEGER,
+   name VARCHAR(50)
+);
+--   Create a test table with schema
+
+INSERT INTO test VALUES(
+   1, 'Hello Docker'
+);
+--   Insert data
+
+\q
+--   exit pgcli = ctrl+D
+```
+## Jupyter notebook
+To retrieve and preprocess data, we execute Jupyter notebook, process data, and pass the processed data to PostgreSQL.
+1. Jupyter notebook setup:
+   1. Install Jupyter: `uv add --dev jupyter`
+   2. Create a Jupyter notebook: `uv run jupyter notebook`
+2. Jupyter notebook code:
+   1. import dependencies:
+   ```
+   import pandas as pd
+   from sqlalchemy import create_engine
+   from tqdm.auto import tqdm
+   ```
+   2. Define Macro to download and normalize data type in schema
+   ```
+   # Macro for download data
+   DATA_SOURCE_PREFIX = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
+   DATA_VERSION = 'yellow_tripdata_2021-01.csv.gz'
+   # Macro for correct schema's data type
+   DTYPE = {
+      "VendorID": "Int64",
+       "passenger_count": "Int64",
+       "trip_distance": "Float64",
+       "RatecodeID": "Int64",
+       "store_and_fwd_flag": "str",
+       "PULocationID": "Int64",
+       "DOLocationID": "Int64",
+       "payment_type": "Int64",
+       "fare_amount": "Float64",
+       "extra": "Float64",
+       "mta_tax": "Float64",
+       "tip_amount": "Float64",
+       "tolls_amount": "Float64",
+       "improvement_surcharge": "Float64",
+       "total_amount": "Float64",
+       "congestion_surcharge": "Float64",
+   }
+   PARSE_DATE = [
+      "tpep_pickup_datetime",
+      "tpep_dropoff_datetime"
+   ]
+   ```
+   3. Double check if pandas exist
+   ```
+   pd.__file__
+   ```
+   4. Download ny_taxi data
+   ```
+   df = pd.read_csv(DATA_SOURCE_PREFIX+DATA_VERSION)
+   ```
+   5. I found out the data type in "VendorID", "tpep_pickup_datetime", "tpep_dropoff_datetime" are incorrect. The "VendorID" should be Int64, not float, and "tpep_pickup_datetime", "tpep_dropoff_datetime" should be datetime, not string, so I used Macro to download data again with data type specified.
+   ```
+   df = pd.read_csv(
+      DATA_SOURCE_PREFIX+DATA_VERSION,
+      dtype=DTYPE,
+      parse_dates=PARSE_DATE,
+   )
+   ```
+   6. Then, I want to pass preprocessed data to postgres. For that, I installed SQLAlchemy.
+   ```
+   In jupyter notebook, use uv to add dependencies: SQLAIchemy, psycopg2-binary
+   !uv add sqlalchemy
+   !uv add psycopg2-binary
+   ```
+   7. To insert data into postgres: Setup sqlalchemy engine to connect local postgres database.
+   syntax: `sqlalchemy.create_engine('<postgresql>://<username>:<password>@<host>:<port>/<database>')`
+   ```
+   # setup sqlalchemy engine
+   engine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')
+   ```
+   8. Preview SQL statement to create table.
+   ```
+   # 1. get schema from dataframe df,
+   # 2. get table name from name='yellow_taxi_data',
+   # 3. generate "postgresql" statement based on con=engine where engine was created for postgresql database in docker
+   print(pd.io.sql.get_schema(df, name='yellow_taxi_data', con=engine))
+   ```
+   9. Create empty table with schema only (column name + dtype)
+   ```
+   # df.head(0) return only column names and data types (=schema)
+   df.head(0).to_sql(
+      name='yellow_taxi_data',
+      con=engine,
+      if_exists='replace',
+   )
+   ```
+   10. I want to insert data in batches, so I downloaded data with chunksize to get dataframe iterator (dtype=TextFileReader)
+   ```
+   df_iter = pd.read_csv(
+      DATA_SOURCE_PREFIX+DATA_VERSION,
+      dtype=DTYPE,
+      parse_dates=PARSE_DATE,
+      iterator=True,
+      chunksize=100000,
+   )
+   ```
+   - Lesson learned:
+     - Issue: first trunk of data missed.
+         ```
+         df_iter = pd.read_csv(
+            url,
+            dtype=DTYPE,
+            parse_dates=PARSE_DATE,
+            iterator=True,
+            chunksize=chunksize,
+         )
+      
+          # create empty table with schema only (column name + dtype)
+          first_trunk = next(df_iter)
+          first_trunk.head(0).to_sql(
+              name=target_table,
+              con=engine,
+              if_exists='replace',
+          )
+          # insert chunk of data
+          for df_chunk in tqdm(df_iter):
+              df_chunk.to_sql(
+                  name=target_table,
+                  con=engine,
+                  if_exists='append'
+         )
+         ```
+      - Reason: `pd.read_csv(..., iterator=True)` returns an iterator, which <ins>only moves forward and never resets</ins>. After `first_trunk = next(df_iter)`, `df_iter` already move forward 1 trunk. Therefore, `for df_chunk in tqdm(df_iter):` starts from <ins>second trunk of data</ins>.
+      - Fix: Add first trunk of data `.to_sql` additionally.
+         ```
+         first_trunk.to_sql(
+            name=target_table,
+            con=engine,
+            if_exists='append',
+         )
+         ```
+   11. Install tqdm, and from tqdm.auto import tqdm to see progress of inserting data
+   ```
+   !uv add tqdm
+   ```
+   12. Finally, I pass data into postgres database
+   ```
+   for df_chunk in tqdm(df_iter):
+      df_chunk.to_sql(
+         name='yellow_taxi_data',
+         con=engine,
+         if_exists='append'
+      )
+   ```
+## Convert jupyter notebook to python script
+1. Jupyter notebook provides early stage data pipeline prototyping by interactive platform. When pipeline development almost done, I tend to convert Jupyter notebook to python script for production phase.
+2. Jupyter notebook is <ins>plain text file as a JSON object</inns> and should be converted into python script for production.
+3. Syntax: `uv run jupyter nbconvert --to=script notebook.ipynb`
+     1. uv run command `jupyter nbconvert --to=script notebook.ipynb` to convert `notebook.ipynb` to python script.
+     2. `jupyter` is the entry point for Jupyter package.
+     3. `nbconvert` is the tool for Notebook Convert.
+     4. `--to=script` is a flag of nbconvert to export input file as a python script.
+     5. `notebook.ipynb` is the input file name.
+## Rename python script
+`mv notebook.py ingest_data.py`
+1. Syntax: `mv [source] [destination]`
+2. `mv` can be both rename and move file:
+   1. If destination is a new file name => rename<br >
+      `mv notebook.py ingest_data.py`
+   2. If destination is an exist directory => move<br >
+      `mv notebook.py /src/scripts/`
+   3. If destination is exist directory + new file name => move + rename<br >
+      `mv notebook.py /src/scripts/ingest_data.py`
+## Use `click` to parse the arguments:
+1. uv add click into dependency: `uv add click`
+2. code:
+   ```python
+   import click
+   
+   @click.command()
+   @click.option('--pg-user', default='root', help='PostgreSQL username')
+   @click.option('--pg-pass', default='root', help='PostgreSQL password')
+   @click.option('--pg-host', default='localhost', help='PostgreSQL host')
+   @click.option('--pg-port', default='5432', help='PostgreSQL port')
+   @click.option('--pg-db', default='ny_taxi', help='PostgreSQL database name')
+   @click.option('--year', default=2021, type=int, help='Year of the data')
+   @click.option('--month', default=1, type=int, help='Month of the data')
+   @click.option('--chunksize', default=100000, type=int, help='Chunk size for ingestion')
+   @click.option('--target-table', default='yellow_taxi_data', help='Target table name')
+   def main(pg_user, pg_pass, pg_host, pg_port, pg_db, year, month, chunksize, target_table):
+   ```
+3. terminal execute:
+   ```bash
+   uv run python ingest_data.py \
+   --pg-user=root \
+   --pg-pass=root \
+   --pg-host=localhost \
+   --pg-port=5432 \
+   --pg-db=ny_taxi \
+   --target-table=yellow_taxi_trips \
+   --year=2021 \
+   --month=1 \
+   --chunksize=100000
+   ```
+### Verify Data in pgcli:
+1. Start pgcli: `uv run pgcli -h localhost -p 5432 -u root -d ny_taxi`
+2. verify data in postgreSQL: 
+```sql
+SELECT COUNT(*)
+FROM yellow_taxi_data;
+-- Count records
+
+SELECT *
+FROM yellow_taxi_data
+LIMIT 10;
+-- View sample data
+
+SELECT
+   DATE(tpep_pickup_datetime) AS pickup_date,
+   COUNT(*) as trips_count,
+   AVG(total_amount) AS avg_amount
+FROM
+   yellow_taxi_data
+GROUP BY DATE(tpep_pickup_datetime)
+ORDER BY pickup_date;
+-- Sample Analytics
+```
+
+## Reference<br >
+1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
+
+
 
 
