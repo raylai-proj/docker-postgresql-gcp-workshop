@@ -640,8 +640,27 @@ Docker Compose let me run multiple docker containers in the same time.
   docker-compose down
   # shut down docker compose
   ```
-
-
+## Ingest data again
+1. To rerun `ingest_data.py`, I have to check which docker network is used by docker compose:
+   ```Bash
+   docker network ls
+   # check new docker network created by docker compose
+   ```
+2. The docker network created by docker compose follow naming standard `<current folder name>_default`. Since current folder is `pipeline`, the docker network is `pipeline_default`. So I modify command from `--network=pg-network` to `--network=pipeline_default`.
+   ```Bash
+   docker run -it --rm \
+   --network=pipeline_default \
+   taxi_ingest:v001 \
+   --pg-user=root \
+   --pg-pass=root \
+   --pg-host=pgdatabase \
+   --pg-port=5432 \
+   --pg-db=ny_taxi \
+   --target-table=yellow_taxi_data \
+   --year=2021 \
+   --month=1 \
+   --chunksize=100000
+   ```
 
 
 ## Reference<br >
