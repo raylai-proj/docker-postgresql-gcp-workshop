@@ -478,6 +478,10 @@ docker run -it \
 2. Lesson learned: There are <ins>Two type</ins> of volume:
    1. <ins>pgadmin_data</ins>:/var/lib/pgadmin: <ins>Named Volume</ins>: only <ins>provide volume name</ins>, and docker store data inside internal file system. Reason to use Named Volume: Only need docker hold application setting/preference.
    2. <ins>$(pwd)/ny_taxi_data</ins>:/var/lib/postgresql: <ins>Bind Mount</ins>: volume binds a specific folder in localhost machine , and docker store data inside local folder.
+3. Question: Why `dpage/pgadmin4` instead of `pgadmin4`, like `postgres:18`?
+   - Answer: There are 2 type of Images:
+     1. Official Image: Docker maintain a set of official images which I can run with their <ins>single name</ins>, e.g. postgres, python, ubuntu...etc.
+     2. Third-party Image: Third-party companies publish image follow standard format `<username>/<repository_name>`, e.g. <ins>dpage</ins> is third-party username of Dave Page which publish tool pgAdmin, and <ins>pgadmin4</ins> is the specific repository name contain pgAdmin 4 image. 
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
