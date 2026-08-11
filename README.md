@@ -535,6 +535,62 @@ The postgres container and pgAdmin container are isolated, means pgAdmin can't s
            - Username: root
            - Password: root
       5. Save
+## Dockerizing the Ingestion Script (add ingest_data.py into Dockerfile)
+To add ingest_data.py in Dockerfile and run to ingest ny taxi data into postgres, all I need to do is to change the last 2 lines of Dockerfile:
+### Edit Dockerfile:
+```dockerfile
+# copy source code
+COPY ingest_data.py ingest_data.py
+
+# define first command when run container
+ENTRYPOINT ["python", "ingest_data.py"]
+```
+Because all dependencies are in pyproject.toml and uv.lock which is already included above: `COPY "pyproject.toml" "uv.lock" ".python-version" ./`, I only have to change the source code copy and entrypoint editing.<br >
+1. Question: Which parameter of `docker run` command specify using Dockerfile?
+   - Answer:
+     1. `docker run` specify <ins>docker image</ins> <name>:<tag>, e.g. data_ingest:v001. `docker run` doesn't specify Dockerfile.
+     2. `docker build` automatically use <ins>local Dockerfile</ins>, e.g. `docker build -t taxi_ingest:v001 .`
+2. Question: Explain: Multi-stage build pattern copies uv from official image
+   - Answer: The image created by docker build includes multi-stage pattern copies and dependency installed in Dockerfile.
+3. Question: Explain: Copying dependency files before code improves Docker layer caching
+   - Answer: Dockerfile is layer caching, means only rerun the update lines and <ins>the lines under update line</ins>. Because `COPY ingest_data.py ingest_data.py` at the bottom line, `docker build` can skip above lines and only rerun the very bottom 2 lines.
+### Build the Docker Image
+```bash
+docker build -t taxi_ingest:v001 .
+```
+### Run Containized Ingestion
+```bash
+docker run -it \
+  --network=pg-network \
+  taxi_ingest:v001 \
+  --pg-user=root \
+  --pg-pass=root \
+  --pg-host=pgdatabase \
+  --pg-port=5432 \
+  --pg-db=ny_taxi \
+  --target-table=yellow_taxi_trips_2021_1 \
+  --year=2021 \
+  --month=1 \
+  --chunksize=100000
+```
+1. Question: why `--network=pg-network` goes before the image `taxi_ingest:v001`?
+   Answer: `--network` have to go before docker image name:
+   ```
+   --network=pg-network \ 
+   taxi_ingest:v001 \
+
+   --network=pg-network \
+   --name=pgdatabase
+   postgres:18
+
+   --network=pg-network \
+   --name=pgadmin \
+   dpage/pgadmin4
+   ```
+2. Question: Why `--pg-host=pgdatabase`, not `--pg-host=localhost`?
+   Answer: Because docker postgres in pg-network called pgdatabase, `docker run taxi_ingest:v001` have to specify `--pg-host=pgdatabase` not localhost to ingest data to postgres in pg-network.
+
+
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
