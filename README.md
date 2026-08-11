@@ -493,6 +493,48 @@ The postgres container and pgAdmin container are isolated, means pgAdmin can't s
    docker network rm pg-network
    # Remove pg-network from docker network
    ```
+2. First, create a docker network:
+   ```bash
+   docker network create pg-network
+   ```
+3. To connect pgAdmin to postgres, we need to rerun pgAdmin and postgres containers and add docker network variables:
+   1. Rerun Postgres on docker network in one terminal:
+      ```bash
+      docker run -it \
+      -e POSTGRES_USER="root" \
+      -e POSTGRES_PASSWORD="root" \
+      -e POSTGRES_DB="ny_taxi" \
+      -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql \
+      -p 5432:5432 \
+      --network=pg-network \
+      --name pgdatabase \
+      postgres:18
+      ```
+      - Question: What does `pgdatabase` mean in `--network=pg-network \ --name pgdatabase \`?
+      - Answer: `--name pgdatabase` is the name of postgres in pg-network. When pgAdmin want to connect postgres in pg-network, I set host as pgdatabase in pgAdmin.
+   2. Run pgAdmin on the same docker network in another terminal:
+      ```bash
+      docker run -it \
+      -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+      -e PGADMIN_DEFAULT_PASSWORD="root" \
+      -v pgadmin_data:/var/lib/pgadmin \
+      -p 8085:80 \
+      --network=pg-network \
+      --name pgadmin \
+      dpage/pgadmin4
+      ```
+   3. Connecting setting for pgAdmin to PostgreSQL database:
+      1. Click <ins>Port</ins> in vs code, click <ins>Add Port</ins>, and type in <ins>8085</ins>
+      2. Login with email: <ins>admin@admin.com</ins>, password: <ins>root</ins>
+      3. Right-click "Servers" → Register → Server
+      4. Configure server pgAdmin to connect database in postgres container:
+         - General tab: Name: Local Docker
+         - Connection tab:
+           - Host: pgdatabase (the postgres container name in docker network (pg-network))
+           - Port: 5432
+           - Username: root
+           - Password: root
+      5. Save
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
