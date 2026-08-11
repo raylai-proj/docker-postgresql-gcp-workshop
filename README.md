@@ -1,6 +1,6 @@
 # docker-postgresql-gcp-workshop
 Workshop Codespaces
-## docker<br >
+## docker<sub>[1]</sub><br >
 1. docker is a containerization software, means can create container to let us isolate software like simple version of virtual machines.<br >
 2. `docker` vs. `.venv`:
    1. `.venv` have same os as system, only different in `Python version` and `dependencies`<br >
@@ -42,7 +42,7 @@ Workshop Codespaces
     2. when local files change, it change in container immediately, so we don't need to exit, edit file, and rerun a new container<br >
   - <ins>Volume</ins> in CS means data storage unit, we use <ins>Volume</ins> means it is independent from container, and <ins>Volume Mount</ins> means we mount data storage unit from local to container<br >
   - To keep code organized, we use <ins>/app</ins> or <ins>/src</ins> to link local directory, e.g. `-v $(pwd)/test:/app/test`<br >
-## Venv and Data Pipeline<br >
+## Venv and Data Pipeline<sub>[2]</sub><br >
 ### sys.argv<br >
 ```
 import sys
@@ -75,7 +75,7 @@ To change python intepreter in vs code:<br >
 ### Include <ins>parquet</ins> file in .gitignore<br >
 1. I can add `*.parquet` in .gitignore (whereever in file)<br >
 2. Wait for .parquet file to turn gray, means git exclude it in record.<br >
-## Dockerfile<br >
+## Dockerfile<sub>[3]</sub><br >
 ### 5W1H<br >
 1. What is Dockerfile: Dockerfile is a <ins>text document</ins> contains script of instructions for building a Docker image.<br >
 2. Why do we use Dockerfile:<br >
@@ -174,11 +174,11 @@ COPY pipeline.py pipeline.py
 # define first command when run container
 ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
 ```
-## Run postgreSQL on Docker:<br >
+## Run postgreSQL on Docker<sub>[4]</sub><br >
 1. Q: Why Docker can run PostgreSQL without installation?<br >
    A: Docker has library Docker Hub which includes <ins>PostgreSQL image</ins>, so Docker can run PostgreSQL without installation.<br >
 2. Terminal run Docker container with PostgreSQL database:
-3. ```
+3. ```Bash
    docker run -it --rm \
    -e POSTGRES_USER="root" \
    -e POSTGRES_PASSWORD="root" \
@@ -199,12 +199,12 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
    3. `-p` = map host port to container port, syntax: `-p [host port]:[container port]`, when setup `pgcli`, use <ins>host port</ins>
    4. `postgres:18` = use PostgreSQL version 18
    5. lesson learned:
-      1. Issue: `/var/lib/postgresql/data` vs. `/var/lib/postgresql` (note: postgres:18+ upgrade and only require `/var/lib/postgresql`, no /data refer<sub>[1]</sub>
+      1. Issue: `/var/lib/postgresql/data` vs. `/var/lib/postgresql` (note: postgres:18+ upgrade and only require `/var/lib/postgresql`, no /data refer<sub>[5]</sub>
       2. Explain: `/var/lib/postgresql/data` is the default folder where postgresql store data. `/var/lib/postgresql` is the parent folder also include /data folder, so docker will create a `/data` folder in local machine folder.
       3. Reason to use `/var/lib/postgresql/data`:
          1. Precision, to only store data from PostgreSQL and exclude server log and configurations
          2. Avoid Permission Conflict, if set volume from `/var/lib/postgresql`, it may trigger permission conflict when other system try to write into `/var/lib/postgresql`
-      4. Final solution: Since PosgreSQL officially upgrade and now only require `/var/lib/postgresql` in `-v`<sub>[1]</sub>
+      4. Final solution: Since PosgreSQL officially upgrade and now only require `/var/lib/postgresql` in `-v`<sub>[5]</sub>
 ## Run pgcli for Postgres<br >
 1. add pgcli in development dependencies: `uv add --dev pgcli`
 2. run pgcli and link to Postgres: `uv run pgcli -h localhost -p 5432 -u root -d ny_taxi`
@@ -227,7 +227,7 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
       4. Restart vs code, and restart pgcli, then press F3 to turn on Multiline.
 5. Lesson learned: `uv add --dev pgcli` means: uv add pgcli in dev group <ins>inside the project virtual environment</ins>.
 ## Quick PostgreSQL Demo:
-```
+```sql
 \dt
 --   List tables
 
@@ -245,20 +245,20 @@ INSERT INTO test VALUES(
 \q
 --   exit pgcli = ctrl+D
 ```
-## Jupyter notebook
+## Jupyter notebook<sub>[6]</sub>
 To retrieve and preprocess data, we execute Jupyter notebook, process data, and pass the processed data to PostgreSQL.
 1. Jupyter notebook setup:
    1. Install Jupyter: `uv add --dev jupyter`
    2. Create a Jupyter notebook: `uv run jupyter notebook`
 2. Jupyter notebook code:
    1. import dependencies:
-   ```
+   ```Python
    import pandas as pd
    from sqlalchemy import create_engine
    from tqdm.auto import tqdm
    ```
    2. Define Macro to download and normalize data type in schema
-   ```
+   ```Python
    # Macro for download data
    DATA_SOURCE_PREFIX = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
    DATA_VERSION = 'yellow_tripdata_2021-01.csv.gz'
@@ -287,15 +287,15 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    ]
    ```
    3. Double check if pandas exist
-   ```
+   ```Python
    pd.__file__
    ```
    4. Download ny_taxi data
-   ```
+   ```Python
    df = pd.read_csv(DATA_SOURCE_PREFIX+DATA_VERSION)
    ```
    5. I found out the data type in "VendorID", "tpep_pickup_datetime", "tpep_dropoff_datetime" are incorrect. The "VendorID" should be Int64, not float, and "tpep_pickup_datetime", "tpep_dropoff_datetime" should be datetime, not string, so I used Macro to download data again with data type specified.
-   ```
+   ```Python
    df = pd.read_csv(
       DATA_SOURCE_PREFIX+DATA_VERSION,
       dtype=DTYPE,
@@ -310,19 +310,19 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    ```
    7. To insert data into postgres: Setup sqlalchemy engine to connect local postgres database.
    syntax: `sqlalchemy.create_engine('<postgresql>://<username>:<password>@<host>:<port>/<database>')`
-   ```
+   ```Python
    # setup sqlalchemy engine
    engine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')
    ```
    8. Preview SQL statement to create table.
-   ```
+   ```Python
    # 1. get schema from dataframe df,
    # 2. get table name from name='yellow_taxi_data',
    # 3. generate "postgresql" statement based on con=engine where engine was created for postgresql database in docker
    print(pd.io.sql.get_schema(df, name='yellow_taxi_data', con=engine))
    ```
    9. Create empty table with schema only (column name + dtype)
-   ```
+   ```Python
    # df.head(0) return only column names and data types (=schema)
    df.head(0).to_sql(
       name='yellow_taxi_data',
@@ -331,7 +331,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    )
    ```
    10. I want to insert data in batches, so I downloaded data with chunksize to get dataframe iterator (dtype=TextFileReader)
-   ```
+   ```Python
    df_iter = pd.read_csv(
       DATA_SOURCE_PREFIX+DATA_VERSION,
       dtype=DTYPE,
@@ -342,7 +342,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    ```
    - Lesson learned:
      - Issue: first trunk of data missed.
-         ```
+         ```Python
          df_iter = pd.read_csv(
             url,
             dtype=DTYPE,
@@ -368,7 +368,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
          ```
       - Reason: `pd.read_csv(..., iterator=True)` returns an iterator, which <ins>only moves forward and never resets</ins>. After `first_trunk = next(df_iter)`, `df_iter` already move forward 1 trunk. Therefore, `for df_chunk in tqdm(df_iter):` starts from <ins>second trunk of data</ins>.
       - Fix: Add first trunk of data `.to_sql` additionally.
-         ```
+         ```Python
          first_trunk.to_sql(
             name=target_table,
             con=engine,
@@ -376,11 +376,11 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
          )
          ```
    11. Install tqdm, and from tqdm.auto import tqdm to see progress of inserting data
-   ```
+   ```Bash
    !uv add tqdm
    ```
    12. Finally, I pass data into postgres database
-   ```
+   ```Python
    for df_chunk in tqdm(df_iter):
       df_chunk.to_sql(
          name='yellow_taxi_data',
@@ -388,7 +388,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
          if_exists='append'
       )
    ```
-## Convert jupyter notebook to python script
+## Convert jupyter notebook to python script<sub>[7]</sub>
 1. Jupyter notebook provides early stage data pipeline prototyping by interactive platform. When pipeline development almost done, I tend to convert Jupyter notebook to python script for production phase.
 2. Jupyter notebook is <ins>plain text file as a JSON object</inns> and should be converted into python script for production.
 3. Syntax: `uv run jupyter nbconvert --to=script notebook.ipynb`
@@ -426,7 +426,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    def main(pg_user, pg_pass, pg_host, pg_port, pg_db, year, month, chunksize, target_table):
    ```
 3. terminal execute:
-   ```bash
+   ```Bash
    uv run python ingest_data.py \
    --pg-user=root \
    --pg-pass=root \
@@ -461,9 +461,219 @@ GROUP BY DATE(tpep_pickup_datetime)
 ORDER BY pickup_date;
 -- Sample Analytics
 ```
+## pgAdmin - a replacement database management tool for pgcli<sub>[8]</sub>
+pgAdmin is a web-based tool to replace pgcli when the query become complicated.
+### Run pgAdmin container:
+```Bash
+docker run -it \
+  -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+  -e PGADMIN_DEFAULT_PASSWORD="root" \
+  -v pgadmin_data:/var/lib/pgadmin \
+  -p 8085:80 \
+  dpage/pgadmin4
+```
+1. Question: In `-v pgadmin_data:/var/lib/pgadmin`, where does pgadmin_data store in linux?
+   - Answer: `pgadmin_data` means docker store data in docker internal file system.
+   - Reason: pgadmin data are application setting data, e.g. which port to connect, what's the connection host, username, and password. Users will type in these data every time when login pgAdmin, so we don't have to keep this data outside of docker.
+2. Lesson learned: There are <ins>Two type</ins> of volume:
+   1. <ins>pgadmin_data</ins>:/var/lib/pgadmin: <ins>Named Volume</ins>: only <ins>provide volume name</ins>, and docker store data inside internal file system. Reason to use Named Volume: Only need docker hold application setting/preference.
+   2. <ins>$(pwd)/ny_taxi_data</ins>:/var/lib/postgresql: <ins>Bind Mount</ins>: volume binds a specific folder in localhost machine , and docker store data inside local folder.
+3. Question: Why `dpage/pgadmin4` instead of `pgadmin4`, like `postgres:18`?
+   - Answer: There are 2 type of Images:
+     1. Official Image: Docker maintain a set of official images which I can run with their <ins>single name</ins>, e.g. postgres, python, ubuntu...etc.
+     2. Third-party Image: Third-party companies publish image follow standard format `<username>/<repository_name>`, e.g. <ins>dpage</ins> is third-party username of Dave Page which publish tool pgAdmin, and <ins>pgadmin4</ins> is the specific repository name contain pgAdmin 4 image. 
+## Docker Network
+The postgres container and pgAdmin container are isolated, means pgAdmin can't see postgres container. For pgAdmin to connect postgres, we need Docker Network.
+1. Docker network commands:
+   ```Bash
+   docker network create pg-network
+   # Create a docker network called pg-network
+   docker network ls
+   # List all docker networks
+   docker network rm pg-network
+   # Remove pg-network from docker network
+   ```
+2. First, create a docker network:
+   ```Bash
+   docker network create pg-network
+   ```
+3. To connect pgAdmin to postgres, we need to rerun pgAdmin and postgres containers and add docker network variables:
+   1. Rerun Postgres on docker network in one terminal:
+      ```Bash
+      docker run -it \
+      -e POSTGRES_USER="root" \
+      -e POSTGRES_PASSWORD="root" \
+      -e POSTGRES_DB="ny_taxi" \
+      -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql \
+      -p 5432:5432 \
+      --network=pg-network \
+      --name pgdatabase \
+      postgres:18
+      ```
+      - Question: What does `pgdatabase` mean in `--network=pg-network \ --name pgdatabase \`?
+      - Answer: `--name pgdatabase` is the name of postgres in pg-network. When pgAdmin want to connect postgres in pg-network, I set host as pgdatabase in pgAdmin.
+   2. Run pgAdmin on the same docker network in another terminal:
+      ```Bash
+      docker run -it \
+      -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+      -e PGADMIN_DEFAULT_PASSWORD="root" \
+      -v pgadmin_data:/var/lib/pgadmin \
+      -p 8085:80 \
+      --network=pg-network \
+      --name pgadmin \
+      dpage/pgadmin4
+      ```
+   3. Connecting setting for pgAdmin to PostgreSQL database:
+      1. Click <ins>Port</ins> in vs code, click <ins>Add Port</ins>, and type in <ins>8085</ins>
+      2. Login with email: <ins>admin@admin.com</ins>, password: <ins>root</ins>
+      3. Right-click "Servers" → Register → Server
+      4. Configure server pgAdmin to connect database in postgres container:
+         - General tab: Name: Local Docker
+         - Connection tab:
+           - Host: pgdatabase (the postgres container name in docker network (pg-network))
+           - Port: 5432
+           - Username: root
+           - Password: root
+      5. Save
+## Dockerizing the Ingestion Script (add ingest_data.py into Dockerfile)<sub>[9]</sub>
+To add ingest_data.py in Dockerfile and run to ingest ny taxi data into postgres, all I need to do is to change the last 2 lines of Dockerfile:
+### Edit Dockerfile:
+```dockerfile
+# copy source code
+COPY ingest_data.py ingest_data.py
+
+# define first command when run container
+ENTRYPOINT ["python", "ingest_data.py"]
+```
+Because all dependencies are in pyproject.toml and uv.lock which is already included above: `COPY "pyproject.toml" "uv.lock" ".python-version" ./`, I only have to change the source code copy and entrypoint editing.<br >
+1. Question: Which parameter of `docker run` command specify using Dockerfile?
+   - Answer:
+     1. `docker run` specify <ins>docker image</ins> <name>:<tag>, e.g. data_ingest:v001. `docker run` doesn't specify Dockerfile.
+     2. `docker build` automatically use <ins>local Dockerfile</ins>, e.g. `docker build -t taxi_ingest:v001 .`
+2. Question: Explain: Multi-stage build pattern copies uv from official image
+   - Answer: The image created by docker build includes multi-stage pattern copies and dependency installed in Dockerfile.
+3. Question: Explain: Copying dependency files before code improves Docker layer caching
+   - Answer: Dockerfile is layer caching, means only rerun the update lines and <ins>the lines under update line</ins>. Because `COPY ingest_data.py ingest_data.py` at the bottom line, `docker build` can skip above lines and only rerun the very bottom 2 lines.
+### Build the Docker Image
+```Bash
+docker build -t taxi_ingest:v001 .
+```
+### Run Containized Ingestion
+```Bash
+docker run -it \
+  --network=pg-network \
+  taxi_ingest:v001 \
+  --pg-user=root \
+  --pg-pass=root \
+  --pg-host=pgdatabase \
+  --pg-port=5432 \
+  --pg-db=ny_taxi \
+  --target-table=yellow_taxi_trips_2021_1 \
+  --year=2021 \
+  --month=1 \
+  --chunksize=100000
+```
+1. Question: why `--network=pg-network` goes before the image `taxi_ingest:v001`?
+   Answer: `--network` have to go before docker image name:
+   ```Bash
+   --network=pg-network \ 
+   taxi_ingest:v001 \
+
+   --network=pg-network \
+   --name=pgdatabase
+   postgres:18
+
+   --network=pg-network \
+   --name=pgadmin \
+   dpage/pgadmin4
+   ```
+2. Question: Why `--pg-host=pgdatabase`, not `--pg-host=localhost`?
+   Answer: Because docker postgres in pg-network called pgdatabase, `docker run taxi_ingest:v001` have to specify `--pg-host=pgdatabase` not localhost to ingest data to postgres in pg-network.
+## Docker Compose<sub>[10]</sub>
+Docker Compose let me run multiple docker containers in the same time.
+### docker-compose.yaml
+1. Create docker-compose.yaml
+   ```Bash
+   touch docker-compoase.yaml
+   ```
+2. Add postgres and pgAdmin in docker-compose.yaml
+   ```yaml
+   services:
+      pgdatabase:
+         image: postgres:18
+      environment:
+         - POSTGRES_USER=root
+         - POSTGRES_PASSWORD=root
+         - POSTGRES_DB=ny_taxi
+      volumes:
+         - "./ny_taxi_postgres_data:/var/lib/postgresql:rw"
+      ports:
+         - "5432:5432"
+
+      pgadmin:
+         image: dpage/pgadmin4
+      environment:
+         - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+         - PGADMIN_DEFAULT_PASSWORD=root
+      volumes:
+         - "pgadmin_data:/var/lib/pgadmin"
+      ports:
+         - "8085:80"
+
+   volumes:
+      pgadmin_data:
+   ```
+   1. Question: What does rw mean in `./ny_taxi_postgres_data:/var/lib/postgresql:rw` in docker-compose.yaml:
+      - Answer: rw means permission to both read from and write to the volume.
+   2. Question: How to bind mount ny_taxi data to local directory?
+      - Answer: To store data locally with bind mount, use `./`, not `$(pwd)`. The code should be looked like 
+      ```yaml
+      volumes:
+      	- "./ny_taxi_postgres_data:/var/lib/postgresql:rw"
+      ```
+3. Run docker-compose.yaml
+   `docker-compose up`
+- Docker compose commands:
+  ```Bash
+  docker-compose up
+  # run docker compose
+  docker-compose down
+  # shut down docker compose
+  ```
+## Ingest data again
+1. To rerun `ingest_data.py`, I have to check which docker network is used by docker compose:
+   ```Bash
+   docker network ls
+   # check new docker network created by docker compose
+   ```
+2. The docker network created by docker compose follow naming standard `<current folder name>_default`. Since current folder is `pipeline`, the docker network is `pipeline_default`. So I modify command from `--network=pg-network` to `--network=pipeline_default`.
+   ```Bash
+   docker run -it --rm \
+   --network=pipeline_default \
+   taxi_ingest:v001 \
+   --pg-user=root \
+   --pg-pass=root \
+   --pg-host=pgdatabase \
+   --pg-port=5432 \
+   --pg-db=ny_taxi \
+   --target-table=yellow_taxi_data \
+   --year=2021 \
+   --month=1 \
+   --chunksize=100000
+   ```
+
 
 ## Reference<br >
-1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
+1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
+2. [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)
+3. [Dockerizing the Pipeline](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/03-dockerizing-pipeline.md)
+4. [Running PostgreSQL with Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/04-postgres-docker.md)
+5. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
+6. [NY Taxi Dataset and Data Ingestion](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/05-data-ingestion.md)
+7. [Creating the Data Ingestion Script](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/06-ingestion-script.md)
+8. [pgAdmin - Database Management Tool](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/07-pgadmin.md)
+9. [Dockerizing the Ingestion Script](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/08-dockerizing-ingestion.md)
+10. [Docker Compose](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/09-docker-compose.md)
 
 
 
