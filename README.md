@@ -482,6 +482,17 @@ docker run -it \
    - Answer: There are 2 type of Images:
      1. Official Image: Docker maintain a set of official images which I can run with their <ins>single name</ins>, e.g. postgres, python, ubuntu...etc.
      2. Third-party Image: Third-party companies publish image follow standard format `<username>/<repository_name>`, e.g. <ins>dpage</ins> is third-party username of Dave Page which publish tool pgAdmin, and <ins>pgadmin4</ins> is the specific repository name contain pgAdmin 4 image. 
+## Docker Network
+The postgres container and pgAdmin container are isolated, means pgAdmin can't see postgres container. For pgAdmin to connect postgres, we need Docker Network.
+1. Docker network commands:
+   ```bash
+   docker network create pg-network
+   # Create a docker network called pg-network
+   docker network ls
+   # List all docker networks
+   docker network rm pg-network
+   # Remove pg-network from docker network
+   ```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
