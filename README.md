@@ -1,6 +1,6 @@
 # docker-postgresql-gcp-workshop
 Workshop Codespaces
-## docker<br >
+## docker<sub>[1]</sub><br >
 1. docker is a containerization software, means can create container to let us isolate software like simple version of virtual machines.<br >
 2. `docker` vs. `.venv`:
    1. `.venv` have same os as system, only different in `Python version` and `dependencies`<br >
@@ -42,7 +42,7 @@ Workshop Codespaces
     2. when local files change, it change in container immediately, so we don't need to exit, edit file, and rerun a new container<br >
   - <ins>Volume</ins> in CS means data storage unit, we use <ins>Volume</ins> means it is independent from container, and <ins>Volume Mount</ins> means we mount data storage unit from local to container<br >
   - To keep code organized, we use <ins>/app</ins> or <ins>/src</ins> to link local directory, e.g. `-v $(pwd)/test:/app/test`<br >
-## Venv and Data Pipeline<br >
+## Venv and Data Pipeline<sub>[2]</sub><br >
 ### sys.argv<br >
 ```
 import sys
@@ -75,7 +75,7 @@ To change python intepreter in vs code:<br >
 ### Include <ins>parquet</ins> file in .gitignore<br >
 1. I can add `*.parquet` in .gitignore (whereever in file)<br >
 2. Wait for .parquet file to turn gray, means git exclude it in record.<br >
-## Dockerfile<br >
+## Dockerfile<sub>[3]</sub><br >
 ### 5W1H<br >
 1. What is Dockerfile: Dockerfile is a <ins>text document</ins> contains script of instructions for building a Docker image.<br >
 2. Why do we use Dockerfile:<br >
@@ -174,7 +174,7 @@ COPY pipeline.py pipeline.py
 # define first command when run container
 ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
 ```
-## Run postgreSQL on Docker:<br >
+## Run postgreSQL on Docker<sub>[4]</sub><br >
 1. Q: Why Docker can run PostgreSQL without installation?<br >
    A: Docker has library Docker Hub which includes <ins>PostgreSQL image</ins>, so Docker can run PostgreSQL without installation.<br >
 2. Terminal run Docker container with PostgreSQL database:
@@ -199,12 +199,12 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
    3. `-p` = map host port to container port, syntax: `-p [host port]:[container port]`, when setup `pgcli`, use <ins>host port</ins>
    4. `postgres:18` = use PostgreSQL version 18
    5. lesson learned:
-      1. Issue: `/var/lib/postgresql/data` vs. `/var/lib/postgresql` (note: postgres:18+ upgrade and only require `/var/lib/postgresql`, no /data refer<sub>[1]</sub>
+      1. Issue: `/var/lib/postgresql/data` vs. `/var/lib/postgresql` (note: postgres:18+ upgrade and only require `/var/lib/postgresql`, no /data refer<sub>[5]</sub>
       2. Explain: `/var/lib/postgresql/data` is the default folder where postgresql store data. `/var/lib/postgresql` is the parent folder also include /data folder, so docker will create a `/data` folder in local machine folder.
       3. Reason to use `/var/lib/postgresql/data`:
          1. Precision, to only store data from PostgreSQL and exclude server log and configurations
          2. Avoid Permission Conflict, if set volume from `/var/lib/postgresql`, it may trigger permission conflict when other system try to write into `/var/lib/postgresql`
-      4. Final solution: Since PosgreSQL officially upgrade and now only require `/var/lib/postgresql` in `-v`<sub>[1]</sub>
+      4. Final solution: Since PosgreSQL officially upgrade and now only require `/var/lib/postgresql` in `-v`<sub>[5]</sub>
 ## Run pgcli for Postgres<br >
 1. add pgcli in development dependencies: `uv add --dev pgcli`
 2. run pgcli and link to Postgres: `uv run pgcli -h localhost -p 5432 -u root -d ny_taxi`
@@ -245,7 +245,7 @@ INSERT INTO test VALUES(
 \q
 --   exit pgcli = ctrl+D
 ```
-## Jupyter notebook
+## Jupyter notebook<sub>[6]</sub>
 To retrieve and preprocess data, we execute Jupyter notebook, process data, and pass the processed data to PostgreSQL.
 1. Jupyter notebook setup:
    1. Install Jupyter: `uv add --dev jupyter`
@@ -388,7 +388,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
          if_exists='append'
       )
    ```
-## Convert jupyter notebook to python script
+## Convert jupyter notebook to python script<sub>[7]</sub>
 1. Jupyter notebook provides early stage data pipeline prototyping by interactive platform. When pipeline development almost done, I tend to convert Jupyter notebook to python script for production phase.
 2. Jupyter notebook is <ins>plain text file as a JSON object</inns> and should be converted into python script for production.
 3. Syntax: `uv run jupyter nbconvert --to=script notebook.ipynb`
@@ -461,7 +461,7 @@ GROUP BY DATE(tpep_pickup_datetime)
 ORDER BY pickup_date;
 -- Sample Analytics
 ```
-## pgAdmin - a replacement database management tool for pgcli
+## pgAdmin - a replacement database management tool for pgcli<sub>[8]</sub>
 pgAdmin is a web-based tool to replace pgcli when the query become complicated.
 ### Run pgAdmin container:
 ```Bash
@@ -535,7 +535,7 @@ The postgres container and pgAdmin container are isolated, means pgAdmin can't s
            - Username: root
            - Password: root
       5. Save
-## Dockerizing the Ingestion Script (add ingest_data.py into Dockerfile)
+## Dockerizing the Ingestion Script (add ingest_data.py into Dockerfile)<sub>[9]</sub>
 To add ingest_data.py in Dockerfile and run to ingest ny taxi data into postgres, all I need to do is to change the last 2 lines of Dockerfile:
 ### Edit Dockerfile:
 ```dockerfile
@@ -589,7 +589,7 @@ docker run -it \
    ```
 2. Question: Why `--pg-host=pgdatabase`, not `--pg-host=localhost`?
    Answer: Because docker postgres in pg-network called pgdatabase, `docker run taxi_ingest:v001` have to specify `--pg-host=pgdatabase` not localhost to ingest data to postgres in pg-network.
-## Docker Compose
+## Docker Compose<sub>[10]</sub>
 Docker Compose let me run multiple docker containers in the same time.
 ### docker-compose.yaml
 1. Create docker-compose.yaml
@@ -664,7 +664,16 @@ Docker Compose let me run multiple docker containers in the same time.
 
 
 ## Reference<br >
-1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
+1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
+2. [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)
+3. [Dockerizing the Pipeline](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/03-dockerizing-pipeline.md)
+4. [Running PostgreSQL with Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/04-postgres-docker.md)
+5. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
+6. [NY Taxi Dataset and Data Ingestion](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/05-data-ingestion.md)
+7. [Creating the Data Ingestion Script](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/06-ingestion-script.md)
+8. [pgAdmin - Database Management Tool](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/07-pgadmin.md)
+9. [Dockerizing the Ingestion Script](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/08-dockerizing-ingestion.md)
+10. [Docker Compose](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/09-docker-compose.md)
 
 
 
