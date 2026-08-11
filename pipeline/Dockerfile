@@ -41,7 +41,7 @@ COPY "pyproject.toml" "uv.lock" ".python-version" ./
 RUN uv sync --locked
 
 # copy source code
-COPY pipeline.py pipeline.py
+COPY ingest_data.py ingest_data.py
 
 # define first command when run container
-ENTRYPOINT ["python", "pipeline.py"]
+ENTRYPOINT ["python", "ingest_data.py"]
