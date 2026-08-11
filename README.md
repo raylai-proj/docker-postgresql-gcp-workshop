@@ -461,7 +461,17 @@ GROUP BY DATE(tpep_pickup_datetime)
 ORDER BY pickup_date;
 -- Sample Analytics
 ```
-
+## pgAdmin - a replacement database management tool for pgcli
+pgAdmin is a web-based tool to replace pgcli when the query become complicated.
+### Run pgAdmin container:
+```bash
+docker run -it \
+  -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+  -e PGADMIN_DEFAULT_PASSWORD="root" \
+  -v pgadmin_data:/var/lib/pgadmin \
+  -p 8085:80 \
+  dpage/pgadmin4
+```
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
