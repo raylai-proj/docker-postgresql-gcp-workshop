@@ -589,6 +589,59 @@ docker run -it \
    ```
 2. Question: Why `--pg-host=pgdatabase`, not `--pg-host=localhost`?
    Answer: Because docker postgres in pg-network called pgdatabase, `docker run taxi_ingest:v001` have to specify `--pg-host=pgdatabase` not localhost to ingest data to postgres in pg-network.
+## Docker Compose
+Docker Compose let me run multiple docker containers in the same time.
+### docker-compose.yaml
+1. Create docker-compose.yaml
+   ```bash
+   touch docker-compoase.yaml
+   ```
+2. Add postgres and pgAdmin in docker-compose.yaml
+   ```yaml
+   services:
+      pgdatabase:
+         image: postgres:18
+      environment:
+         - POSTGRES_USER=root
+         - POSTGRES_PASSWORD=root
+         - POSTGRES_DB=ny_taxi
+      volumes:
+         - "./ny_taxi_postgres_data:/var/lib/postgresql:rw"
+      ports:
+         - "5432:5432"
+
+      pgadmin:
+         image: dpage/pgadmin4
+      environment:
+         - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+         - PGADMIN_DEFAULT_PASSWORD=root
+      volumes:
+         - "pgadmin_data:/var/lib/pgadmin"
+      ports:
+         - "8085:80"
+
+   volumes:
+      pgadmin_data:
+   ```
+   1. Question: What does rw mean in `./ny_taxi_postgres_data:/var/lib/postgresql:rw` in docker-compose.yaml:
+      - Answer: rw means permission to both read from and write to the volume.
+   2. Question: How to bind mount ny_taxi data to local directory?
+      - Answer: To store data locally with bind mount, use `./`, not `$(pwd)`. The code should be looked like 
+      ```
+      volumes:
+      	- "./ny_taxi_postgres_data:/var/lib/postgresql:rw"
+      ```
+3. Run docker-compose.yaml
+   `docker-compose up`
+- Docker compose commands:
+  ```Bash
+  docker-compose up
+  # run docker compose
+  docker-compose down
+  # shut down docker compose
+  ```
+
+
 
 
 ## Reference<br >
