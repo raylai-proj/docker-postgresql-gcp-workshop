@@ -475,6 +475,9 @@ docker run -it \
 1. Question: In `-v pgadmin_data:/var/lib/pgadmin`, where does pgadmin_data store in linux?
    - Answer: `pgadmin_data` means docker store data in docker internal file system.
    - Reason: pgadmin data are application setting data, e.g. which port to connect, what's the connection host, username, and password. Users will type in these data every time when login pgAdmin, so we don't have to keep this data outside of docker.
+2. Lesson learned: There are <ins>Two type</ins> of volume:
+   1. <ins>pgadmin_data</ins>:/var/lib/pgadmin: <ins>Named Volume</ins>: only <ins>provide volume name</ins>, and docker store data inside internal file system. Reason to use Named Volume: Only need docker hold application setting/preference.
+   2. <ins>$(pwd)/ny_taxi_data</ins>:/var/lib/postgresql: <ins>Bind Mount</ins>: volume binds a specific folder in localhost machine , and docker store data inside local folder.
 ## Reference<br >
 1. [Upgrading between major versions?](https://github.com/docker-library/postgres/issues/37#issuecomment-4435452264)
 
