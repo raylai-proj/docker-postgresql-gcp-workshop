@@ -178,7 +178,7 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
 1. Q: Why Docker can run PostgreSQL without installation?<br >
    A: Docker has library Docker Hub which includes <ins>PostgreSQL image</ins>, so Docker can run PostgreSQL without installation.<br >
 2. Terminal run Docker container with PostgreSQL database:
-3. ```
+3. ```Bash
    docker run -it --rm \
    -e POSTGRES_USER="root" \
    -e POSTGRES_PASSWORD="root" \
@@ -227,7 +227,7 @@ ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
       4. Restart vs code, and restart pgcli, then press F3 to turn on Multiline.
 5. Lesson learned: `uv add --dev pgcli` means: uv add pgcli in dev group <ins>inside the project virtual environment</ins>.
 ## Quick PostgreSQL Demo:
-```
+```sql
 \dt
 --   List tables
 
@@ -252,13 +252,13 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    2. Create a Jupyter notebook: `uv run jupyter notebook`
 2. Jupyter notebook code:
    1. import dependencies:
-   ```
+   ```Python
    import pandas as pd
    from sqlalchemy import create_engine
    from tqdm.auto import tqdm
    ```
    2. Define Macro to download and normalize data type in schema
-   ```
+   ```Python
    # Macro for download data
    DATA_SOURCE_PREFIX = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
    DATA_VERSION = 'yellow_tripdata_2021-01.csv.gz'
@@ -287,15 +287,15 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    ]
    ```
    3. Double check if pandas exist
-   ```
+   ```Python
    pd.__file__
    ```
    4. Download ny_taxi data
-   ```
+   ```Python
    df = pd.read_csv(DATA_SOURCE_PREFIX+DATA_VERSION)
    ```
    5. I found out the data type in "VendorID", "tpep_pickup_datetime", "tpep_dropoff_datetime" are incorrect. The "VendorID" should be Int64, not float, and "tpep_pickup_datetime", "tpep_dropoff_datetime" should be datetime, not string, so I used Macro to download data again with data type specified.
-   ```
+   ```Python
    df = pd.read_csv(
       DATA_SOURCE_PREFIX+DATA_VERSION,
       dtype=DTYPE,
@@ -310,19 +310,19 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    ```
    7. To insert data into postgres: Setup sqlalchemy engine to connect local postgres database.
    syntax: `sqlalchemy.create_engine('<postgresql>://<username>:<password>@<host>:<port>/<database>')`
-   ```
+   ```Python
    # setup sqlalchemy engine
    engine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')
    ```
    8. Preview SQL statement to create table.
-   ```
+   ```Python
    # 1. get schema from dataframe df,
    # 2. get table name from name='yellow_taxi_data',
    # 3. generate "postgresql" statement based on con=engine where engine was created for postgresql database in docker
    print(pd.io.sql.get_schema(df, name='yellow_taxi_data', con=engine))
    ```
    9. Create empty table with schema only (column name + dtype)
-   ```
+   ```Python
    # df.head(0) return only column names and data types (=schema)
    df.head(0).to_sql(
       name='yellow_taxi_data',
@@ -331,7 +331,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    )
    ```
    10. I want to insert data in batches, so I downloaded data with chunksize to get dataframe iterator (dtype=TextFileReader)
-   ```
+   ```Python
    df_iter = pd.read_csv(
       DATA_SOURCE_PREFIX+DATA_VERSION,
       dtype=DTYPE,
@@ -342,7 +342,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    ```
    - Lesson learned:
      - Issue: first trunk of data missed.
-         ```
+         ```Python
          df_iter = pd.read_csv(
             url,
             dtype=DTYPE,
@@ -368,7 +368,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
          ```
       - Reason: `pd.read_csv(..., iterator=True)` returns an iterator, which <ins>only moves forward and never resets</ins>. After `first_trunk = next(df_iter)`, `df_iter` already move forward 1 trunk. Therefore, `for df_chunk in tqdm(df_iter):` starts from <ins>second trunk of data</ins>.
       - Fix: Add first trunk of data `.to_sql` additionally.
-         ```
+         ```Python
          first_trunk.to_sql(
             name=target_table,
             con=engine,
@@ -376,11 +376,11 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
          )
          ```
    11. Install tqdm, and from tqdm.auto import tqdm to see progress of inserting data
-   ```
+   ```Bash
    !uv add tqdm
    ```
    12. Finally, I pass data into postgres database
-   ```
+   ```Python
    for df_chunk in tqdm(df_iter):
       df_chunk.to_sql(
          name='yellow_taxi_data',
@@ -426,7 +426,7 @@ To retrieve and preprocess data, we execute Jupyter notebook, process data, and 
    def main(pg_user, pg_pass, pg_host, pg_port, pg_db, year, month, chunksize, target_table):
    ```
 3. terminal execute:
-   ```bash
+   ```Bash
    uv run python ingest_data.py \
    --pg-user=root \
    --pg-pass=root \
@@ -464,7 +464,7 @@ ORDER BY pickup_date;
 ## pgAdmin - a replacement database management tool for pgcli
 pgAdmin is a web-based tool to replace pgcli when the query become complicated.
 ### Run pgAdmin container:
-```bash
+```Bash
 docker run -it \
   -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
   -e PGADMIN_DEFAULT_PASSWORD="root" \
@@ -485,7 +485,7 @@ docker run -it \
 ## Docker Network
 The postgres container and pgAdmin container are isolated, means pgAdmin can't see postgres container. For pgAdmin to connect postgres, we need Docker Network.
 1. Docker network commands:
-   ```bash
+   ```Bash
    docker network create pg-network
    # Create a docker network called pg-network
    docker network ls
@@ -494,12 +494,12 @@ The postgres container and pgAdmin container are isolated, means pgAdmin can't s
    # Remove pg-network from docker network
    ```
 2. First, create a docker network:
-   ```bash
+   ```Bash
    docker network create pg-network
    ```
 3. To connect pgAdmin to postgres, we need to rerun pgAdmin and postgres containers and add docker network variables:
    1. Rerun Postgres on docker network in one terminal:
-      ```bash
+      ```Bash
       docker run -it \
       -e POSTGRES_USER="root" \
       -e POSTGRES_PASSWORD="root" \
@@ -513,7 +513,7 @@ The postgres container and pgAdmin container are isolated, means pgAdmin can't s
       - Question: What does `pgdatabase` mean in `--network=pg-network \ --name pgdatabase \`?
       - Answer: `--name pgdatabase` is the name of postgres in pg-network. When pgAdmin want to connect postgres in pg-network, I set host as pgdatabase in pgAdmin.
    2. Run pgAdmin on the same docker network in another terminal:
-      ```bash
+      ```Bash
       docker run -it \
       -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
       -e PGADMIN_DEFAULT_PASSWORD="root" \
@@ -555,11 +555,11 @@ Because all dependencies are in pyproject.toml and uv.lock which is already incl
 3. Question: Explain: Copying dependency files before code improves Docker layer caching
    - Answer: Dockerfile is layer caching, means only rerun the update lines and <ins>the lines under update line</ins>. Because `COPY ingest_data.py ingest_data.py` at the bottom line, `docker build` can skip above lines and only rerun the very bottom 2 lines.
 ### Build the Docker Image
-```bash
+```Bash
 docker build -t taxi_ingest:v001 .
 ```
 ### Run Containized Ingestion
-```bash
+```Bash
 docker run -it \
   --network=pg-network \
   taxi_ingest:v001 \
@@ -575,7 +575,7 @@ docker run -it \
 ```
 1. Question: why `--network=pg-network` goes before the image `taxi_ingest:v001`?
    Answer: `--network` have to go before docker image name:
-   ```
+   ```Bash
    --network=pg-network \ 
    taxi_ingest:v001 \
 
@@ -593,7 +593,7 @@ docker run -it \
 Docker Compose let me run multiple docker containers in the same time.
 ### docker-compose.yaml
 1. Create docker-compose.yaml
-   ```bash
+   ```Bash
    touch docker-compoase.yaml
    ```
 2. Add postgres and pgAdmin in docker-compose.yaml
@@ -627,7 +627,7 @@ Docker Compose let me run multiple docker containers in the same time.
       - Answer: rw means permission to both read from and write to the volume.
    2. Question: How to bind mount ny_taxi data to local directory?
       - Answer: To store data locally with bind mount, use `./`, not `$(pwd)`. The code should be looked like 
-      ```
+      ```yaml
       volumes:
       	- "./ny_taxi_postgres_data:/var/lib/postgresql:rw"
       ```
