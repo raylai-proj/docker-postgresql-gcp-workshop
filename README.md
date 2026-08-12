@@ -661,6 +661,37 @@ Docker Compose let me run multiple docker containers in the same time.
    --month=1 \
    --chunksize=100000
    ```
+## Ingest Data for SQL Refresher Chapter
+To move on to the next chapter, I still need download and ingest taxi_zone_lookup table.
+### Build data pipeline on jupyter notebook
+1. Download taxi_zone_lookup table:
+   ```Python
+   import pandas as pd
+   from sqlalchemy import create_engine
+   
+   DATA_SOURCE_PREFIX = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/"
+   ZONE_DATA = "taxi_zone_lookup.csv"
+   
+   zone_df = pd.read_csv(DATA_SOURCE_PREFIX+ZONE_DATA)
+   ```
+2. Setup Marco for SQLalchemy:
+   ```Python
+   POSTGRES = "postgresql"
+   PG_USER = "root"
+   PG_PASS = "root"
+   PG_DB = "ny_taxi"
+   PG_HOST = "localhost"
+   PG_PORT = "5432"
+   INGEST_TABLE_NAME = "zones"
+
+   engine = create_engine(f"{POSTGRES}://{PG_USER}:{PG_PASS}@{PG_HOST}:{PG_PORT}/{PG_DB}")
+   ```
+3. Preview table schema and ingest table:
+   ```Python
+   print(pd.io.sql.get_schema(zone_df, name=INGEST_TABLE_NAME, con=engine))
+
+   zone_df.to_sql(name=INGEST_TABLE_NAME, con=engine, if_exists='replace')
+   ```
 
 
 ## Reference<br >
