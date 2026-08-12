@@ -661,7 +661,7 @@ Docker Compose let me run multiple docker containers in the same time.
    --month=1 \
    --chunksize=100000
    ```
-## Ingest Data for SQL Refresher Chapter
+## Ingest Data for SQL Refresher Chapter<sub>[11]</sub>
 To move on to the next chapter, I still need download and ingest taxi_zone_lookup table.
 ### Build data pipeline on jupyter notebook
 1. Download taxi_zone_lookup table:
@@ -692,6 +692,69 @@ To move on to the next chapter, I still need download and ingest taxi_zone_looku
 
    zone_df.to_sql(name=INGEST_TABLE_NAME, con=engine, if_exists='replace')
    ```
+### Convert jupyter notebook to python script
+```Bash
+uv run jupyter nbconvert --to python ingest_zone_data.ipynb
+```
+### Refactor ingest_zone_data.py with click
+```Python
+import pandas as pd
+from sqlalchemy import create_engine
+import click
+# from tqdm.auto import tqdm
+
+DATA_SOURCE_PREFIX = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/"
+ZONE_DATA = "taxi_zone_lookup.csv"
+
+POSTGRES = "postgresql"
+PG_USER = "root"
+PG_PASS = "root"
+PG_DB = "ny_taxi"
+PG_HOST = "localhost"
+PG_PORT = "5432"
+INGEST_TABLE = "zones"
+
+@click.command()
+@click.option('--pg-user', default=PG_USER, help='PostgreSQL user (default:root)')
+@click.option('--pg-pass', default=PG_PASS, help='PostgreSQL password (default:root)')
+@click.option('--pg-host', default=PG_HOST, help='PostgreSQL host (default:localhost)')
+@click.option('--pg-port', default=PG_PORT, help='PostgreSQL port (default:5432)')
+@click.option('--pg-db', default=PG_DB, help='PostgreSQL db (default:ny_taxi)')
+@click.option('--ingest-table', default=INGEST_TABLE, help='table name to ingest (default:zones)')
+def ingest_taxi_zone_data(pg_user, pg_pass, pg_host, pg_port, pg_db, ingest_table):
+    zone_df = pd.read_csv(DATA_SOURCE_PREFIX+ZONE_DATA)
+    engine = create_engine(f"{POSTGRES}://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}")
+    zone_df.to_sql(name=ingest_table, con=engine, if_exists='replace')
+
+if __name__ == "__main__":
+    ingest_taxi_zone_data()
+```
+### Adjust Dockerfile for another image built
+1. Adjust Dockerfile for ingest_zone_data.py
+   ```Dockerfile
+   # simply change ingest_data.py to ingest_zone_data.py
+   COPY ingest_zone_data.py ingest_zone_data.py
+   
+   # define first command when run container
+   ENTRYPOINT ["python", "ingest_zone_data.py"]
+   ```
+2. build another docker image
+   ```Bash
+   docker build -t taxi_zone_ingest:v001 .
+   ```
+### run docker taxi_zone_ingest:v001 to ingest taxi_zone_lookup table
+```Bash
+docker run -it \
+  --network=pipeline_default \
+  taxi_zone_ingest:v001 \
+  --pg-user=root \
+  --pg-pass=root \
+  --pg-host=pgdatabase \
+  --pg-port=5432 \
+  --pg-db=ny_taxi \
+  --ingest-table=zones
+```
+   
 
 
 ## Reference<br >
@@ -705,6 +768,7 @@ To move on to the next chapter, I still need download and ingest taxi_zone_looku
 8. [pgAdmin - Database Management Tool](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/07-pgadmin.md)
 9. [Dockerizing the Ingestion Script](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/08-dockerizing-ingestion.md)
 10. [Docker Compose](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/09-docker-compose.md)
+11. [Taxi Zone Lookup Table](https://github.com/DataTalksClub/nyc-tlc-data/releases/)
 
 
 
