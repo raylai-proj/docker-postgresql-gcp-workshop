@@ -3,6 +3,7 @@
 
 import pandas as pd
 from sqlalchemy import create_engine
+import click
 # from tqdm.auto import tqdm
 
 DATA_SOURCE_PREFIX = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/"
@@ -14,12 +15,19 @@ PG_PASS = "root"
 PG_DB = "ny_taxi"
 PG_HOST = "localhost"
 PG_PORT = "5432"
-INGEST_TABLE_NAME = "zones"
+INGEST_TABLE = "zones"
 
-def ingest_taxi_zone_data():
+@click.command()
+@click.option('--pg-user', default=PG_USER, help='PostgreSQL user (default:root)')
+@click.option('--pg-pass', default=PG_PASS, help='PostgreSQL password (default:root)')
+@click.option('--pg-host', default=PG_HOST, help='PostgreSQL host (default:localhost)')
+@click.option('--pg-port', default=PG_PORT, help='PostgreSQL port (default:5432)')
+@click.option('--pg-db', default=PG_DB, help='PostgreSQL db (default:ny_taxi)')
+@click.option('--ingest-table', default=INGEST_TABLE, help='table name to ingest (default:zones)')
+def ingest_taxi_zone_data(pg_user, pg_pass, pg_host, pg_port, pg_db, ingest_table):
     zone_df = pd.read_csv(DATA_SOURCE_PREFIX+ZONE_DATA)
-    engine = create_engine(f"{POSTGRES}://{PG_USER}:{PG_PASS}@{PG_HOST}:{PG_PORT}/{PG_DB}")
-    zone_df.to_sql(name=INGEST_TABLE_NAME, con=engine, if_exists='replace')
+    engine = create_engine(f"{POSTGRES}://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}")
+    zone_df.to_sql(name=ingest_table, con=engine, if_exists='replace')
 
 if __name__ == "__main__":
     ingest_taxi_zone_data()
