@@ -786,6 +786,12 @@ PostgreSQL practice:
         ```Python
         df.columns = ['pu_location_id', 'do_location_id']
         ```
+   2. Question: What's the difference between `" "` and `' '`?<br >
+      Answer: `" "` used on table, column, schema name, while `' '` used on string <ins>value</ins> in table (text, character, date)
+   3. Lesson learned: `+` throw error in PostgreSQL
+      - Issue: `zpu.borough + ' | ' + zpu.zone AS pickup_loc` throw error.
+      - Reason: PostgreSQL reserve `+` for <ins>addition</ins> only. Other usage will throw error.
+      - Solution: use `CONCAT(zpu.borough, ' | ', zpu.zone AS pickup_loc)` or `CONCAT_WS(' | ', zpu.borough, zpu.zone AS pickup_loc)`
 
 
 
