@@ -840,6 +840,32 @@ PostgreSQL practice:
    	drop_times DESC
    LIMIT 100;
    ```
+5. `GROUP BY` multiple fields:
+   ```SQL
+   SELECT
+   	CAST(tpep_dropoff_datetime AS DATE) drop_date,
+   	"DOLocationID",
+   	COUNT(1) drop_times,
+   	MAX(total_amount) max_amount,
+   	MIN(passenger_count) lowest_passenger 
+   FROM
+   	public.yellow_taxi_data
+   GROUP BY
+   	1, 2
+   ORDER BY
+   	drop_times DESC, drop_date ASC
+   LIMIT 100;
+   ```
+   1. Question: What does multiple GROUP BY do?
+      - Answer: PostgreSQL only collapse rows when values in all GROUP BY columns are the same.
+   2. Question: What does `1, 2` do in GROUP BY?
+      - Answer: `1, 2` means the first and the second column in `SELECT` list, and here `1, 2` means:
+        ```SQL
+        GROUP BY
+           CAST(tpep_dropoff_datetime AS DATE) drop_date,
+           "DOLocationID",
+        ```
+        PostgreSQL support number 1, 2,... in `GROUP BY` as No. of columns in `SELECT` list.
 
 
 
