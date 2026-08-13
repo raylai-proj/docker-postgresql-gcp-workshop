@@ -807,6 +807,24 @@ PostgreSQL practice:
    	OR "DOLocationID" IS NULL
    LIMIT 100;
    ```
+3. Data quality check: Check `"PULocationID"` and `"DOLocationID"` are actually exist in `"LocationID"` in taxi zone lookup table 
+   ```SQL
+   SELECT
+   	tpep_pickup_datetime,
+   	tpep_dropoff_datetime,
+   	total_amount,
+   	"PULocationID",
+   	"DOLocationID"
+   FROM
+   	public.yellow_taxi_data
+   WHERE
+   	"PULocationID" NOT IN (
+   		SELECT "LocationID" FROM zones
+   	)
+   OR	"DOLocationID" NOT IN (
+   		SELECT "LocationID" FROM zones
+   	);
+   ```
 
 
 
