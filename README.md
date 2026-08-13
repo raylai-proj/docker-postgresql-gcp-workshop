@@ -754,7 +754,7 @@ docker run -it \
   --pg-db=ny_taxi \
   --ingest-table=zones
 ```
-## SQL Refresher
+## SQL Refresher<sub>[12]</sub>
 PostgreSQL practice:
 1. `CONCAT()` and `CONCAT_WS()`:
    ```SQL
@@ -867,7 +867,7 @@ PostgreSQL practice:
         ```
         PostgreSQL support number 1, 2,... in `GROUP BY` as No. of columns in `SELECT` list.
 6. Lesson learned: `DESCRIBE` throw error in PostgreSQL:
-   - Reason: `DESCRIBE <table_name>` is NOT a valid SQL command in PostgreSQL, while valid in MySQL.<sub>[12]</sub>
+   - Reason: `DESCRIBE <table_name>` is NOT a valid SQL command in PostgreSQL, while valid in MySQL.<sub>[13]</sub>
    - Solution:
      1. Select table name, Columns to view table columns in pgAdmin.
      2. Query with `LIMIT 1` to view table columns:
@@ -891,7 +891,8 @@ PostgreSQL practice:
 9. [Dockerizing the Ingestion Script](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/08-dockerizing-ingestion.md)
 10. [Docker Compose](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/09-docker-compose.md)
 11. [Taxi Zone Lookup Table](https://github.com/DataTalksClub/nyc-tlc-data/releases/)
-12. [115. DESCRIBE](https://github.com/raylai-proj/SQL_review_note#115-describe)
+12. [SQL Refresher](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/10-sql-refresher.md)
+13. [115. DESCRIBE](https://github.com/raylai-proj/SQL_review_note#115-describe)
 
 
 
