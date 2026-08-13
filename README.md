@@ -866,6 +866,16 @@ PostgreSQL practice:
            "DOLocationID",
         ```
         PostgreSQL support number 1, 2,... in `GROUP BY` as No. of columns in `SELECT` list.
+6. Lesson learned: `DESCRIBE` throw error in PostgreSQL:
+   - Reason: `DESCRIBE <table_name>` is NOT a valid SQL command in PostgreSQL, while valid in MySQL.<sub>[12]</sub>
+   - Solution:
+     1. Select table name, Columns to view table columns in pgAdmin.
+     2. Query with `LIMIT 1` to view table columns:
+        ```SQL
+        SELECT *
+        FROM yellow_taxi_data
+        LIMIT 1;
+        ```
 
 
 
@@ -881,6 +891,7 @@ PostgreSQL practice:
 9. [Dockerizing the Ingestion Script](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/08-dockerizing-ingestion.md)
 10. [Docker Compose](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/09-docker-compose.md)
 11. [Taxi Zone Lookup Table](https://github.com/DataTalksClub/nyc-tlc-data/releases/)
+12. [115. DESCRIBE](https://github.com/raylai-proj/SQL_review_note#115-describe)
 
 
 
