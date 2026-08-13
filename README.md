@@ -754,7 +754,39 @@ docker run -it \
   --pg-db=ny_taxi \
   --ingest-table=zones
 ```
-   
+## SQL Refresher
+PostgreSQL practice:
+1. CONCAT() and CONCAT_WS():
+   ```SQL
+   SELECT
+   	y.tpep_pickup_datetime,
+   	y.tpep_dropoff_datetime,
+   	y.total_amount,
+   	CONCAT_WS(' | ', zpu."Borough", zpu."Zone") AS pickup_loc,
+   	CONCAT(zdo."Borough", ' | ', zdo."Zone") AS dropoff_loc
+   FROM
+   	public.yellow_taxi_data y,
+   	public.zones zpu,
+   	public.zones zdo
+   WHERE
+   	y."PULocationID" = zpu."LocationID"
+   	AND y."DOLocationID" = zdo."LocationID"
+   LIMIT 10;	
+   ```
+   1. Lesson learned: Double quotes `" "` in PostgreSQL:
+      - Issue: Why some columns in PostgreSQL need double quotes to identify?
+      - Reason: PostgreSQL automatically convert all unquoted table, column, schema...etc. to <ins>lowercase<ins>, so without `" "`, PostgreSQL will convert PULocationID to pulocationid, and unable to find the column.
+      - Solution:
+        1. Use `" "` to avoid converting to lowercase before PostgreSQL process query.
+        2. Convert column names to lowercase before push to SQL:
+        ```Python
+        df.columns = df.columns.str.lower()
+        ```
+        3. rename column names to snake_case:
+        ```Python
+        df.columns = ['pu_location_id', 'do_location_id']
+        ```
+
 
 
 ## Reference<br >
