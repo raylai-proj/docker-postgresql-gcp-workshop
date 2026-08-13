@@ -756,7 +756,7 @@ docker run -it \
 ```
 ## SQL Refresher
 PostgreSQL practice:
-1. CONCAT() and CONCAT_WS():
+1. `CONCAT()` and `CONCAT_WS()`:
    ```SQL
    SELECT
    	y.tpep_pickup_datetime,
@@ -792,7 +792,7 @@ PostgreSQL practice:
       - Issue: `zpu.borough + ' | ' + zpu.zone AS pickup_loc` throw error.
       - Reason: PostgreSQL reserve `+` for <ins>addition</ins> only. Other usage will throw error.
       - Solution: use `CONCAT(zpu.borough, ' | ', zpu.zone AS pickup_loc)` or `CONCAT_WS(' | ', zpu.borough, zpu.zone AS pickup_loc)`
-2. Data quality check: Check NULL for `"PULocationID"` and `"DOLocationID"`
+2. Data quality check (`IS NULL`): Check NULL for `"PULocationID"` and `"DOLocationID"`
    ```SQL
    SELECT
    	tpep_pickup_datetime,
@@ -807,7 +807,7 @@ PostgreSQL practice:
    	OR "DOLocationID" IS NULL
    LIMIT 100;
    ```
-3. Data quality check: Check `"PULocationID"` and `"DOLocationID"` are actually exist in `"LocationID"` in taxi zone lookup table 
+3. Data quality check (`NOT IN`): Check `"PULocationID"` and `"DOLocationID"` are actually exist in `"LocationID"` in taxi zone lookup table
    ```SQL
    SELECT
    	tpep_pickup_datetime,
@@ -824,6 +824,21 @@ PostgreSQL practice:
    OR	"DOLocationID" NOT IN (
    		SELECT "LocationID" FROM zones
    	);
+   ```
+4. `GROUP BY`, `ORDER BY`, `MAX`, `MIN`:
+   ```SQL
+   SELECT
+   	CAST(tpep_dropoff_datetime AS DATE) drop_date,
+   	COUNT(1) drop_times,
+   	MAX(total_amount) max_amount,
+   	MIN(passenger_count) lowest_passenger 
+   FROM
+   	public.yellow_taxi_data
+   GROUP BY
+   	CAST(tpep_dropoff_datetime AS DATE)
+   ORDER BY
+   	drop_times DESC
+   LIMIT 100;
    ```
 
 
