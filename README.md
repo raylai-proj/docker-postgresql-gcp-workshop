@@ -792,6 +792,21 @@ PostgreSQL practice:
       - Issue: `zpu.borough + ' | ' + zpu.zone AS pickup_loc` throw error.
       - Reason: PostgreSQL reserve `+` for <ins>addition</ins> only. Other usage will throw error.
       - Solution: use `CONCAT(zpu.borough, ' | ', zpu.zone AS pickup_loc)` or `CONCAT_WS(' | ', zpu.borough, zpu.zone AS pickup_loc)`
+2. Data quality check: Check NULL for `"PULocationID"` and `"DOLocationID"`
+   ```SQL
+   SELECT
+   	tpep_pickup_datetime,
+   	tpep_dropoff_datetime,
+   	total_amount,
+   	"PULocationID",
+   	"DOLocationID"
+   FROM
+   	public.yellow_taxi_data
+   WHERE
+   	"PULocationID" IS NULL
+   	OR "DOLocationID" IS NULL
+   LIMIT 100;
+   ```
 
 
 
