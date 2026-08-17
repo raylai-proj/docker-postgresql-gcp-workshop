@@ -876,6 +876,14 @@ PostgreSQL practice:
         FROM yellow_taxi_data
         LIMIT 1;
         ```
+## GCP Introduction
+### GCP 5W1H
+1. What is GCP?
+2. Why using GCP?
+3. When to use GCP?
+4. Who to use GCP?
+5. Where to use GCP?
+6. How people use GCP?
 
 
 
