@@ -879,11 +879,12 @@ PostgreSQL practice:
 ## GCP Introduction
 ### GCP 5W1H
 1. What is GCP?
-2. Why using GCP?
-3. When to use GCP?
-4. Who to use GCP?
-5. Where to use GCP?
-6. How people use GCP?
+   - Google Cloud Platform (GCP) is a enterprise level cloud computing service, e.g. AWS, and the service is provided by Google. GCP provides services include computing, <ins>Storage & Database</ins>, <ins>Big Data</ins>, machine learning, networking, and management, and these services allow user to migrate their development application from local to cloud. GCP runs on the same infrastructure on which Google internally use to develop products, e.g. Search, Youtube, Gmail..etc.
+3. Why using GCP?
+4. When to use GCP?
+5. Who to use GCP?
+6. Where to use GCP?
+7. How people use GCP?
 
 
 
