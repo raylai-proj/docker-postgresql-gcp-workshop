@@ -876,7 +876,7 @@ PostgreSQL practice:
         FROM yellow_taxi_data
         LIMIT 1;
         ```
-## GCP Introduction
+## GCP Introduction<sub>[14]</sub>
 ### GCP 5W1H
 1. What is GCP?
    - Google Cloud Platform (GCP) is a enterprise level cloud computing service, e.g. AWS, and the service is provided by Google. GCP provides services include computing, <ins>Storage & Database</ins>, <ins>Big Data</ins>, machine learning, networking, and management, and these services allow user to migrate their development application from local to cloud. GCP runs on the same infrastructure on which Google internally use to develop products, e.g. Search, Youtube, Gmail..etc.
@@ -902,6 +902,7 @@ PostgreSQL practice:
 11. [Taxi Zone Lookup Table](https://github.com/DataTalksClub/nyc-tlc-data/releases/)
 12. [SQL Refresher](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/10-sql-refresher.md)
 13. [115. DESCRIBE](https://github.com/raylai-proj/SQL_review_note#115-describe)
+14. [GCP](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/01-docker-terraform#gcp)
 
 
 
