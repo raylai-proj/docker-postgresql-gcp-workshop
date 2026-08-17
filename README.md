@@ -661,6 +661,222 @@ Docker Compose let me run multiple docker containers in the same time.
    --month=1 \
    --chunksize=100000
    ```
+## Ingest Data for SQL Refresher Chapter<sub>[11]</sub>
+To move on to the next chapter, I still need download and ingest taxi_zone_lookup table.
+### Build data pipeline on jupyter notebook
+1. Download taxi_zone_lookup table:
+   ```Python
+   import pandas as pd
+   from sqlalchemy import create_engine
+   
+   DATA_SOURCE_PREFIX = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/"
+   ZONE_DATA = "taxi_zone_lookup.csv"
+   
+   zone_df = pd.read_csv(DATA_SOURCE_PREFIX+ZONE_DATA)
+   ```
+2. Setup Marco for SQLalchemy:
+   ```Python
+   POSTGRES = "postgresql"
+   PG_USER = "root"
+   PG_PASS = "root"
+   PG_DB = "ny_taxi"
+   PG_HOST = "localhost"
+   PG_PORT = "5432"
+   INGEST_TABLE_NAME = "zones"
+
+   engine = create_engine(f"{POSTGRES}://{PG_USER}:{PG_PASS}@{PG_HOST}:{PG_PORT}/{PG_DB}")
+   ```
+3. Preview table schema and ingest table:
+   ```Python
+   print(pd.io.sql.get_schema(zone_df, name=INGEST_TABLE_NAME, con=engine))
+
+   zone_df.to_sql(name=INGEST_TABLE_NAME, con=engine, if_exists='replace')
+   ```
+### Convert jupyter notebook to python script
+```Bash
+uv run jupyter nbconvert --to python ingest_zone_data.ipynb
+```
+### Refactor ingest_zone_data.py with click
+```Python
+import pandas as pd
+from sqlalchemy import create_engine
+import click
+# from tqdm.auto import tqdm
+
+DATA_SOURCE_PREFIX = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/"
+ZONE_DATA = "taxi_zone_lookup.csv"
+
+POSTGRES = "postgresql"
+PG_USER = "root"
+PG_PASS = "root"
+PG_DB = "ny_taxi"
+PG_HOST = "localhost"
+PG_PORT = "5432"
+INGEST_TABLE = "zones"
+
+@click.command()
+@click.option('--pg-user', default=PG_USER, help='PostgreSQL user (default:root)')
+@click.option('--pg-pass', default=PG_PASS, help='PostgreSQL password (default:root)')
+@click.option('--pg-host', default=PG_HOST, help='PostgreSQL host (default:localhost)')
+@click.option('--pg-port', default=PG_PORT, help='PostgreSQL port (default:5432)')
+@click.option('--pg-db', default=PG_DB, help='PostgreSQL db (default:ny_taxi)')
+@click.option('--ingest-table', default=INGEST_TABLE, help='table name to ingest (default:zones)')
+def ingest_taxi_zone_data(pg_user, pg_pass, pg_host, pg_port, pg_db, ingest_table):
+    zone_df = pd.read_csv(DATA_SOURCE_PREFIX+ZONE_DATA)
+    engine = create_engine(f"{POSTGRES}://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}")
+    zone_df.to_sql(name=ingest_table, con=engine, if_exists='replace')
+
+if __name__ == "__main__":
+    ingest_taxi_zone_data()
+```
+### Adjust Dockerfile for another image built
+1. Adjust Dockerfile for ingest_zone_data.py
+   ```Dockerfile
+   # simply change ingest_data.py to ingest_zone_data.py
+   COPY ingest_zone_data.py ingest_zone_data.py
+   
+   # define first command when run container
+   ENTRYPOINT ["python", "ingest_zone_data.py"]
+   ```
+2. build another docker image
+   ```Bash
+   docker build -t taxi_zone_ingest:v001 .
+   ```
+### run docker taxi_zone_ingest:v001 to ingest taxi_zone_lookup table
+```Bash
+docker run -it \
+  --network=pipeline_default \
+  taxi_zone_ingest:v001 \
+  --pg-user=root \
+  --pg-pass=root \
+  --pg-host=pgdatabase \
+  --pg-port=5432 \
+  --pg-db=ny_taxi \
+  --ingest-table=zones
+```
+## SQL Refresher<sub>[12]</sub>
+PostgreSQL practice:
+1. `CONCAT()` and `CONCAT_WS()`:
+   ```SQL
+   SELECT
+   	y.tpep_pickup_datetime,
+   	y.tpep_dropoff_datetime,
+   	y.total_amount,
+   	CONCAT_WS(' | ', zpu."Borough", zpu."Zone") AS pickup_loc,
+   	CONCAT(zdo."Borough", ' | ', zdo."Zone") AS dropoff_loc
+   FROM
+   	public.yellow_taxi_data y,
+   	public.zones zpu,
+   	public.zones zdo
+   WHERE
+   	y."PULocationID" = zpu."LocationID"
+   	AND y."DOLocationID" = zdo."LocationID"
+   LIMIT 10;	
+   ```
+   1. Lesson learned: Double quotes `" "` in PostgreSQL:
+      - Issue: Why some columns in PostgreSQL need double quotes to identify?
+      - Reason: PostgreSQL automatically convert all unquoted table, column, schema...etc. to <ins>lowercase<ins>, so without `" "`, PostgreSQL will convert PULocationID to pulocationid, and unable to find the column.
+      - Solution:
+        1. Use `" "` to avoid converting to lowercase before PostgreSQL process query.
+        2. Convert column names to lowercase before push to SQL:
+        ```Python
+        df.columns = df.columns.str.lower()
+        ```
+        3. rename column names to snake_case:
+        ```Python
+        df.columns = ['pu_location_id', 'do_location_id']
+        ```
+   2. Question: What's the difference between `" "` and `' '`?<br >
+      Answer: `" "` used on table, column, schema name, while `' '` used on string <ins>value</ins> in table (text, character, date)
+   3. Lesson learned: `+` throw error in PostgreSQL
+      - Issue: `zpu.borough + ' | ' + zpu.zone AS pickup_loc` throw error.
+      - Reason: PostgreSQL reserve `+` for <ins>addition</ins> only. Other usage will throw error.
+      - Solution: use `CONCAT(zpu.borough, ' | ', zpu.zone AS pickup_loc)` or `CONCAT_WS(' | ', zpu.borough, zpu.zone AS pickup_loc)`
+2. Data quality check (`IS NULL`): Check NULL for `"PULocationID"` and `"DOLocationID"`
+   ```SQL
+   SELECT
+   	tpep_pickup_datetime,
+   	tpep_dropoff_datetime,
+   	total_amount,
+   	"PULocationID",
+   	"DOLocationID"
+   FROM
+   	public.yellow_taxi_data
+   WHERE
+   	"PULocationID" IS NULL
+   	OR "DOLocationID" IS NULL
+   LIMIT 100;
+   ```
+3. Data quality check (`NOT IN`): Check `"PULocationID"` and `"DOLocationID"` are actually exist in `"LocationID"` in taxi zone lookup table
+   ```SQL
+   SELECT
+   	tpep_pickup_datetime,
+   	tpep_dropoff_datetime,
+   	total_amount,
+   	"PULocationID",
+   	"DOLocationID"
+   FROM
+   	public.yellow_taxi_data
+   WHERE
+   	"PULocationID" NOT IN (
+   		SELECT "LocationID" FROM zones
+   	)
+   OR	"DOLocationID" NOT IN (
+   		SELECT "LocationID" FROM zones
+   	);
+   ```
+4. `GROUP BY`, `ORDER BY`, `MAX`, `MIN`:
+   ```SQL
+   SELECT
+   	CAST(tpep_dropoff_datetime AS DATE) drop_date,
+   	COUNT(1) drop_times,
+   	MAX(total_amount) max_amount,
+   	MIN(passenger_count) lowest_passenger 
+   FROM
+   	public.yellow_taxi_data
+   GROUP BY
+   	CAST(tpep_dropoff_datetime AS DATE)
+   ORDER BY
+   	drop_times DESC
+   LIMIT 100;
+   ```
+5. `GROUP BY` multiple fields:
+   ```SQL
+   SELECT
+   	CAST(tpep_dropoff_datetime AS DATE) drop_date,
+   	"DOLocationID",
+   	COUNT(1) drop_times,
+   	MAX(total_amount) max_amount,
+   	MIN(passenger_count) lowest_passenger 
+   FROM
+   	public.yellow_taxi_data
+   GROUP BY
+   	1, 2
+   ORDER BY
+   	drop_times DESC, drop_date ASC
+   LIMIT 100;
+   ```
+   1. Question: What does multiple GROUP BY do?
+      - Answer: PostgreSQL only collapse rows when values in all GROUP BY columns are the same.
+   2. Question: What does `1, 2` do in GROUP BY?
+      - Answer: `1, 2` means the first and the second column in `SELECT` list, and here `1, 2` means:
+        ```SQL
+        GROUP BY
+           CAST(tpep_dropoff_datetime AS DATE) drop_date,
+           "DOLocationID",
+        ```
+        PostgreSQL support number 1, 2,... in `GROUP BY` as No. of columns in `SELECT` list.
+6. Lesson learned: `DESCRIBE` throw error in PostgreSQL:
+   - Reason: `DESCRIBE <table_name>` is NOT a valid SQL command in PostgreSQL, while valid in MySQL.<sub>[13]</sub>
+   - Solution:
+     1. Select table name, Columns to view table columns in pgAdmin.
+     2. Query with `LIMIT 1` to view table columns:
+        ```SQL
+        SELECT *
+        FROM yellow_taxi_data
+        LIMIT 1;
+        ```
+
 
 
 ## Reference<br >
@@ -674,6 +890,9 @@ Docker Compose let me run multiple docker containers in the same time.
 8. [pgAdmin - Database Management Tool](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/07-pgadmin.md)
 9. [Dockerizing the Ingestion Script](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/08-dockerizing-ingestion.md)
 10. [Docker Compose](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/09-docker-compose.md)
+11. [Taxi Zone Lookup Table](https://github.com/DataTalksClub/nyc-tlc-data/releases/)
+12. [SQL Refresher](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/10-sql-refresher.md)
+13. [115. DESCRIBE](https://github.com/raylai-proj/SQL_review_note#115-describe)
 
 
 
