@@ -881,8 +881,8 @@ PostgreSQL practice:
 1. What is GCP?
    - Google Cloud Platform (GCP) is a enterprise level cloud computing service, e.g. AWS, and the service is provided by Google. GCP provides services include computing, <ins>Storage & Database</ins>, <ins>Big Data</ins>, machine learning, networking, and management, and these services allow user to migrate their development application from local to cloud. GCP runs on the same infrastructure on which Google internally use to develop products, e.g. Search, Youtube, Gmail..etc.
 2. Why use GCP? GCP is the industry-leading services for large-scale data engineering and analytics which align data engineer skills within company to build product and applications.
-3. When to use GCP?
-4. Who to use GCP?
+3. Who to use GCP? GCP is for data engineer to build scalable data lake as well as data pipeline with data processing in real time and pass to the data warehouse. In addition, software engineer can use GCP to deploy microservices, host web applications and automate CI/CD workflows.
+4. When to use GCP?
 5. Where to use GCP?
 6. How people use GCP?
 
