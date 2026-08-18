@@ -876,6 +876,20 @@ PostgreSQL practice:
         FROM yellow_taxi_data
         LIMIT 1;
         ```
+## GCP Introduction<sub>[14]</sub>
+### GCP 5W1H
+1. What is GCP?
+   - Google Cloud Platform (GCP) is a enterprise level cloud computing service, e.g. AWS, and the service is provided by Google. GCP provides services include computing, <ins>Storage & Database</ins>, <ins>Big Data</ins>, machine learning, networking, and management, and these services allow user to migrate their development application from local to cloud. GCP runs on the same infrastructure on which Google internally use to develop products, e.g. Search, Youtube, Gmail..etc.
+2. Why use GCP?
+   - GCP is the industry-leading services for large-scale data engineering and analytics which align data engineer skills within company to build product and applications.
+3. Who to use GCP?
+   - GCP is for data engineer to build scalable data lake as well as data pipeline with data processing in real time and pass to the data warehouse. In addition, software engineer can use GCP to deploy microservices, host web applications and automate CI/CD workflows.
+4. When to use GCP?
+   - GCP is used when large scale data processing is required. When the <ins>data size</ins> become very large and manage physical infrastructure is impractical, migrate the data model to cloud service like GCP is a practical option. In addition, <ins>GCP replace localhost machine</ins> to run data pipeline and data model to <ins>free the localhost machine</ins> for staying powered on and being occupied 24/7.
+5. Where to use GCP?
+   - GCP can be used for distributed deployments, which allows different countries access applications that was deployed to the closest server in their region to reduce network latency. This also provides benefit for distributed computing, e.g. load balancing, capacity pooling, and fault tolerance and recovery. 
+6. How people use GCP?
+   - People use GCP by Google Cloud Console for web-based UI, gcloud in CLI for apps management and deployment, and Infrastructure as Code (IaC) tool, e.g. Terraform for automatic deployment.
 
 
 
@@ -893,6 +907,7 @@ PostgreSQL practice:
 11. [Taxi Zone Lookup Table](https://github.com/DataTalksClub/nyc-tlc-data/releases/)
 12. [SQL Refresher](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/10-sql-refresher.md)
 13. [115. DESCRIBE](https://github.com/raylai-proj/SQL_review_note#115-describe)
+14. [GCP](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/01-docker-terraform#gcp)
 
 
 
