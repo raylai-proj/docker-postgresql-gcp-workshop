@@ -887,6 +887,7 @@ PostgreSQL practice:
 4. When to use GCP?
    - GCP is used when large scale data processing is required. When the <ins>data size</ins> become very large and manage physical infrastructure is impractical, migrate the data model to cloud service like GCP is a practical option. In addition, <ins>GCP replace localhost machine</ins> to run data pipeline and data model to <ins>free the localhost machine</ins> for staying powered on and being occupied 24/7.
 5. Where to use GCP?
+   - GCP can be used for distributed deployments, which allows different countries access applications that was deployed to the closest server in their region to reduce network latency. This also provides benefit for distributed computing, e.g. load balancing, capacity pooling, and fault tolerance and recovery. 
 6. How people use GCP?
 
 
