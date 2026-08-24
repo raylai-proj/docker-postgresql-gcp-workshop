@@ -916,6 +916,7 @@ PostgreSQL practice:
    3. `terraform plan`: compare current `.tfstate` to updated `.tf` code to output update path (dry-run preview) include addition(+), modification(~), deletion(-)<br >
    4. `terraform apply`: make API calls to update and build the infrastructure that matched updated `.tf` code file.<br >
 ### What is DevOps?
+DevOps combines development (Dev) and IT operations (Ops) and in terraform. DevOps means <ins>using Infrastructure as Code (IaC) tools</ins> to replace <ins>manually point-and-click on cloud console method</ins> to setup infrastructure in cloud platform. With terraform, DevOps define infrastructure in `.tf` files for version control and maintenance.
 ### What is providers in terraform?
 ### What is resources in terraform?
 ### What is registry in terraform?
