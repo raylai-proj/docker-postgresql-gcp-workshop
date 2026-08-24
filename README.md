@@ -892,25 +892,29 @@ PostgreSQL practice:
    - People use GCP by Google Cloud Console for web-based UI, gcloud in CLI for apps management and deployment, and Infrastructure as Code (IaC) tool, e.g. Terraform for automatic deployment.
 ## Terraform Introduction<sub>[15]</sub>
 ### Terraform 5W1H
-1. What is Terraform?
+1. What is Terraform?<br >
    Terraform is an open source tool of Infrastructure as Code (IaC) that allows developers to create <ins>human-readable configuration files</ins> to define, provision (automatically create, configure, deploy, reuse), and manage cloud services based on codes in a file(.tf). This replaces multiple <ins>clicking, selecting, and saving</ins> on cloud consoles in various services (e.g. IAM, BigQuery, Cloud Storage, EC2, RDS) from various cloud platforms (e.g. AWS, GCP...etc.)<sub>[16][17][18]</sub>
-2. Why use terraform? (terraform advantages)<sub>[17]</sub>
+2. Why use terraform? (terraform advantages)<sub>[17]</sub><br >
    1. Create and maintain <ins>human-readable infrastructure configuration file(.tf)</ins> to replace <ins>clicking, selecting, saving</ins> on cloud service console. This help maintain infrastructure configuration, allow us to understand the configuration, and version control of complicated cloud service infrastructure/environment setup.
    2. Terraform enable <ins>automation</ins> to <ins>safely build</ins> infrastructure with plan, setup, create, modify, upgrade, setup sequence.
    3. With applying infrastructure based on code means the code <ins>can include our policy</ins>, e.g. cost limit, security requirement, compliance, operational best practice.
    4. Reusability and modularity: Terraform enable infrastructure as a module/library (e.g. with database, container, virtual environment, cloud service setup in it) to be able to recreate the infrastructure and setup for next application.
    <img width="265" height="259" alt="image" src="https://github.com/user-attachments/assets/55ea3d69-80da-4eee-8984-b27b15b20eac" />
-3. Who use terraform?<sub>[19]</sub>
+3. Who use terraform?<sub>[19]</sub><br >
    Terraform is built for infrastructure configuration setup and it's suit for:
    - DevOps Engineer: to automatically setup cloud infrastructure with CI/CD infrastructure pipeline.
    - Cloud Architects: to apply policy on infrastructure setup.
    - Data Engineer: to help themselves setup self-service environment, e.g. BigQuery, Google Cloud Storage buckets...etc. 
-4. Where to use terraform?
+4. Where to use terraform?<br >
    Terraform mainly used on cloud service platform (GCP, AWS), cloud service (GCS buckets, BigQuery), container (WSL, Docker, VMware).<sub>[17]</sub>
-5. When to use terraform?<sub>[17]</sub>
-   Terraform is used from <ins>initial deployment</ins> (day 1), continue <ins>configuration modification/maintenance</ins> (day 2 to day n-1), to <ins>decommission/service terminate/project destory</ins> (day n).
-<img width="426" height="277" alt="image" src="https://github.com/user-attachments/assets/b2d6aac6-3474-4cc2-b9f1-aaee212b9d75" />
-7. How to use terraform?
+5. When to use terraform?<sub>[17]</sub><br >
+   Terraform is used from <ins>initial deployment</ins> (day 1), continue <ins>configuration modification/maintenance</ins> (day 2 to day n-1), to <ins>decommission/service terminate/project destory</ins> (day n).<br >
+   <img width="426" height="277" alt="image" src="https://github.com/user-attachments/assets/b2d6aac6-3474-4cc2-b9f1-aaee212b9d75" />
+6. How to use terraform?<sub>[20]</sub><br >
+   1. Write `.tf` code: create `.tf` file and write HCL code (HashiCorp Configuration Language) and include <ins>provider</ins> to specify cloud platform.<br >
+   2. `terraform init`: download provider plugin specified by provider and initialize state tracking.<br > 
+   3. `terraform plan`: compare current `.tfstate` to updated `.tf` code to output update path (dry-run preview) include addition(+), modification(~), deletion(-)<br >
+   4. `terraform apply`: make API calls to update and build the infrastructure that matched updated `.tf` code file.<br >
 
 
 
@@ -935,6 +939,7 @@ PostgreSQL practice:
 17. [Introduction to Terraform](https://www.youtube.com/watch?v=ZFLWA1kQ3ls)
 18. [DE Zoomcamp 1.1.1 - Introduction to Google Cloud Platform](https://www.youtube.com/watch?v=18jIzE41fJ4&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=3)
 19. [Infrastructure as code: What is it? Why is it important?](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code)
+20. [terraform execution steps](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md#execution-steps)
 
 
 
