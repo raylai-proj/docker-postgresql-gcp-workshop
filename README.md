@@ -899,7 +899,11 @@ PostgreSQL practice:
    2. Terraform enable <ins>automation</ins> to <ins>safely build</ins> infrastructure with plan, setup, create, modify, upgrade, setup sequence.
    3. With applying infrastructure based on code means the code <ins>can include our policy</ins>, e.g. cost limit, security requirement, compliance, operational best practice.
    4. Reusability and modularity: Terraform enable infrastructure as a module/library (e.g. with database, container, virtual environment, cloud service setup in it) to be able to recreate the infrastructure and setup for next application.
-3. Who use terraform? 
+3. Who use terraform?<sub>[19]</sub>
+   Terraform is built for infrastructure configuration setup and it's suit for:
+   - DevOps Engineer: to automatically setup cloud infrastructure with CI/CD infrastructure pipeline.
+   - Cloud Architects: to apply policy on infrastructure setup.
+   - Data Engineer: to help themselves setup self-service environment, e.g. BigQuery, Google Cloud Storage buckets...etc. 
 4. Where to use terraform?
 5. How to use terraform?
 
@@ -925,6 +929,7 @@ PostgreSQL practice:
 16. [What is Terraform?](https://developer.hashicorp.com/terraform/intro)
 17. [Introduction to Terraform](https://www.youtube.com/watch?v=ZFLWA1kQ3ls)
 18. [DE Zoomcamp 1.1.1 - Introduction to Google Cloud Platform](https://www.youtube.com/watch?v=18jIzE41fJ4&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=3)
+19. [Infrastructure as code: What is it? Why is it important?](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code)
 
 
 
