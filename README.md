@@ -899,6 +899,7 @@ PostgreSQL practice:
    2. Terraform enable <ins>automation</ins> to <ins>safely build</ins> infrastructure with plan, setup, create, modify, upgrade, setup sequence.
    3. With applying infrastructure based on code means the code <ins>can include our policy</ins>, e.g. cost limit, security requirement, compliance, operational best practice.
    4. Reusability and modularity: Terraform enable infrastructure as a module/library (e.g. with database, container, virtual environment, cloud service setup in it) to be able to recreate the infrastructure and setup for next application.
+   <img width="265" height="259" alt="image" src="https://github.com/user-attachments/assets/55ea3d69-80da-4eee-8984-b27b15b20eac" />
 3. Who use terraform?<sub>[19]</sub>
    Terraform is built for infrastructure configuration setup and it's suit for:
    - DevOps Engineer: to automatically setup cloud infrastructure with CI/CD infrastructure pipeline.
@@ -906,7 +907,10 @@ PostgreSQL practice:
    - Data Engineer: to help themselves setup self-service environment, e.g. BigQuery, Google Cloud Storage buckets...etc. 
 4. Where to use terraform?
    Terraform mainly used on cloud service platform (GCP, AWS), cloud service (GCS buckets, BigQuery), container (WSL, Docker, VMware).<sub>[17]</sub>
-5. How to use terraform?
+5. When to use terraform?<sub>[17]</sub>
+   Terraform is used from <ins>initial deployment</ins> (day 1), continue <ins>configuration modification/maintenance</ins> (day 2 to day n-1), to <ins>decommission/service terminate/project destory</ins> (day n).
+<img width="426" height="277" alt="image" src="https://github.com/user-attachments/assets/b2d6aac6-3474-4cc2-b9f1-aaee212b9d75" />
+7. How to use terraform?
 
 
 
