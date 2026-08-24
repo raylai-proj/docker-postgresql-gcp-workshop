@@ -905,6 +905,7 @@ PostgreSQL practice:
    - Cloud Architects: to apply policy on infrastructure setup.
    - Data Engineer: to help themselves setup self-service environment, e.g. BigQuery, Google Cloud Storage buckets...etc. 
 4. Where to use terraform?
+   Terraform mainly used on cloud service platform (GCP, AWS), cloud service (GCS buckets, BigQuery), container (WSL, Docker, VMware).<sub>[17]</sub>
 5. How to use terraform?
 
 
