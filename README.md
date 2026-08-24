@@ -890,6 +890,15 @@ PostgreSQL practice:
    - GCP can be used for distributed deployments, which allows different countries access applications that was deployed to the closest server in their region to reduce network latency. This also provides benefit for distributed computing, e.g. load balancing, capacity pooling, and fault tolerance and recovery. 
 6. How people use GCP?
    - People use GCP by Google Cloud Console for web-based UI, gcloud in CLI for apps management and deployment, and Infrastructure as Code (IaC) tool, e.g. Terraform for automatic deployment.
+## Terraform Introduction<sub>[15]</sub>
+### Terraform 5W1H
+1. What is Terraform?
+   Terraform is an open source tool of Infrastructure as Code (IaC) that allows developers to create <ins>human-readable configuration files</ins> to define, provision (automatically create, configure, deploy, reuse), and manage cloud services based on codes in a file(.tf). This replaces multiple <ins>clicking, selecting, and saving</ins> on cloud consoles in various services (e.g. IAM, BigQuery, Cloud Storage, EC2, RDS) from various cloud platforms (e.g. AWS, GCP...etc.)<sub>[16][17][18]</sub>
+3. Why use terraform?
+4. Who use terraform?
+5. Where to use terraform?
+6. How to use terraform?
+
 
 
 
@@ -908,6 +917,10 @@ PostgreSQL practice:
 12. [SQL Refresher](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/10-sql-refresher.md)
 13. [115. DESCRIBE](https://github.com/raylai-proj/SQL_review_note#115-describe)
 14. [GCP](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/01-docker-terraform#gcp)
+15. [Terraform Overview](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md)
+16. [What is Terraform?](https://developer.hashicorp.com/terraform/intro)
+17. [Introduction to Terraform](https://www.youtube.com/watch?v=ZFLWA1kQ3ls)
+18. [DE Zoomcamp 1.1.1 - Introduction to Google Cloud Platform](https://www.youtube.com/watch?v=18jIzE41fJ4&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=3)
 
 
 
