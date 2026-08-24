@@ -922,7 +922,10 @@ Providers is a <ins>plugin that translate terraform code into API calls for targ
 ### What is resources in terraform?<sub>[22]</sub>
 Resource block in terraform represent the infrastructure object that will create, modify, or destory (e.g. IAM roles, BigQuery dataset, GCS bucket).
 - resource syntax: `resource "provider resource type" "local name"`, e.g. `resource "google_storage_bucket" "my_data_bucket"`
-### What is Terraform Registry?
+### What is Terraform Registry?<sub>[22]</sub>
+Terraform registry is a repository where terraform community and cloud vendors share pre-built <ins>providers</ins> and <ins>modules</ins>.<br >
+1. The providers enable terraform to communicate with various cloud platforms.
+2. The modules are <ins>reusable code blueprints</ins> which are <ins>pre-packaged set of terraform code that was configured multiple resources together following the industry best practices</ins>. 
 
 
 
