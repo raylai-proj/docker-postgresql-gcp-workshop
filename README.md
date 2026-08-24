@@ -894,10 +894,14 @@ PostgreSQL practice:
 ### Terraform 5W1H
 1. What is Terraform?
    Terraform is an open source tool of Infrastructure as Code (IaC) that allows developers to create <ins>human-readable configuration files</ins> to define, provision (automatically create, configure, deploy, reuse), and manage cloud services based on codes in a file(.tf). This replaces multiple <ins>clicking, selecting, and saving</ins> on cloud consoles in various services (e.g. IAM, BigQuery, Cloud Storage, EC2, RDS) from various cloud platforms (e.g. AWS, GCP...etc.)<sub>[16][17][18]</sub>
-3. Why use terraform?
-4. Who use terraform?
-5. Where to use terraform?
-6. How to use terraform?
+2. Why use terraform? (terraform advantages)<sub>[17]</sub>
+   1. Create and maintain <ins>human-readable infrastructure configuration file(.tf)</ins> to replace <ins>clicking, selecting, saving</ins> on cloud service console. This help maintain infrastructure configuration, allow us to understand the configuration, and version control of complicated cloud service infrastructure/environment setup.
+   2. Terraform enable <ins>automation</ins> to <ins>safely build</ins> infrastructure with plan, setup, create, modify, upgrade, setup sequence.
+   3. With applying infrastructure based on code means the code <ins>can include our policy</ins>, e.g. cost limit, security requirement, compliance, operational best practice.
+   4. Reusability and modularity: Terraform enable infrastructure as a module/library (e.g. with database, container, virtual environment, cloud service setup in it) to be able to recreate the infrastructure and setup for next application.
+3. Who use terraform? 
+4. Where to use terraform?
+5. How to use terraform?
 
 
 
