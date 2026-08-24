@@ -915,6 +915,11 @@ PostgreSQL practice:
    2. `terraform init`: download provider plugin specified by provider and initialize state tracking.<br > 
    3. `terraform plan`: compare current `.tfstate` to updated `.tf` code to output update path (dry-run preview) include addition(+), modification(~), deletion(-)<br >
    4. `terraform apply`: make API calls to update and build the infrastructure that matched updated `.tf` code file.<br >
+### What is DevOps?
+### What is providers in terraform?
+### What is resources in terraform?
+### What is registry in terraform?
+
 
 
 
