@@ -919,8 +919,10 @@ PostgreSQL practice:
 DevOps combines development (Dev) and IT operations (Ops) and in terraform. DevOps means <ins>using Infrastructure as Code (IaC) tools</ins> to replace <ins>manually point-and-click on cloud console method</ins> to setup infrastructure in cloud platform. With terraform, DevOps define infrastructure in `.tf` files for version control and maintenance.
 ### What is providers in terraform?<sub>[21]</sub>
 Providers is a <ins>plugin that translate terraform code into API calls for target platform</ins> (e.g. GCP, AWS, Azure). Providers <ins>help replace complicated REST API calls</ins> to human-readable blocks. 
-### What is resources in terraform?
-### What is registry in terraform?
+### What is resources in terraform?<sub>[22]</sub>
+Resource block in terraform represent the infrastructure object that will create, modify, or destory (e.g. IAM roles, BigQuery dataset, GCS bucket).
+- resource syntax: `resource "provider resource type" "local name"`, e.g. `resource "google_storage_bucket" "my_data_bucket"`
+### What is Terraform Registry?
 
 
 
@@ -948,6 +950,7 @@ Providers is a <ins>plugin that translate terraform code into API calls for targ
 19. [Infrastructure as code: What is it? Why is it important?](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code)
 20. [terraform execution steps](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md#execution-steps)
 21. [terraform providers](https://registry.terraform.io/browse/providers)
+22. [terraform declaration](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md#declarations)
 
 
 
