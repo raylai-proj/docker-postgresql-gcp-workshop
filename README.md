@@ -917,7 +917,8 @@ PostgreSQL practice:
    4. `terraform apply`: make API calls to update and build the infrastructure that matched updated `.tf` code file.<br >
 ### What is DevOps?
 DevOps combines development (Dev) and IT operations (Ops) and in terraform. DevOps means <ins>using Infrastructure as Code (IaC) tools</ins> to replace <ins>manually point-and-click on cloud console method</ins> to setup infrastructure in cloud platform. With terraform, DevOps define infrastructure in `.tf` files for version control and maintenance.
-### What is providers in terraform?
+### What is providers in terraform?<sub>[21]</sub>
+Providers is a <ins>plugin that translate terraform code into API calls for target platform</ins> (e.g. GCP, AWS, Azure). Providers <ins>help replace complicated REST API calls</ins> to human-readable blocks. 
 ### What is resources in terraform?
 ### What is registry in terraform?
 
@@ -946,6 +947,7 @@ DevOps combines development (Dev) and IT operations (Ops) and in terraform. DevO
 18. [DE Zoomcamp 1.1.1 - Introduction to Google Cloud Platform](https://www.youtube.com/watch?v=18jIzE41fJ4&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=3)
 19. [Infrastructure as code: What is it? Why is it important?](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code)
 20. [terraform execution steps](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md#execution-steps)
+21. [terraform providers](https://registry.terraform.io/browse/providers)
 
 
 
