@@ -1,3 +1,8 @@
+variable "credentials" {
+  description = "My Credentials"
+  default     = "~/.config/gcloud/application_default_credentials.json"
+}
+
 variable "project" {
   description = "Project"
   default     = "project-9c55cdb0-ce48-42d5-902"
