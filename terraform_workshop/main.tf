@@ -14,9 +14,10 @@ provider "google" {
 }
 
 resource "google_storage_bucket" "demo-bucket" {
-  name          = "project-9c55cdb0-ce48-42d5-902-terra-bucket"
-  location      = "asia-east1"
-  force_destroy = true
+  name                        = "project-9c55cdb0-ce48-42d5-902-terra-bucket"
+  location                    = "asia-east1"
+  uniform_bucket_level_access = true
+  force_destroy               = true
 
   lifecycle_rule {
     condition {
