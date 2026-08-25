@@ -28,3 +28,8 @@ resource "google_storage_bucket" "demo-bucket" {
     }
   }
 }
+
+resource "google_bigquery_dataset" "demo_dataset" {
+  dataset_id = "demo_dataset"
+  location   = "asia-east1"
+}
