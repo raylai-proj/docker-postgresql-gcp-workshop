@@ -209,6 +209,12 @@ __marimo__/
 # Local .terraform directories
 .terraform/
 
+<<<<<<< HEAD
+=======
+# Local .terraform directories
+.terraform/
+
+>>>>>>> 2307f30 (chore: stop tracking .terraform files)
 # .tfstate files
 *.tfstate
 *.tfstate.*
