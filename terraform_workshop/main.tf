@@ -8,9 +8,10 @@ terraform {
 }
 
 provider "google" {
-  project = var.project
-  region  = var.region
-  zone    = var.zone
+  credentials = file(var.credentials)
+  project     = var.project
+  region      = var.region
+  zone        = var.zone
 }
 
 resource "google_storage_bucket" "demo-bucket" {
