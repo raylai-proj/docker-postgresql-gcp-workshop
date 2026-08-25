@@ -1,3 +1,8 @@
+variable "location" {
+    description = "Project Location"
+    default = "asia-east1"
+}
+
 variable "bq_dataset_name" {
     description = "My BigQuery Dataset Name"
     default = "demo_dataset"
