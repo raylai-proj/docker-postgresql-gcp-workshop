@@ -890,6 +890,11 @@ PostgreSQL practice:
    - GCP can be used for distributed deployments, which allows different countries access applications that was deployed to the closest server in their region to reduce network latency. This also provides benefit for distributed computing, e.g. load balancing, capacity pooling, and fault tolerance and recovery. 
 6. How people use GCP?
    - People use GCP by Google Cloud Console for web-based UI, gcloud in CLI for apps management and deployment, and Infrastructure as Code (IaC) tool, e.g. Terraform for automatic deployment.
+### gcloud setup
+gcloud is command line tool (CLI), which let developer to directly manage services, create service account, assign roles, and deploy resource from local to GCP. gcloud is the cleanest way to manage GCP service instead of point and click on GCP website.
+1. login gmail account and authorize it to use free-tier GCP:
+   - login gmail: [https://mail.google.com](https://mail.google.com)
+   - authorize gmail account to use GCP: [https://console.cloud.google.com/](https://console.cloud.google.com/)
 ## Terraform Introduction<sub>[15]</sub>
 ### Terraform 5W1H
 1. What is Terraform?<br >
