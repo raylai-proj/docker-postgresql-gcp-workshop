@@ -926,7 +926,7 @@ Resource block in terraform represent the infrastructure object that will create
 Terraform registry is a repository where terraform community and cloud vendors share pre-built <ins>providers</ins> and <ins>modules</ins>.<br >
 1. The providers enable terraform to communicate with various cloud platforms.
 2. The modules are <ins>reusable code blueprints</ins> which are <ins>pre-packaged set of terraform code that was configured multiple resources together following the industry best practices</ins>.
-## gcloud setup (in WSL)<sub>[22]</sub>
+## gcloud setup (in WSL)<sub>[23]</sub>
 gcloud is command line tool (CLI), which let developer to directly manage services, create service account, assign roles, and deploy resource from local to GCP. gcloud is the cleanest way to manage GCP service instead of point and click on GCP website.
 1. login gmail account and authorize it to use free-tier GCP:
    - login gmail: [https://mail.google.com](https://mail.google.com)
@@ -969,12 +969,11 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
       gcloud --version
       ```
 
-3. Initialize and Authenticate gcloud to connect to Google account and GCP:
+3. Initialize and Authenticate gcloud to connect to Google account and GCP:<sub>[24]</sub>
    ```Bash
    # gcloud init will prompt to sign in Google account to authorize access and ask permission to connect to GCP
    gcloud init
    ```
-
 
 
 
@@ -1002,6 +1001,7 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
 21. [terraform providers](https://registry.terraform.io/browse/providers)
 22. [terraform declaration](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md#declarations)
 23. [Install the Google Cloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk)
+24. [Initialize and authorize the gcloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk#initializing-the-cli)
 
 
 
