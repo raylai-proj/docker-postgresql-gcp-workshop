@@ -890,11 +890,6 @@ PostgreSQL practice:
    - GCP can be used for distributed deployments, which allows different countries access applications that was deployed to the closest server in their region to reduce network latency. This also provides benefit for distributed computing, e.g. load balancing, capacity pooling, and fault tolerance and recovery. 
 6. How people use GCP?
    - People use GCP by Google Cloud Console for web-based UI, gcloud in CLI for apps management and deployment, and Infrastructure as Code (IaC) tool, e.g. Terraform for automatic deployment.
-### gcloud setup
-gcloud is command line tool (CLI), which let developer to directly manage services, create service account, assign roles, and deploy resource from local to GCP. gcloud is the cleanest way to manage GCP service instead of point and click on GCP website.
-1. login gmail account and authorize it to use free-tier GCP:
-   - login gmail: [https://mail.google.com](https://mail.google.com)
-   - authorize gmail account to use GCP: [https://console.cloud.google.com/](https://console.cloud.google.com/)
 ## Terraform Introduction<sub>[15]</sub>
 ### Terraform 5W1H
 1. What is Terraform?<br >
@@ -930,7 +925,49 @@ Resource block in terraform represent the infrastructure object that will create
 ### What is Terraform Registry?<sub>[22]</sub>
 Terraform registry is a repository where terraform community and cloud vendors share pre-built <ins>providers</ins> and <ins>modules</ins>.<br >
 1. The providers enable terraform to communicate with various cloud platforms.
-2. The modules are <ins>reusable code blueprints</ins> which are <ins>pre-packaged set of terraform code that was configured multiple resources together following the industry best practices</ins>. 
+2. The modules are <ins>reusable code blueprints</ins> which are <ins>pre-packaged set of terraform code that was configured multiple resources together following the industry best practices</ins>.
+## gcloud setup (in WSL)<sub>[22]</sub>
+gcloud is command line tool (CLI), which let developer to directly manage services, create service account, assign roles, and deploy resource from local to GCP. gcloud is the cleanest way to manage GCP service instead of point and click on GCP website.
+1. login gmail account and authorize it to use free-tier GCP:
+   - login gmail: [https://mail.google.com](https://mail.google.com)
+   - authorize gmail account to use GCP: [https://console.cloud.google.com/](https://console.cloud.google.com/)
+2. gcloud installation in WSL:
+   1. Prerequisites: update apt-get package:
+      ```Bash
+      sudo apt-get update
+      ```
+   2. Prerequisites: make sure install `ca-certificates`, `gnupg`, `curl`
+      ```Bash
+      sudo apt-get install ca-certificates gnupg curl
+      ```
+   3. Import Google Cloud public key:
+      ```Bash
+      # 1. curl download gcloud public key
+      # 2. use `gpg` (from `gnupg`) to:
+      #    1. convert public key to binary format (because package manager only read binary format)
+      #    2. save to `/usr/share/keyrings/cloud.google.gpg`
+      curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg -o /usr/share/keyrings/cloud.google.gpg
+      ```
+   4. Add the gcloud CLI distribution URI as a package source:
+      ```Bash
+      # 1. deb is Repository Directive to tell system https://packages.cloud.google.com/apt cloud-sdk main is a repo contain binary packages for installation.
+      # 2. [signed-by=/usr/share/keyrings/cloud.google.gpg] means this repo can be verified by gpg key in directory saved previously.
+      # 3. tee is tool to read standard input and write both standard output and one more files. Here tee does:
+      #   1. solve permission limitation for (>), e.g. sudo echo "..." > /etc/apt/...
+      #      - Because sudo only apply to echo, (>) will fail, so sudo tee ensure writeing operation have root permission.
+      #   2. tee write repo entry to google-cloud-sdk.list 
+      echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+      ```
+   5. Update apt-get again and install gcloud:
+      ```Bash
+      #   1. apt-get update rescan to include new added google cloud repository
+      #   2. then install gcloud
+      sudo apt-get update && sudo apt-get install google-cloud-cli
+      ```
+   6. Verify gcloud installed:
+      ```Bash
+      gcloud --version
+      ```
 
 
 
@@ -959,6 +996,7 @@ Terraform registry is a repository where terraform community and cloud vendors s
 20. [terraform execution steps](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md#execution-steps)
 21. [terraform providers](https://registry.terraform.io/browse/providers)
 22. [terraform declaration](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md#declarations)
+23. [Install the Google Cloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk)
 
 
 
