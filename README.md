@@ -980,14 +980,39 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
    --display-name="CJ L Service Account"
    ```
 5. Grant service account with IAM roles on the project<sub>[25][26]</sub>
-   ```Bash
-   # 1. give service account viewr role
-   # 2. <Project ID> can be found in gcp console -> cloud overview -> dashboard
-   # 3. <Service Account Name> is the service account name created previously (cj-l-service-account)
-   gcloud projects add-iam-policy-binding <Project_ID> \
-   --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
-   --role="roles/viewer"
-   ```
+   1. assigne <ins>viewer</ins> role to service account
+      ```Bash
+      # 1. give service account viewr role
+      # 2. <Project ID> can be found in gcp console -> cloud overview -> dashboard
+      # 3. <Service Account Name> is the service account name created previously (cj-l-service-account)
+      gcloud projects add-iam-policy-binding <Project_ID> \
+      --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
+      --role="roles/viewer"
+      ```
+   3. assigne <ins>Storage Object Admin</ins> role to service account
+      ```Bash
+      gcloud projects add-iam-policy-binding <Project_ID> \
+      --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
+      --role="roles/storage.objectAdmin"
+      ```
+   4. assigne <ins>Storage Admin</ins> role to service account
+      ```Bash
+      gcloud projects add-iam-policy-binding <Project_ID> \
+      --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
+      --role="roles/storage.admin"
+      ```
+   5. assigne <ins>BigQuery Admin</ins> role to service account
+      ```Bash
+      gcloud projects add-iam-policy-binding <Project_ID> \
+      --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
+      --role="roles/bigquery.admin"
+      ```
+   6. assigne <ins>Compute Admin</ins> role to service account
+      ```Bash
+      gcloud projects add-iam-policy-binding <Project_ID> \
+      --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
+      --role="roles/compute.admin"
+      ```
 
 
 ## Reference<br >
