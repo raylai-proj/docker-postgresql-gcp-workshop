@@ -969,6 +969,11 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
       gcloud --version
       ```
 
+3. Initialize and Authenticate gcloud to connect to Google account and GCP:
+   ```Bash
+   # gcloud init will prompt to sign in Google account to authorize access and ask permission to connect to GCP
+   gcloud init
+   ```
 
 
 
