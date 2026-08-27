@@ -979,7 +979,15 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
    gcloud iam service-accounts create <Service Account Name, e.g. cj-l-service-account> \
    --display-name="CJ L Service Account"
    ```
-5. 
+5. Grant service account with IAM roles on the project<sub>[25][26]</sub>
+   ```Bash
+   # 1. give service account viewr role
+   # 2. <Project ID> can be found in gcp console -> cloud overview -> dashboard
+   # 3. <Service Account Name> is the service account name created previously (cj-l-service-account)
+   gcloud projects add-iam-policy-binding <Project_ID> \
+   --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
+   --role="roles/viewer"
+   ```
 
 
 ## Reference<br >
@@ -1008,7 +1016,7 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
 23. [Install the Google Cloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk)
 24. [Initialize and authorize the gcloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk#initializing-the-cli)
 25. [Create service accounts](https://docs.cloud.google.com/iam/docs/service-accounts-create#iam-service-accounts-create-gcloud)
-26. 
+26. [DE Zoomcamp 1.3.2 - Terraform Basics](https://www.youtube.com/watch?v=Y2ux7gq3Z0o&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=9)
 
 
 
