@@ -980,7 +980,7 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
    --display-name="CJ L Service Account"
    ```
 5. Grant service account with IAM roles on the project<sub>[25][26]</sub>
-   1. assigne <ins>viewer</ins> role to service account
+   1. assign <ins>viewer</ins> role to service account
       ```Bash
       # 1. give service account viewr role
       # 2. <Project ID> can be found in gcp console -> cloud overview -> dashboard
@@ -989,30 +989,39 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
       --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
       --role="roles/viewer"
       ```
-   3. assigne <ins>Storage Object Admin</ins> role to service account
+   3. assign <ins>Storage Object Admin</ins> role to service account
       ```Bash
       gcloud projects add-iam-policy-binding <Project_ID> \
       --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
       --role="roles/storage.objectAdmin"
       ```
-   4. assigne <ins>Storage Admin</ins> role to service account
+   4. assign <ins>Storage Admin</ins> role to service account
       ```Bash
       gcloud projects add-iam-policy-binding <Project_ID> \
       --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
       --role="roles/storage.admin"
       ```
-   5. assigne <ins>BigQuery Admin</ins> role to service account
+   5. assign <ins>BigQuery Admin</ins> role to service account
       ```Bash
       gcloud projects add-iam-policy-binding <Project_ID> \
       --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
       --role="roles/bigquery.admin"
       ```
-   6. assigne <ins>Compute Admin</ins> role to service account
+   6. assign <ins>Compute Admin</ins> role to service account
       ```Bash
       gcloud projects add-iam-policy-binding <Project_ID> \
       --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
       --role="roles/compute.admin"
       ```
+6. Enable IAM API and IAM Service Account Credentials API<sub>[27]</sub>
+   ```Bash
+   gcloud services enable iam.googleapis.com iamcredentials.googleapis.com --project=<Project_ID>
+   ```
+7. Refresh Google Application Default Credentials (ADC) by login google account<sub>[28][29]</sub>
+   ```Bash
+   # terminal will prompt a link to login google account and authenticate gcloud CLI
+   gcloud auth application-default login
+   ```
 
 
 ## Reference<br >
@@ -1042,6 +1051,9 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
 24. [Initialize and authorize the gcloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk#initializing-the-cli)
 25. [Create service accounts](https://docs.cloud.google.com/iam/docs/service-accounts-create#iam-service-accounts-create-gcloud)
 26. [DE Zoomcamp 1.3.2 - Terraform Basics](https://www.youtube.com/watch?v=Y2ux7gq3Z0o&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=9)
+27. [Enabling an API in your Google Cloud project](https://docs.cloud.google.com/endpoints/docs/openapi/enable-api)
+28. [gcloud auth application-default login](https://docs.cloud.google.com/sdk/gcloud/reference/auth/application-default/login)
+29. [GCP Overview - Setup for Access](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/2_gcp_overview.md#setup-for-access)
 
 
 
