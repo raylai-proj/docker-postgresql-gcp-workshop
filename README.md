@@ -1022,7 +1022,7 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
    # terminal will prompt a link to login google account and authenticate gcloud CLI
    gcloud auth application-default login
    ```
-
+## Lesson learned from gcloud setup (in WSL)
 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
