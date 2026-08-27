@@ -974,7 +974,12 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
    # gcloud init will prompt to sign in Google account to authorize access and ask permission to connect to GCP
    gcloud init
    ```
-
+4. Create Service account<sub>[25]</sub>
+   ```Bash
+   gcloud iam service-accounts create <Service Account Name, e.g. cj-l-service-account> \
+   --display-name="CJ L Service Account"
+   ```
+5. 
 
 
 ## Reference<br >
@@ -1002,6 +1007,8 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
 22. [terraform declaration](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md#declarations)
 23. [Install the Google Cloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk)
 24. [Initialize and authorize the gcloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk#initializing-the-cli)
+25. [Create service accounts](https://docs.cloud.google.com/iam/docs/service-accounts-create#iam-service-accounts-create-gcloud)
+26. 
 
 
 
