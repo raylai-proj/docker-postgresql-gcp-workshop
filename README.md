@@ -1049,7 +1049,44 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
      ```
 5. Question: What is Application Default Credential (ADC) and what does it do?
    - Lesson Learned: ADC is <ins>automated lookup strategy</ins> by Google Cloud Library, Terraform, gcloud <ins>to authenticate requests</ins> from developers. when using gcloud or terraform google providers, the system will automatically authenticate requests, and it decrease workload from developer to generate path to verify manually by gcloud.
-
+## Terraform setup (in WSL)<sub>[35][36]</sub>
+1. Terraform installation in WSL:
+   1. Prerequisites: update the latest package index and install available updates:
+      ```Bash
+      sudo apt update && sudo apt upgrade
+      ```
+   2. Prerequisites: update apt-get package and install `gnupg`, `software-properties-common`, `curl`
+      ```Bash
+      sudo apt-get update && sudo apt install -y gnupg software-properties-common curl
+      ```
+   3. Import HashiCorp's public key:
+      ```Bash
+      # 1. curl download HashiCorp's public key
+      # 2. use `gpg` (from `gnupg`) to:
+      #    1. convert public key to binary format (because package manager only read binary format)
+      #    2. save to `/usr/share/keyrings/hashicorp-archive-keyring.gpg`
+      curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+      ```
+   4. Add the HashiCorp repository URI as a package source:
+      ```Bash
+      # 1. deb is Repository Directive to tell system https://apt.releases.hashicorp.com $(lsb_release -cs) main is a repo contain binary packages for installation.
+      # 2. [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] means this repo can be verified by gpg key in directory saved previously.
+      # 3. tee is tool to read standard input and write both standard output and one more files. Here tee does:
+      #   1. solve permission limitation for (>), e.g. sudo echo "..." > /etc/apt/...
+      #      - Because sudo only apply to echo, (>) will fail, so sudo tee ensure writeing operation have root permission.
+      #   2. tee write repo entry to /hashicorp.list 
+      echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+      ```
+   5. Update apt-get again and install terraform:
+      ```Bash
+      #   1. apt-get update rescan to include new added HashiCorp repository
+      #   2. then install terraform
+      sudo apt update && sudo apt install terraform -y
+      ```
+   6. Verify terraform installed:
+      ```Bash
+      terraform --version
+      ```
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
 2. [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)
@@ -1085,6 +1122,8 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
 32. [Set up ADC for a local development environment](https://docs.cloud.google.com/docs/authentication/set-up-adc-local-dev-environment)
 33. [How Application Default Credentials works](https://docs.cloud.google.com/docs/authentication/application-default-credentials)
 34. [View current access](https://docs.cloud.google.com/iam/docs/granting-changing-revoking-access)
+35. [Installing Terraform on Linux (Ubuntu) and Windows (WSL2 with Ubuntu)](https://codingarchitect.dev/blog/installing-terraform-on-linux-ubuntu-and-windows-wsl2-with-ubuntu/)
+36. [Install Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 
 
 
