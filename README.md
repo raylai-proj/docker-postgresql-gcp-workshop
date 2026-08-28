@@ -1023,6 +1023,9 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
    gcloud auth application-default login
    ```
 ## Lesson learned from gcloud setup (in WSL)
+1. Issue: I wonder if exposing Project_ID, Service Account Name, or Service Account Email is a risk?
+   - Answer: No, <ins>Project_ID, Service Account Name, and Service Account Email are public information.</ins>
+   - Lesson learned: An attacker cannot do anything without application credential key (.json), so only expose Project_ID, Service Account Name, Service Account Email is not a risk.
 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
