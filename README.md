@@ -1026,6 +1026,17 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
 1. Issue: I wonder if exposing Project_ID, Service Account Name, or Service Account Email is a risk?
    - Answer: No, <ins>Project_ID, Service Account Name, and Service Account Email are public information.</ins>
    - Lesson learned: An attacker cannot do anything without application credential key (.json), so only expose Project_ID, Service Account Name, Service Account Email is not a risk.
+2. Issue: Creating and downloading Application Credential key is not allowed:
+   ```Bash
+   (pipeline) > gcloud iam service-accounts keys create ~/.gcp/gcp-key.json \
+    --iam-account="chun-juei-lai-service-account@project-9c55cdb0-ce48-42d5-902.iam.gserviceaccount.com"
+   ERROR: (gcloud.iam.service-accounts.keys.create)
+   FAILED_PRECONDITION: Key creation is not allowed on this service account.
+   ...
+   type: constraints/iam.disableServiceAccountKeyCreation
+   ```
+   - Reason: GCP enabled Disable service account key creation policy for safety and security
+   - Lesson learned: GCP enabled Disable service account key creation policy and recommend developers using Application Default Credentials.
 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
