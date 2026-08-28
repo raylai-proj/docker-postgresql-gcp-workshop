@@ -1037,6 +1037,9 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
    ```
    - Reason: GCP enabled Disable service account key creation policy for safety and security
    - Lesson learned: GCP enabled Disable service account key creation policy and recommend developers using Application Default Credentials.
+3. Issue: Service Account Credential Key vs. Application Default Credentials (ADC)
+   - Reason: Service Account Credential Key will save `.json` key in local, and GCP has warned it is a security risk if not managed correctly.<sub>[30]</sub>
+   - Lesson learned: Application Default Credentials is safer in general. To setup ADC for project, simply input `gcloud auth application-default login` and connect with your google account.<sub>[31][32]</sub> GCP will automatically generate ADC key in `~/.config/gcloud/application_default_credentials.json` and authenticate it later.<sub>[33]</sub>
 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
@@ -1068,6 +1071,12 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
 27. [Enabling an API in your Google Cloud project](https://docs.cloud.google.com/endpoints/docs/openapi/enable-api)
 28. [gcloud auth application-default login](https://docs.cloud.google.com/sdk/gcloud/reference/auth/application-default/login)
 29. [GCP Overview - Setup for Access](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/2_gcp_overview.md#setup-for-access)
+30. [Service account keys](https://docs.cloud.google.com/docs/authentication/set-up-adc-local-dev-environment#local-key)
+31. [Set up Application Default Credentials](https://docs.cloud.google.com/docs/authentication/provide-credentials-adc)
+32. [Set up ADC for a local development environment](https://docs.cloud.google.com/docs/authentication/set-up-adc-local-dev-environment)
+33. [How Application Default Credentials works](https://docs.cloud.google.com/docs/authentication/application-default-credentials)
+
+
 
 
 
