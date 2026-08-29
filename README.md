@@ -1089,7 +1089,11 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
       ```
 2. Add Terraform.gitignore:
    As always, adding tool gitignore (here: Terraform gitignore) is a __most__ configuration before generating `.tf` file as well as coding.<sub>[37]</sub>
-3. 
+3. Search and Install Extension of HashiCorp Terraform in vs code.<sub>[37]</sub>
+   - HashiCorp Terraform is an extension in vs code, which is an useful tool for function prompting and auto-completion when coding in Terraform (.tf).<br >
+   <img width="642" height="156" alt="image" src="https://github.com/user-attachments/assets/b4445a70-7ee7-4e87-aa46-035a7a018d71" /><sub>[26]</sub>
+
+5. 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
 2. [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)
