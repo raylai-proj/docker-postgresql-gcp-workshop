@@ -1100,7 +1100,25 @@ The first step to initialize project infrastructure configuration with terraform
    cd terraform_workshop
    touch main.tf 
    ```
-2. 
+2. Add terraform block and provider block:
+   - `terraform` block describes the terraform setting: __what__ provider (cloud platform) plugin is required to configure the project infrastructure. Here, terraform set the project to accept __Google__ providers for infrastructure configuration.<sub>[40][41]</sub>
+   - `provider` block describes what project for connection and which region to deploy the project. Here, `provider` set to connect to __my-project-id__ at __us-central__ region.<sub>[42][43]</sub>
+   ```terraform
+   terraform {
+     required_providers {
+       google = {
+         source  = "hashicorp/google"
+         version = "7.45.0"
+       }
+     }
+   }
+   
+   provider "google" {
+     project     = "my-project-id"
+     region      = "us-central1"
+   }
+   ```
+3. 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
 2. [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)
@@ -1141,6 +1159,10 @@ The first step to initialize project infrastructure configuration with terraform
 37. [Terraform.gitignore](https://github.com/github/gitignore/blob/main/Terraform.gitignore)
 38. [vs code extension - HashiCorp Terraform](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform)
 39. [Write configuration](https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/google-cloud-platform-build#write-configuration)
+40. [Terraform Registry - Google Providers](https://registry.terraform.io/providers/hashicorp/google/latest)
+41. [Terraform Block](https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/google-cloud-platform-build#terraform-block)
+42. [Terraform provider for Google Cloud](https://registry.terraform.io/providers/hashicorp/google/latest/docs)
+43. [provider block reference](https://developer.hashicorp.com/terraform/language/block/provider)
 
 
 
