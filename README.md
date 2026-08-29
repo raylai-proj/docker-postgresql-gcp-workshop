@@ -1123,7 +1123,7 @@ The first step to initialize project infrastructure configuration with terraform
      terraform fmt
      ```
 3. Initialize project infrastructure with configuration in terraform files (`.tf`):
-   - With `terraform init`, terraform prepares working directory with backend installation and provider plugin downloaded.<sub>[45]</sub>
+   - With `terraform init`, terraform prepares working directory with backend installation (generate .terraform.lock.hcl, terraform.tfstate, terraform.tfstate.backup) and provider plugin downloaded.<sub>[45]</sub>
    ```Bash
    terraform init
    ```
