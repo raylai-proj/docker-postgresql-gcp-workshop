@@ -1130,6 +1130,8 @@ The first step to initialize project infrastructure configuration with terraform
 ## `terraform plan`
 Next, I am going to add resource blocks in `main.tf`, so `terraform plan` will specify that a GCP storage bucket and a BigQuery dataset will be created in my project on GCP.<sub>[46][47]</sub>
 ```terraform
+# syntax:
+# resource "provider resource type" "local name"
 resource "google_storage_bucket" "demo-bucket" {
   name                        = "<Project ID>.terra.bucket"
   location                    = "us-central1"
