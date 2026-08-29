@@ -1251,7 +1251,7 @@ Before apply the configuration setting, I am going to setup variable schema in `
 ## Lesson Learned from Terraform Practice:
 1. Issue: Push to github failed after commit `.terraform/` folder with size over 100 MB.
    - Reason: I didn't add `terraform .gitignore` at very beginning, and accidentally commit internal folder `.terraform` with files, and the commit is 18 later in history.
-   - Solution: Using git-filter-repo<sub>[54][55]</sub>:
+   - Solution: Using git-filter-repo<sub>[54][55][56]</sub>:
      1. install git-filter-repo and remove `/.terraform` and `.terraform*` in commit history:
      ```Bash
      pip install git-filter-repo
@@ -1265,7 +1265,7 @@ Before apply the configuration setting, I am going to setup variable schema in `
      2. Check if `.terraform/` is removed from commit history:
      ```Bash
      # terminal should output nothing now.
-     git log -n 18 --oneline -- .terraform/
+     git log --oneline -- .terraform/
      ```
      3. When using git-filter-repo, for safety, it will clear project origin url that connect to remote repository, so I have to set the origin repository SSH link back:
      ```Bash
@@ -1276,6 +1276,22 @@ Before apply the configuration setting, I am going to setup variable schema in `
      git push -u origin <branch name> --force
      ```
    - Lesson Learned: Always add `.gitignore` for language as first step before start developing. Search certain language `.gitignore` and append under current `.gitignore`.
+2. Issue: Current branch not allowed to merge back to main branch.
+   - Reason: After `git filter-repo`, the commit history are reorganized, and all commit hashed are changed, so current branch not allowed to merge back to main branch.
+   - Solution: In this case, git rebase origin/main automatically match Patch ID and found 2 identical files with different hashes, so it dropped the sub-branch hashes and use main branch's hashes.<sub>[56][57]</sub>
+   - Lesson Learned: I should fetch and rebase branch with main before I force push it to origin in Github. See the correct git commands overall as following:
+     ```Bash
+     pip install git-filter-repo
+     git filter-repo --path-glob "*/.terraform*" --path-glob ".terraform*" --invert-paths --force
+     git log --oneline -- .terraform/
+     git remote set-url origin <GitHub Repository>
+     git fetch
+     
+     # git automatically match Patch ID and use hashes from main branch
+     git rebase origin/main
+     
+     git push -u origin <branch name> --force
+     ```
 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
@@ -1333,6 +1349,9 @@ Before apply the configuration setting, I am going to setup variable schema in `
 53. [terraform destroy command](https://developer.hashicorp.com/terraform/cli/commands/destroy)
 54. [Git Filter-repo: Rewrite Git History Like a Pro (Beginner's Guide)](https://www.youtube.com/watch?v=_EcmY7_zlv0)
 55. [git-filter-repo(1) Manual Page](https://htmlpreview.github.io/?https://github.com/newren/git-filter-repo/blob/docs/html/git-filter-repo.html)
+56. [git-log - Show commit logs](https://git-scm.com/docs/git-log)
+57. [git-rebase - Reapply commits on top of another base tip](https://git-scm.com/docs/git-rebase)
+
 
 
 
