@@ -1248,6 +1248,34 @@ Before apply the configuration setting, I am going to setup variable schema in `
    - Note: `terraform apply` will create `terraform.tfstate` and `terraform.tfstate.backup` to log current and previous infrastructure settings.
 ## `terraform destroy`
 `terraform destroy` provides a safe and complete way to delete all resources that was created by `terraform apply` and which prevent accidental charge for resources that were not stopped on GCP.<sub>[53]</sub>
+## Lesson Learned from Terraform Practice:
+1. Issue: Push to github failed after commit `.terraform/` folder with size over 100 MB.
+   - Reason: I didn't add `terraform .gitignore` at very beginning, and accidentally commit internal folder `.terraform` with files, and the commit is 18 later in history.
+   - Solution: Using git-filter-repo<sub>[54][55]</sub>:
+     1. install git-filter-repo and remove `/.terraform` and `.terraform*` in commit history:
+     ```Bash
+     pip install git-filter-repo
+     
+     # --path-glob "<wildcard path>" match directory with "*" in the commit history
+     # --invert-paths:
+     #   Originally git filter-repo keep only specified directory.
+     #   With --invert-paths, git filter-repo remove only specified directory.
+     git filter-repo --path-glob "*/.terraform*" --path-glob ".terraform*" --invert-paths --force
+     ```
+     2. Check if `.terraform/` is removed from commit history:
+     ```Bash
+     # terminal should output nothing now.
+     git log -n 18 --oneline -- .terraform/
+     ```
+     3. When using git-filter-repo, for safety, it will clear project origin url that connect to remote repository, so I have to set the origin repository SSH link back:
+     ```Bash
+     git remote set-url origin <GitHub Repository>
+     ```
+     4. Since git-filter-repo change commit history, all commit hashes are different now, so I have to push to Github with `--force`:
+     ```Bash
+     git push -u origin <branch name> --force
+     ```
+   - Lesson Learned: Always add `.gitignore` for language as first step before start developing. Search certain language `.gitignore` and append under current `.gitignore`.
 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
@@ -1303,6 +1331,8 @@ Before apply the configuration setting, I am going to setup variable schema in `
 51. [Google Cloud Region Picker](https://cloud.withgoogle.com/region-picker/)
 52. [Terraform Overview - Execution Steps](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md)
 53. [terraform destroy command](https://developer.hashicorp.com/terraform/cli/commands/destroy)
+54. [Git Filter-repo: Rewrite Git History Like a Pro (Beginner's Guide)](https://www.youtube.com/watch?v=_EcmY7_zlv0)
+55. [git-filter-repo(1) Manual Page](https://htmlpreview.github.io/?https://github.com/newren/git-filter-repo/blob/docs/html/git-filter-repo.html)
 
 
 
