@@ -1123,10 +1123,43 @@ The first step to initialize project infrastructure configuration with terraform
      terraform fmt
      ```
 3. Initialize project infrastructure with configuration in terraform files (`.tf`):
-   - With `terraform init`, terraform prepares working directory with backend installation (generate .terraform.lock.hcl, terraform.tfstate, terraform.tfstate.backup) and provider plugin downloaded.<sub>[45]</sub>
+   - With `terraform init`, terraform prepares working directory with backend installation (generate .terraform.lock.hcl, terraform.tfstate, terraform.tfstate.backu) and provider plugin downloaded.<sub>[45]</sub>
    ```Bash
    terraform init
    ```
+## `terraform plan`
+Next, I am going to add resource blocks in `main.tf`, so `terraform plan` will specify that a GCP storage bucket and a BigQuery dataset will be created in my project on GCP.<sub>[46][47]</sub>
+```terraform
+resource "google_storage_bucket" "demo-bucket" {
+  name                        = "<Project ID>.terra.bucket"
+  location                    = "us-central1"
+  uniform_bucket_level_access = true
+  force_destroy               = true
+
+  lifecycle_rule {
+    condition {
+      age = 1
+    }
+    action {
+      type = "AbortIncompleteMultipartUpload"
+    }
+  }
+}
+
+resource "google_bigquery_dataset" "demo_dataset" {
+  dataset_id = "demo_dataset"
+  location   = "us-central1"
+}
+```
+```Bash
+terraform plan
+```
+- Note:
+  1. (Recommended) `terraform plan` is a safe way to check what is going to be done based on `main.tf` before `terraform apply`.
+  2. Google Cloud Storage (GCS) vs. BigQuery: GCS is a Data Lake where raw data store, while BigQuery is a Data Warehouse where data were collected, organized, and reported.<sub>[48][49]</sub>
+  3. What is a bucket in Google Cloud Storage (GCS)? a bucket is a basic container in GCS where data store. The uploaded data called <ins>objects</ins>.<sub>[50]</sub>
+  4. Remember to assign the closest location and zone that GCP provide to reduce latency.<sub>[51]</sub>
+
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
 2. [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)
@@ -1173,6 +1206,12 @@ The first step to initialize project infrastructure configuration with terraform
 43. [provider block reference](https://developer.hashicorp.com/terraform/language/block/provider)
 44. [terraform fmt command](https://developer.hashicorp.com/terraform/cli/commands/fmt)
 45. [terraform init command](https://developer.hashicorp.com/terraform/cli/commands/init)
+46. [Google Provider - Example Usage - Life cycle settings for storage bucket objects](https://registry.terraform.io/providers/hashicorp/google/4.35.0/docs/resources/storage_bucket#example-usage---life-cycle-settings-for-storage-bucket-objects)
+47. [Google Provider - Example Usage](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/bigquery_dataset#example-usage)
+48. [Data warehouse](https://en.wikipedia.org/wiki/Data_warehouse)
+49. [BigQuery](https://cloud.google.com/bigquery)
+50. [About Cloud Storage buckets](https://docs.cloud.google.com/storage/docs/buckets)
+51. [Google Cloud Region Picker](https://cloud.withgoogle.com/region-picker/)
 
 
 
