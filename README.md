@@ -1089,11 +1089,18 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
       ```
 2. Add Terraform.gitignore:
    As always, adding tool gitignore (here: Terraform gitignore) is a __most__ configuration before generating `.tf` file as well as coding.<sub>[37]</sub>
-3. Search and Install Extension of HashiCorp Terraform in vs code.<sub>[37]</sub>
-   - HashiCorp Terraform is an extension in vs code, which is an useful tool for function prompting and auto-completion when coding in Terraform (.tf).<br >
-   <img width="642" height="156" alt="image" src="https://github.com/user-attachments/assets/b4445a70-7ee7-4e87-aa46-035a7a018d71" /><sub>[26]</sub>
-
-5. 
+3. Search and Install Extension of HashiCorp Terraform in vs code.<sub>[38]</sub>
+   - HashiCorp Terraform is an extension in vs code, which is an useful tool for function prompting and auto-completion when coding in Terraform (.tf).<sub>[26]</sub><br >
+   <img width="642" height="156" alt="image" src="https://github.com/user-attachments/assets/b4445a70-7ee7-4e87-aa46-035a7a018d71" />
+## `terraform init`
+The first step to initialize project infrastructure configuration with terraform and cloud service is `terraform init`. The following are steps for `terraform init`:<sub>[39]</sub>
+1. Create `main.tf` in new directory `terraform_workshop`:
+   ```Bash
+   mkdir terraform_workshop
+   cd terraform_workshop
+   touch main.tf 
+   ```
+2. 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
 2. [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)
@@ -1132,6 +1139,8 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
 35. [Installing Terraform on Linux (Ubuntu) and Windows (WSL2 with Ubuntu)](https://codingarchitect.dev/blog/installing-terraform-on-linux-ubuntu-and-windows-wsl2-with-ubuntu/)
 36. [Install Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 37. [Terraform.gitignore](https://github.com/github/gitignore/blob/main/Terraform.gitignore)
+38. [vs code extension - HashiCorp Terraform](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform)
+39. [Write configuration](https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/google-cloud-platform-build#write-configuration)
 
 
 
