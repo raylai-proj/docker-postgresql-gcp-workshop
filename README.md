@@ -1087,6 +1087,9 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
       ```Bash
       terraform --version
       ```
+2. Add Terraform.gitignore:
+   As always, adding tool gitignore (here: Terraform gitignore) is a __most__ configuration before generating `.tf` file as well as coding.<sub>[37]</sub>
+3. 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
 2. [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)
@@ -1124,6 +1127,7 @@ gcloud is command line tool (CLI), which let developer to directly manage servic
 34. [View current access](https://docs.cloud.google.com/iam/docs/granting-changing-revoking-access)
 35. [Installing Terraform on Linux (Ubuntu) and Windows (WSL2 with Ubuntu)](https://codingarchitect.dev/blog/installing-terraform-on-linux-ubuntu-and-windows-wsl2-with-ubuntu/)
 36. [Install Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+37. [Terraform.gitignore](https://github.com/github/gitignore/blob/main/Terraform.gitignore)
 
 
 
