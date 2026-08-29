@@ -890,8 +890,408 @@ PostgreSQL practice:
    - GCP can be used for distributed deployments, which allows different countries access applications that was deployed to the closest server in their region to reduce network latency. This also provides benefit for distributed computing, e.g. load balancing, capacity pooling, and fault tolerance and recovery. 
 6. How people use GCP?
    - People use GCP by Google Cloud Console for web-based UI, gcloud in CLI for apps management and deployment, and Infrastructure as Code (IaC) tool, e.g. Terraform for automatic deployment.
+## Terraform Introduction<sub>[15]</sub>
+### Terraform 5W1H
+1. What is Terraform?<br >
+   Terraform is an open source tool of Infrastructure as Code (IaC) that allows developers to create <ins>human-readable configuration files</ins> to define, provision (automatically create, configure, deploy, reuse), and manage cloud services based on codes in a file(.tf). This replaces multiple <ins>clicking, selecting, and saving</ins> on cloud consoles in various services (e.g. IAM, BigQuery, Cloud Storage, EC2, RDS) from various cloud platforms (e.g. AWS, GCP...etc.)<sub>[16][17][18]</sub>
+2. Why use terraform? (terraform advantages)<sub>[17]</sub><br >
+   1. Create and maintain <ins>human-readable infrastructure configuration file(.tf)</ins> to replace <ins>clicking, selecting, saving</ins> on cloud service console. This help maintain infrastructure configuration, allow us to understand the configuration, and version control of complicated cloud service infrastructure/environment setup.
+   2. Terraform enable <ins>automation</ins> to <ins>safely build</ins> infrastructure with plan, setup, create, modify, upgrade, setup sequence.
+   3. With applying infrastructure based on code means the code <ins>can include our policy</ins>, e.g. cost limit, security requirement, compliance, operational best practice.
+   4. Reusability and modularity: Terraform enable infrastructure as a module/library (e.g. with database, container, virtual environment, cloud service setup in it) to be able to recreate the infrastructure and setup for next application.
+   <img width="265" height="259" alt="image" src="https://github.com/user-attachments/assets/55ea3d69-80da-4eee-8984-b27b15b20eac" />
+3. Who use terraform?<sub>[19]</sub><br >
+   Terraform is built for infrastructure configuration setup and it's suit for:
+   - DevOps Engineer: to automatically setup cloud infrastructure with CI/CD infrastructure pipeline.
+   - Cloud Architects: to apply policy on infrastructure setup.
+   - Data Engineer: to help themselves setup self-service environment, e.g. BigQuery, Google Cloud Storage buckets...etc. 
+4. Where to use terraform?<br >
+   Terraform mainly used on cloud service platform (GCP, AWS), cloud service (GCS buckets, BigQuery), container (WSL, Docker, VMware).<sub>[17]</sub>
+5. When to use terraform?<sub>[17]</sub><br >
+   Terraform is used from <ins>initial deployment</ins> (day 1), continue <ins>configuration modification/maintenance</ins> (day 2 to day n-1), to <ins>decommission/service terminate/project destory</ins> (day n).<br >
+   <img width="426" height="277" alt="image" src="https://github.com/user-attachments/assets/b2d6aac6-3474-4cc2-b9f1-aaee212b9d75" />
+6. How to use terraform?<sub>[20]</sub><br >
+   1. Write `.tf` code: create `.tf` file and write HCL code (HashiCorp Configuration Language) and include <ins>provider</ins> to specify cloud platform.<br >
+   2. `terraform init`: download provider plugin specified by provider and initialize state tracking.<br > 
+   3. `terraform plan`: compare current `.tfstate` to updated `.tf` code to output update path (dry-run preview) include addition(+), modification(~), deletion(-)<br >
+   4. `terraform apply`: make API calls to update and build the infrastructure that matched updated `.tf` code file.<br >
+### What is DevOps?
+DevOps combines development (Dev) and IT operations (Ops) and in terraform. DevOps means <ins>using Infrastructure as Code (IaC) tools</ins> to replace <ins>manually point-and-click on cloud console method</ins> to setup infrastructure in cloud platform. With terraform, DevOps define infrastructure in `.tf` files for version control and maintenance.
+### What is providers in terraform?<sub>[21]</sub>
+Providers is a <ins>plugin that translate terraform code into API calls for target platform</ins> (e.g. GCP, AWS, Azure). Providers <ins>help replace complicated REST API calls</ins> to human-readable blocks. 
+### What is resources in terraform?<sub>[22]</sub>
+Resource block in terraform represent the infrastructure object that will create, modify, or destory (e.g. IAM roles, BigQuery dataset, GCS bucket).
+- resource syntax: `resource "provider resource type" "local name"`, e.g. `resource "google_storage_bucket" "my_data_bucket"`
+### What is Terraform Registry?<sub>[22]</sub>
+Terraform registry is a repository where terraform community and cloud vendors share pre-built <ins>providers</ins> and <ins>modules</ins>.<br >
+1. The providers enable terraform to communicate with various cloud platforms.
+2. The modules are <ins>reusable code blueprints</ins> which are <ins>pre-packaged set of terraform code that was configured multiple resources together following the industry best practices</ins>.
+## gcloud setup (in WSL)<sub>[23]</sub>
+gcloud is command line tool (CLI), which let developer to directly manage services, create service account, assign roles, and deploy resource from local to GCP. gcloud is the cleanest way to manage GCP service instead of point and click on GCP website.
+1. login gmail account and authorize it to use free-tier GCP:
+   - login gmail: [https://mail.google.com](https://mail.google.com)
+   - authorize gmail account to use GCP: [https://console.cloud.google.com/](https://console.cloud.google.com/)
+2. gcloud installation in WSL:
+   1. Prerequisites: update apt-get package:
+      ```Bash
+      sudo apt-get update
+      ```
+   2. Prerequisites: make sure install `ca-certificates`, `gnupg`, `curl`
+      ```Bash
+      sudo apt-get install ca-certificates gnupg curl
+      ```
+   3. Import Google Cloud public key:
+      ```Bash
+      # 1. curl download gcloud public key
+      # 2. use `gpg` (from `gnupg`) to:
+      #    1. convert public key to binary format (because package manager only read binary format)
+      #    2. save to `/usr/share/keyrings/cloud.google.gpg`
+      curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg -o /usr/share/keyrings/cloud.google.gpg
+      ```
+   4. Add the gcloud CLI distribution URI as a package source:
+      ```Bash
+      # 1. deb is Repository Directive to tell system https://packages.cloud.google.com/apt cloud-sdk main is a repo contain binary packages for installation.
+      # 2. [signed-by=/usr/share/keyrings/cloud.google.gpg] means this repo can be verified by gpg key in directory saved previously.
+      # 3. tee is tool to read standard input and write both standard output and one more files. Here tee does:
+      #   1. solve permission limitation for (>), e.g. sudo echo "..." > /etc/apt/...
+      #      - Because sudo only apply to echo, (>) will fail, so sudo tee ensure writeing operation have root permission.
+      #   2. tee write repo entry to google-cloud-sdk.list 
+      echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+      ```
+   5. Update apt-get again and install gcloud:
+      ```Bash
+      #   1. apt-get update rescan to include new added google cloud repository
+      #   2. then install gcloud
+      sudo apt-get update && sudo apt-get install google-cloud-cli
+      ```
+   6. Verify gcloud installed:
+      ```Bash
+      gcloud --version
+      ```
 
+3. Initialize and Authenticate gcloud to connect to Google account and GCP:<sub>[24]</sub>
+   ```Bash
+   # gcloud init will prompt to sign in Google account to authorize access and ask permission to connect to GCP
+   gcloud init
+   ```
+4. Create Service account<sub>[25]</sub>
+   ```Bash
+   gcloud iam service-accounts create <Service Account Name, e.g. cj-l-service-account> \
+   --display-name="CJ L Service Account"
+   ```
+5. Grant service account with IAM roles on the project<sub>[25][26]</sub>
+   1. assign <ins>viewer</ins> role to service account
+      ```Bash
+      # 1. give service account viewr role
+      # 2. <Project ID> can be found in gcp console -> cloud overview -> dashboard
+      # 3. <Service Account Name> is the service account name created previously (cj-l-service-account)
+      gcloud projects add-iam-policy-binding <Project_ID> \
+      --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
+      --role="roles/viewer"
+      ```
+   3. assign <ins>Storage Object Admin</ins> role to service account
+      ```Bash
+      gcloud projects add-iam-policy-binding <Project_ID> \
+      --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
+      --role="roles/storage.objectAdmin"
+      ```
+   4. assign <ins>Storage Admin</ins> role to service account
+      ```Bash
+      gcloud projects add-iam-policy-binding <Project_ID> \
+      --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
+      --role="roles/storage.admin"
+      ```
+   5. assign <ins>BigQuery Admin</ins> role to service account
+      ```Bash
+      gcloud projects add-iam-policy-binding <Project_ID> \
+      --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
+      --role="roles/bigquery.admin"
+      ```
+   6. assign <ins>Compute Admin</ins> role to service account
+      ```Bash
+      gcloud projects add-iam-policy-binding <Project_ID> \
+      --member="serviceAccount:<Service Account Name>@<Project ID>.iam.gserviceaccount.com" \
+      --role="roles/compute.admin"
+      ```
+6. Enable IAM API and IAM Service Account Credentials API<sub>[27]</sub>
+   ```Bash
+   gcloud services enable iam.googleapis.com iamcredentials.googleapis.com --project=<Project_ID>
+   ```
+7. Refresh Google Application Default Credentials (ADC) by login google account<sub>[28][29]</sub>
+   ```Bash
+   # terminal will prompt a link to login google account and authenticate gcloud CLI
+   gcloud auth application-default login
+   ```
+## Lesson learned from gcloud setup (in WSL)
+1. Issue: I wonder if exposing Project_ID, Service Account Name, or Service Account Email is a risk?
+   - Answer: No, <ins>Project_ID, Service Account Name, and Service Account Email are public information.</ins>
+   - Lesson learned: An attacker cannot do anything without application credential key (.json), so only expose Project_ID, Service Account Name, Service Account Email is not a risk.
+2. Issue: Creating and downloading Application Credential key is not allowed:
+   ```Bash
+   (pipeline) > gcloud iam service-accounts keys create ~/.gcp/gcp-key.json \
+    --iam-account="chun-juei-lai-service-account@project-9c55cdb0-ce48-42d5-902.iam.gserviceaccount.com"
+   ERROR: (gcloud.iam.service-accounts.keys.create)
+   FAILED_PRECONDITION: Key creation is not allowed on this service account.
+   ...
+   type: constraints/iam.disableServiceAccountKeyCreation
+   ```
+   - Reason: GCP enabled Disable service account key creation policy for safety and security
+   - Lesson learned: GCP enabled Disable service account key creation policy and recommend developers using Application Default Credentials.
+3. Issue: Service Account Credential Key vs. Application Default Credentials (ADC)
+   - Reason: Service Account Credential Key will save `.json` key in local, and GCP has warned it is a security risk if not managed correctly.<sub>[30]</sub>
+   - Lesson learned: Application Default Credentials is safer in general. To setup ADC for project, simply input `gcloud auth application-default login` and connect with your google account.<sub>[31][32]</sub> GCP will automatically generate ADC key in `~/.config/gcloud/application_default_credentials.json` and authenticate it later.<sub>[33]</sub>
+4. Issue: How to display what roles did I assign to my accounts:<sub>[34]</sub>
+   - Answer: display with gcloud:
+     ```Bash
+     gcloud projects get-iam-policy <Project ID> \
+     --flatten="bindings[].members" \
+     --format="table(bindings.members:label=ACCOUNT, bindings.role:label=ROLE)"
+     ```
+5. Question: What is Application Default Credential (ADC) and what does it do?
+   - Lesson Learned: ADC is <ins>automated lookup strategy</ins> by Google Cloud Library, Terraform, gcloud <ins>to authenticate requests</ins> from developers. when using gcloud or terraform google providers, the system will automatically authenticate requests, and it decrease workload from developer to generate path to verify manually by gcloud.
+## Terraform setup (in WSL)<sub>[35][36]</sub>
+1. Terraform installation in WSL:
+   1. Prerequisites: update the latest package index and install available updates:
+      ```Bash
+      sudo apt update && sudo apt upgrade
+      ```
+   2. Prerequisites: update apt-get package and install `gnupg`, `software-properties-common`, `curl`
+      ```Bash
+      sudo apt-get update && sudo apt install -y gnupg software-properties-common curl
+      ```
+   3. Import HashiCorp's public key:
+      ```Bash
+      # 1. curl download HashiCorp's public key
+      # 2. use `gpg` (from `gnupg`) to:
+      #    1. convert public key to binary format (because package manager only read binary format)
+      #    2. save to `/usr/share/keyrings/hashicorp-archive-keyring.gpg`
+      curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+      ```
+   4. Add the HashiCorp repository URI as a package source:
+      ```Bash
+      # 1. deb is Repository Directive to tell system https://apt.releases.hashicorp.com $(lsb_release -cs) main is a repo contain binary packages for installation.
+      # 2. [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] means this repo can be verified by gpg key in directory saved previously.
+      # 3. tee is tool to read standard input and write both standard output and one more files. Here tee does:
+      #   1. solve permission limitation for (>), e.g. sudo echo "..." > /etc/apt/...
+      #      - Because sudo only apply to echo, (>) will fail, so sudo tee ensure writeing operation have root permission.
+      #   2. tee write repo entry to /hashicorp.list 
+      echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+      ```
+   5. Update apt-get again and install terraform:
+      ```Bash
+      #   1. apt-get update rescan to include new added HashiCorp repository
+      #   2. then install terraform
+      sudo apt update && sudo apt install terraform -y
+      ```
+   6. Verify terraform installed:
+      ```Bash
+      terraform --version
+      ```
+2. Add Terraform.gitignore:
+   As always, adding tool gitignore (here: Terraform gitignore) is a __most__ configuration before generating `.tf` file as well as coding.<sub>[37]</sub>
+3. Search and Install Extension of HashiCorp Terraform in vs code.<sub>[38]</sub>
+   - HashiCorp Terraform is an extension in vs code, which is an useful tool for function prompting and auto-completion when coding in Terraform (.tf).<sub>[26]</sub><br >
+   <img width="642" height="156" alt="image" src="https://github.com/user-attachments/assets/b4445a70-7ee7-4e87-aa46-035a7a018d71" />
+## `terraform init`
+The first step to initialize project infrastructure configuration with terraform and cloud service is `terraform init`. The following are steps for `terraform init`:<sub>[39]</sub>
+1. Create `main.tf` in new directory `terraform_workshop`:
+   ```Bash
+   mkdir terraform_workshop
+   cd terraform_workshop
+   touch main.tf 
+   ```
+2. Add terraform block and provider block:
+   - `terraform` block describes the terraform setting: __what__ provider (cloud platform) plugin is required to configure the project infrastructure. Here, terraform set the project to accept __Google__ providers for infrastructure configuration.<sub>[40][41]</sub>
+   - `provider` block describes what project for connection and which region to deploy the project. Here, `provider` set to connect to __my-project-id__ at __us-central__ region.<sub>[42][43]</sub>
+   ```terraform
+   terraform {
+     required_providers {
+       google = {
+         source  = "hashicorp/google"
+         version = "7.45.0"
+       }
+     }
+   }
+   
+   provider "google" {
+     project     = "my-project-id"
+     region      = "us-central1"
+   }
+   ```
+   - Note: A quick way to format terraform, e.g. indention, alignment, is `terraform fmt`. `terraform fmt` automatically align terraform files in current directory.<sub>[44]</sub>
+     ```Bash
+     terraform fmt
+     ```
+3. Initialize project infrastructure with configuration in terraform files (`.tf`):
+   - With `terraform init`, terraform prepares working directory with backend installation (generate .terraform.lock.hcl, terraform.tfstate, terraform.tfstate.backu) and provider plugin downloaded.<sub>[45]</sub>
+   ```Bash
+   terraform init
+   ```
+## `terraform plan`
+Next, I am going to add resource blocks in `main.tf`, so `terraform plan` will specify that a GCP storage bucket and a BigQuery dataset will be created in my project on GCP.<sub>[46][47]</sub>
+```terraform
+# syntax:
+# resource "provider resource type" "local name"
+resource "google_storage_bucket" "demo-bucket" {
+  name                        = "<Project ID>.terra.bucket"
+  location                    = "us-central1"
+  uniform_bucket_level_access = true
+  force_destroy               = true
 
+  lifecycle_rule {
+    condition {
+      age = 1
+    }
+    action {
+      type = "AbortIncompleteMultipartUpload"
+    }
+  }
+}
+
+resource "google_bigquery_dataset" "demo_dataset" {
+  dataset_id = "demo_dataset"
+  location   = "us-central1"
+}
+```
+```Bash
+terraform plan
+```
+- Note:
+  1. (Recommended) `terraform plan` is a safe way to check what is going to be done based on `main.tf` before `terraform apply`.
+  2. Google Cloud Storage (GCS) vs. BigQuery: GCS is a Data Lake where raw data store, while BigQuery is a Data Warehouse where data were collected, organized, and reported.<sub>[48][49]</sub>
+  3. What is a bucket in Google Cloud Storage (GCS)? a bucket is a basic container in GCS where data store. The uploaded data called <ins>objects</ins>.<sub>[50]</sub>
+  4. Remember to assign the closest location and zone that GCP provide to reduce latency.<sub>[51]</sub>
+## `terraform apply`
+Before apply the configuration setting, I am going to setup variable schema in `variable.tf` for variables in `main.tf`.
+1. create `variable.tf`:
+   ```Bash
+   touch variable.tf
+   ```
+2. setup variables in `variable.tf`:
+   ```terraform
+   variable "project" {
+     description = "Project"
+     default     = "<Project ID>"
+   
+   }
+   
+   variable "location" {
+     description = "Project Location"
+     default     = "us-central1"
+   }
+   
+   variable "region" {
+     description = "Project Region"
+     default     = "us-central1"
+   
+   }
+   
+   variable "bq_dataset_name" {
+     description = "My BigQuery Dataset Name"
+     default     = "demo_dataset"
+   }
+   
+   variable "gcs_bucket_name" {
+     description = "My Storage Bucket Name"
+     default     = "<Project ID>-terra-bucket"
+   }
+   
+   variable "gcs_storage_class" {
+     description = "Bucket Storage Class"
+     default     = "STANDARD"
+   
+   }
+   ```
+3. Modify `main.tf` via `variable.tf`:
+   ```terraform
+   terraform {
+     required_providers {
+       google = {
+         source  = "hashicorp/google"
+         version = "7.45.0"
+       }
+     }
+   }
+   
+   provider "google" {
+     project     = var.project
+     region      = var.region
+     zone        = var.zone
+   }
+   
+   resource "google_storage_bucket" "demo-bucket" {
+     name                        = var.gcs_bucket_name
+     location                    = var.location
+     uniform_bucket_level_access = true
+     force_destroy               = true
+   
+     lifecycle_rule {
+       condition {
+         age = 1
+       }
+       action {
+         type = "AbortIncompleteMultipartUpload"
+       }
+     }
+   }
+   
+   resource "google_bigquery_dataset" "demo_dataset" {
+     dataset_id = var.bq_dataset_name
+     location   = var.location
+   }
+   ```
+4. Execute `terraform apply`:
+   ```Bash
+   terraform apply
+   ```
+   - Here, `terraform apply` will connect assigned project in GCP and create a GCS bucket and a BigQuery dataset.<sub>[52]</sub>
+   - Note: `terraform apply` will create `terraform.tfstate` and `terraform.tfstate.backup` to log current and previous infrastructure settings.
+## `terraform destroy`
+`terraform destroy` provides a safe and complete way to delete all resources that was created by `terraform apply` and which prevent accidental charge for resources that were not stopped on GCP.<sub>[53]</sub>
+## Lesson Learned from Terraform Practice:
+1. Issue: Push to github failed after commit `.terraform/` folder with size over 100 MB.
+   - Reason: I didn't add `terraform .gitignore` at very beginning, and accidentally commit internal folder `.terraform` with files, and the commit is 18 later in history.
+   - Solution: Using git-filter-repo<sub>[54][55][56]</sub>:
+     1. install git-filter-repo and remove `/.terraform` and `.terraform*` in commit history:
+     ```Bash
+     pip install git-filter-repo
+     
+     # --path-glob "<wildcard path>" match directory with "*" in the commit history
+     # --invert-paths:
+     #   Originally git filter-repo keep only specified directory.
+     #   With --invert-paths, git filter-repo remove only specified directory.
+     git filter-repo --path-glob "*/.terraform*" --path-glob ".terraform*" --invert-paths --force
+     ```
+     2. Check if `.terraform/` is removed from commit history:
+     ```Bash
+     # terminal should output nothing now.
+     git log --oneline -- .terraform/
+     ```
+     3. When using git-filter-repo, for safety, it will clear project origin url that connect to remote repository, so I have to set the origin repository SSH link back:
+     ```Bash
+     git remote set-url origin <GitHub Repository>
+     ```
+     4. Since git-filter-repo change commit history, all commit hashes are different now, so I have to push to Github with `--force`:
+     ```Bash
+     git push -u origin <branch name> --force
+     ```
+   - Lesson Learned: Always add `.gitignore` for language as first step before start developing. Search certain language `.gitignore` and append under current `.gitignore`.
+2. Issue: Current branch not allowed to merge back to main branch.
+   - Reason: After `git filter-repo`, the commit history are reorganized, and all commit hashed are changed, so current branch not allowed to merge back to main branch.
+   - Solution: In this case, git rebase origin/main automatically match Patch ID and found 2 identical files with different hashes, so it dropped the sub-branch hashes and use main branch's hashes.<sub>[56][57]</sub>
+   - Lesson Learned: I should fetch and rebase branch with main before I force push it to origin in Github. See the correct git commands overall as following:
+     ```Bash
+     pip install git-filter-repo
+     git filter-repo --path-glob "*/.terraform*" --path-glob ".terraform*" --invert-paths --force
+     git log --oneline -- .terraform/
+     git remote set-url origin <GitHub Repository>
+     git fetch
+     
+     # git automatically match Patch ID and use hashes from main branch
+     git rebase origin/main
+     
+     git push -u origin <branch name> --force
+     ```
 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
@@ -908,6 +1308,52 @@ PostgreSQL practice:
 12. [SQL Refresher](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/10-sql-refresher.md)
 13. [115. DESCRIBE](https://github.com/raylai-proj/SQL_review_note#115-describe)
 14. [GCP](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/01-docker-terraform#gcp)
+15. [Terraform Overview](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md)
+16. [What is Terraform?](https://developer.hashicorp.com/terraform/intro)
+17. [Introduction to Terraform](https://www.youtube.com/watch?v=ZFLWA1kQ3ls)
+18. [DE Zoomcamp 1.1.1 - Introduction to Google Cloud Platform](https://www.youtube.com/watch?v=18jIzE41fJ4&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=3)
+19. [Infrastructure as code: What is it? Why is it important?](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code)
+20. [terraform execution steps](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md#execution-steps)
+21. [terraform providers](https://registry.terraform.io/browse/providers)
+22. [terraform declaration](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md#declarations)
+23. [Install the Google Cloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk)
+24. [Initialize and authorize the gcloud CLI](https://docs.cloud.google.com/sdk/docs/install-sdk#initializing-the-cli)
+25. [Create service accounts](https://docs.cloud.google.com/iam/docs/service-accounts-create#iam-service-accounts-create-gcloud)
+26. [DE Zoomcamp 1.3.2 - Terraform Basics](https://www.youtube.com/watch?v=Y2ux7gq3Z0o&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=9)
+27. [Enabling an API in your Google Cloud project](https://docs.cloud.google.com/endpoints/docs/openapi/enable-api)
+28. [gcloud auth application-default login](https://docs.cloud.google.com/sdk/gcloud/reference/auth/application-default/login)
+29. [GCP Overview - Setup for Access](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/2_gcp_overview.md#setup-for-access)
+30. [Service account keys](https://docs.cloud.google.com/docs/authentication/set-up-adc-local-dev-environment#local-key)
+31. [Set up Application Default Credentials](https://docs.cloud.google.com/docs/authentication/provide-credentials-adc)
+32. [Set up ADC for a local development environment](https://docs.cloud.google.com/docs/authentication/set-up-adc-local-dev-environment)
+33. [How Application Default Credentials works](https://docs.cloud.google.com/docs/authentication/application-default-credentials)
+34. [View current access](https://docs.cloud.google.com/iam/docs/granting-changing-revoking-access)
+35. [Installing Terraform on Linux (Ubuntu) and Windows (WSL2 with Ubuntu)](https://codingarchitect.dev/blog/installing-terraform-on-linux-ubuntu-and-windows-wsl2-with-ubuntu/)
+36. [Install Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+37. [Terraform.gitignore](https://github.com/github/gitignore/blob/main/Terraform.gitignore)
+38. [vs code extension - HashiCorp Terraform](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform)
+39. [Write configuration](https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/google-cloud-platform-build#write-configuration)
+40. [Terraform Registry - Google Providers](https://registry.terraform.io/providers/hashicorp/google/latest)
+41. [Terraform Block](https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/google-cloud-platform-build#terraform-block)
+42. [Terraform provider for Google Cloud](https://registry.terraform.io/providers/hashicorp/google/latest/docs)
+43. [provider block reference](https://developer.hashicorp.com/terraform/language/block/provider)
+44. [terraform fmt command](https://developer.hashicorp.com/terraform/cli/commands/fmt)
+45. [terraform init command](https://developer.hashicorp.com/terraform/cli/commands/init)
+46. [Google Provider - Example Usage - Life cycle settings for storage bucket objects](https://registry.terraform.io/providers/hashicorp/google/4.35.0/docs/resources/storage_bucket#example-usage---life-cycle-settings-for-storage-bucket-objects)
+47. [Google Provider - Example Usage](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/bigquery_dataset#example-usage)
+48. [Data warehouse](https://en.wikipedia.org/wiki/Data_warehouse)
+49. [BigQuery](https://cloud.google.com/bigquery)
+50. [About Cloud Storage buckets](https://docs.cloud.google.com/storage/docs/buckets)
+51. [Google Cloud Region Picker](https://cloud.withgoogle.com/region-picker/)
+52. [Terraform Overview - Execution Steps](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md)
+53. [terraform destroy command](https://developer.hashicorp.com/terraform/cli/commands/destroy)
+54. [Git Filter-repo: Rewrite Git History Like a Pro (Beginner's Guide)](https://www.youtube.com/watch?v=_EcmY7_zlv0)
+55. [git-filter-repo(1) Manual Page](https://htmlpreview.github.io/?https://github.com/newren/git-filter-repo/blob/docs/html/git-filter-repo.html)
+56. [git-log - Show commit logs](https://git-scm.com/docs/git-log)
+57. [git-rebase - Reapply commits on top of another base tip](https://git-scm.com/docs/git-rebase)
+
+
+
 
 
 
