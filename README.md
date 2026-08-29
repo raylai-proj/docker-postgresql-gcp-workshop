@@ -1118,11 +1118,15 @@ The first step to initialize project infrastructure configuration with terraform
      region      = "us-central1"
    }
    ```
-   - Note: A quick way to format terraform, e.g. indention, alignment, is `terraform fmt`. `terraform fmt` automatically align terraform files in current directory.
+   - Note: A quick way to format terraform, e.g. indention, alignment, is `terraform fmt`. `terraform fmt` automatically align terraform files in current directory.<sub>[44]</sub>
      ```Bash
      terraform fmt
      ```
-3. 
+3. Initialize project infrastructure with configuration in terraform files (`.tf`):
+   - With `terraform init`, terraform prepares working directory with backend installation and provider plugin downloaded.<sub>[45]</sub>
+   ```Bash
+   terraform init
+   ```
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
 2. [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)
@@ -1168,6 +1172,7 @@ The first step to initialize project infrastructure configuration with terraform
 42. [Terraform provider for Google Cloud](https://registry.terraform.io/providers/hashicorp/google/latest/docs)
 43. [provider block reference](https://developer.hashicorp.com/terraform/language/block/provider)
 44. [terraform fmt command](https://developer.hashicorp.com/terraform/cli/commands/fmt)
+45. [terraform init command](https://developer.hashicorp.com/terraform/cli/commands/init)
 
 
 
