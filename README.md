@@ -1161,6 +1161,91 @@ terraform plan
   2. Google Cloud Storage (GCS) vs. BigQuery: GCS is a Data Lake where raw data store, while BigQuery is a Data Warehouse where data were collected, organized, and reported.<sub>[48][49]</sub>
   3. What is a bucket in Google Cloud Storage (GCS)? a bucket is a basic container in GCS where data store. The uploaded data called <ins>objects</ins>.<sub>[50]</sub>
   4. Remember to assign the closest location and zone that GCP provide to reduce latency.<sub>[51]</sub>
+## `terraform apply`
+Before apply the configuration setting, I am going to setup variable schema in `variable.tf` for variables in `main.tf`.
+1. create `variable.tf`:
+   ```Bash
+   touch variable.tf
+   ```
+2. setup variables in `variable.tf`:
+   ```terraform
+   variable "project" {
+     description = "Project"
+     default     = "<Project ID>"
+   
+   }
+   
+   variable "location" {
+     description = "Project Location"
+     default     = "us-central1"
+   }
+   
+   variable "region" {
+     description = "Project Region"
+     default     = "us-central1"
+   
+   }
+   
+   variable "bq_dataset_name" {
+     description = "My BigQuery Dataset Name"
+     default     = "demo_dataset"
+   }
+   
+   variable "gcs_bucket_name" {
+     description = "My Storage Bucket Name"
+     default     = "<Project ID>-terra-bucket"
+   }
+   
+   variable "gcs_storage_class" {
+     description = "Bucket Storage Class"
+     default     = "STANDARD"
+   
+   }
+   ```
+3. Modify `main.tf` via `variable.tf`:
+   ```terraform
+   terraform {
+     required_providers {
+       google = {
+         source  = "hashicorp/google"
+         version = "7.45.0"
+       }
+     }
+   }
+   
+   provider "google" {
+     project     = var.project
+     region      = var.region
+     zone        = var.zone
+   }
+   
+   resource "google_storage_bucket" "demo-bucket" {
+     name                        = var.gcs_bucket_name
+     location                    = var.location
+     uniform_bucket_level_access = true
+     force_destroy               = true
+   
+     lifecycle_rule {
+       condition {
+         age = 1
+       }
+       action {
+         type = "AbortIncompleteMultipartUpload"
+       }
+     }
+   }
+   
+   resource "google_bigquery_dataset" "demo_dataset" {
+     dataset_id = var.bq_dataset_name
+     location   = var.location
+   }
+   ```
+4. Execute `terraform apply`:
+   ```Bash
+   terraform apply
+   ```
+   - Here, `terraform apply` will connect assigned project in GCP and create a GCS bucket and a BigQuery dataset.<sub>[52]</sub>
+   - Note: `terraform apply` will create `terraform.tfstate` and `terraform.tfstate.backup` to log current and previous infrastructure settings.
 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
@@ -1214,6 +1299,7 @@ terraform plan
 49. [BigQuery](https://cloud.google.com/bigquery)
 50. [About Cloud Storage buckets](https://docs.cloud.google.com/storage/docs/buckets)
 51. [Google Cloud Region Picker](https://cloud.withgoogle.com/region-picker/)
+52. [Terraform Overview - Execution Steps](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md)
 
 
 
