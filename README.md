@@ -1246,6 +1246,8 @@ Before apply the configuration setting, I am going to setup variable schema in `
    ```
    - Here, `terraform apply` will connect assigned project in GCP and create a GCS bucket and a BigQuery dataset.<sub>[52]</sub>
    - Note: `terraform apply` will create `terraform.tfstate` and `terraform.tfstate.backup` to log current and previous infrastructure settings.
+## `terraform destroy`
+`terraform destroy` provides a safe and complete way to delete all resources that was created by `terraform apply` and which prevent accidental charge for resources that were not stopped on GCP.<sub>[53]</sub>
 
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
@@ -1300,6 +1302,7 @@ Before apply the configuration setting, I am going to setup variable schema in `
 50. [About Cloud Storage buckets](https://docs.cloud.google.com/storage/docs/buckets)
 51. [Google Cloud Region Picker](https://cloud.withgoogle.com/region-picker/)
 52. [Terraform Overview - Execution Steps](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/terraform/1_terraform_overview.md)
+53. [terraform destroy command](https://developer.hashicorp.com/terraform/cli/commands/destroy)
 
 
 
