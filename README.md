@@ -1,5 +1,16 @@
 # docker-postgresql-gcp-workshop
-Workshop Codespaces
+With this workshop, I follow workflow from setting up local data pipeline infrastructure, including:<br >
+1. Docker - containerized software
+2. virtual environment (venv)
+3. Jupyter notebook - early stage data pipeline for data ingestion and verification
+4. Python script - data pipeline automation
+5. pgcli - CLI for PostgreSQL
+6. pgAdmin - web-based data analysis tool for sophisticated PostgreSQL data analysis<br >
+
+To cloud data infrastructure setup:
+1. Google Cloud Platform (GCP) - cloud service like AWS to manage and deploy APPs
+2. gcloud - CLI tool to create and manage resource in GCP
+3. Terraform - Infrastructure as Code (IaC) for cloud infrastructure setup
 ## docker<sub>[1]</sub><br >
 1. docker is a containerization software, means can create container to let us isolate software like simple version of virtual machines.<br >
 2. `docker` vs. `.venv`:
