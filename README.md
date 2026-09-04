@@ -1317,6 +1317,7 @@ A workflow orchestrator does following functionalities:
 3. <ins>Schedule Triggering and Event Driven for Automation</ins>: automatically start workflow on specific time (schedule triggering) or when specific event happen (event driven).
 ### 5W1H Kestra:
 #### What is Kestra?
+Kestra is an open-source orchestration platform, which is a <ins>workflow orchestrator</ins>, let engineers to manage and operate workflow by building data pipeline, microservices, automation tasks via <ins>Declarative Code</ins> (.yaml file).<sub>[60][61]</sub>
 #### Why use Kestra?
 #### Who use Kestra?
 #### Where to use Kestra?
@@ -1382,6 +1383,8 @@ A workflow orchestrator does following functionalities:
 57. [git-rebase - Reapply commits on top of another base tip](https://git-scm.com/docs/git-rebase)
 58. [What is Workflow Orchestration? Data Engineering Zoomcamp - 2.1.1](https://www.youtube.com/watch?v=-JLnp-iLins)
 59. [2.1.1 - What is Workflow Orchestration?](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/02-workflow-orchestration#211---what-is-workflow-orchestration)
+60. [What is Kestra? Data Engineering Zoomcamp - 2.1.2](https://www.youtube.com/watch?v=ZvVN_NmB_1s)
+61. [2.1.2 - What is Kestra?](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/02-workflow-orchestration#212---what-is-kestra)
 
 
 
