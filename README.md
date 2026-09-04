@@ -1327,6 +1327,7 @@ Kestra's advantage as following for great user friendly:
 5. Kestra has two methods of workflow trigger automation (Schedule and Event Driven).
 6. Kestra supports multiple Plugins and Languages.
 #### Who use Kestra?
+Data engineer, Software engineer, and DevOps engineer.
 #### Where to use Kestra?
 #### When to use Kestra?
 #### How to use Kestra?
