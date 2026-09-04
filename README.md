@@ -1331,7 +1331,9 @@ Data engineer, Software engineer, and DevOps engineer.
 #### Where to use Kestra?
 Kestra can run on docker, GCP, Kubernetes...etc.
 #### When to use Kestra?
+Kestra is used to manage complex data pipeline, replace heavy legacy tools, and schedule or event triggered workflow.
 #### How to use Kestra?
+Kestra has an image released to Docker Hub which is an easy method to install and launch Kestra on Docker.
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
 2. [Virtual Environments and Data Pipelines](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/02-virtual-environment.md)
