@@ -1329,6 +1329,7 @@ Kestra's advantage as following for great user friendly:
 #### Who use Kestra?
 Data engineer, Software engineer, and DevOps engineer.
 #### Where to use Kestra?
+Kestra can run on docker, GCP, Kubernetes...etc.
 #### When to use Kestra?
 #### How to use Kestra?
 ## Reference<br >
