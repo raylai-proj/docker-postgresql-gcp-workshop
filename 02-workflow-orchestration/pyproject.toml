@@ -1,0 +1,27 @@
+[project]
+name = "02-workflow-orchestration"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Chun Juei (Ray) Lai", email = "chunjueilai@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "click>=8.5.0",
+    "pandas>=3.0.5",
+    "psycopg2-binary>=2.9.12",
+    "pyarrow>=25.0.1",
+    "sqlalchemy>=2.0.52",
+    "tqdm>=4.70.0",
+]
+
+[project.scripts]
+02-workflow-orchestration = "02_workflow_orchestration:main"
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+package = false
