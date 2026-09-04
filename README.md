@@ -1322,10 +1322,10 @@ Kestra is an open-source orchestration platform, which is a <ins>workflow orches
 Kestra's advantage as following for great user friendly:
 1. Kestra is an open-source tool.
 2. Kestra provides management on workflow.
-3. Kestra builds workflows by Declarative Code (.yaml file)
-4. Kestra can setup monitor and take note on log for workflow status.
-5. Kestra has two methods of workflow trigger automation (Schedule and Event Driven).
-6. Kestra supports multiple Plugins and Languages.
+3. Kestra can builds workflows with Declarative Code (.yaml file), no-code, or with AI interchangeably.
+4. Kestra can setup monitor (Gantt chart) and take note on log for workflow status.
+5. Kestra has two methods of workflow trigger automation (Time Schedule and Event Driven).
+6. Kestra supports multiple Plugins (GCP, Postgres) and Languages (Python, Go, C).
 #### Who use Kestra?
 Data engineer, Software engineer, and DevOps engineer.
 #### Where to use Kestra?
