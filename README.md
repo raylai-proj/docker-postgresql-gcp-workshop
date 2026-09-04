@@ -1305,6 +1305,9 @@ Before apply the configuration setting, I am going to setup variable schema in `
      ```
 ## Module2: Workflow Orchestration
 ### What is workflow orchestration:
+- A workflow: is <ins>a sequence of works</ins> to do and output the result.
+- An orchestration: is a group of platforms and tools <ins>work together</ins> to get the job done, like a music orchestra have different instruments work together to play a music song.
+- Therefore, a workflow orchestration: is a group of platforms (GCS Bucket, GCP BigQuery dataset) and tools (Docker, Postgres, pgcli, Jupyter Notebook, Terraform, gcloud, PgAdmin, Kestra,...etc.) <ins>work together</ins> and do <ins>a sequence of works</ins> to process data and output the result.
 ### What is workflow orchestrator:
 ### What does workflow orchestrator do:
 ### 5W1H Kestra:
