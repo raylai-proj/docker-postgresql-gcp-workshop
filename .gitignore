@@ -253,3 +253,6 @@ terraform.rc
 
 # include json files for potential key leakage
 *.json
+
+# include ny_taxi_postgres_data
+ny_taxi_postgres_data/
