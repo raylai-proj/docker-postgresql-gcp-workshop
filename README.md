@@ -1304,17 +1304,17 @@ Before apply the configuration setting, I am going to setup variable schema in `
      git push -u origin <branch name> --force
      ```
 ## Module2: Workflow Orchestration
-### What is workflow orchestration:<sub>58</sub>
+### What is workflow orchestration:<sub>[58][59]</sub>
 - A workflow: is <ins>a sequence of works</ins> to do and output the result.
 - An orchestration: is a group of platforms and tools <ins>work together</ins> to get the job done, like a music orchestra have different instruments work together to play a music song.
-- Therefore, a workflow orchestration: is a group of platforms (GCS Bucket, GCP BigQuery dataset) and tools (Docker, Postgres, pgcli, Jupyter Notebook, Terraform, gcloud, PgAdmin, Kestra,...etc.) <ins>work together</ins> and do <ins>a sequence of works</ins> to process data and output the result.
+- Therefore, a workflow orchestration: is a group of platforms (GCS Bucket, GCP BigQuery dataset), tools (Docker, Postgres, pgcli, Jupyter Notebook, Terraform, gcloud, PgAdmin, Kestra,...etc.), and code (Python script, PostgreSQL, .tf, .yaml) <ins>work together</ins> and do <ins>a sequence of works</ins> to process data and output the result.
 ### What is workflow orchestrator:
-A workflow orchestrator is like a <ins>orchestra conductor</ins> (director) to gather all platforms and order them work together.<sub>58</sub>
-### What does workflow orchestrator do:<sub>58</sub>
+A workflow orchestrator is like a <ins>orchestra conductor</ins> (director) to gather all platforms and order them work together.<sub>[58][59]</sub>
+### What does workflow orchestrator do:<sub>[58][59]</sub>
 A workflow orchestrator does following functionalities:
 1. <ins>Run a workflow</ins>: Running a workflow which includes multiple predefined works in order.
 2. <ins>Monitor and Log errors</ins>: monitoring, logging errors, and take extra predefined steps to dealing with errors.
-3. <ins>Schedule Triggering and Event Driven</ins>: automatically start workflow on specific time (schedule triggering) or when specific event happen (event driven).
+3. <ins>Schedule Triggering and Event Driven for Automation</ins>: automatically start workflow on specific time (schedule triggering) or when specific event happen (event driven).
 ### 5W1H Kestra:
 ## Reference<br >
 1. [Introduction to Docker](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/docker-sql/01-introduction.md)
@@ -1374,7 +1374,8 @@ A workflow orchestrator does following functionalities:
 55. [git-filter-repo(1) Manual Page](https://htmlpreview.github.io/?https://github.com/newren/git-filter-repo/blob/docs/html/git-filter-repo.html)
 56. [git-log - Show commit logs](https://git-scm.com/docs/git-log)
 57. [git-rebase - Reapply commits on top of another base tip](https://git-scm.com/docs/git-rebase)
-58. [2.1.1 - What is Workflow Orchestration?](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/02-workflow-orchestration#211---what-is-workflow-orchestration)
+58. [What is Workflow Orchestration? Data Engineering Zoomcamp - 2.1.1](https://www.youtube.com/watch?v=-JLnp-iLins)
+59. [2.1.1 - What is Workflow Orchestration?](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/02-workflow-orchestration#211---what-is-workflow-orchestration)
 
 
 
