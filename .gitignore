@@ -256,3 +256,24 @@ terraform.rc
 
 # include ny_taxi_postgres_data
 ny_taxi_postgres_data/
+
+# ignore aider files
+.DS_Store
+.vscode/
+aider.code-workspace
+*.pyc
+.aider*
+aider_chat.egg-info/
+build
+dist/
+Gemfile.lock
+_site
+.jekyll-cache/
+.jekyll-metadata
+aider/__version__.py
+aider/_version.py
+.venv/
+.#*
+.gitattributes
+tmp.benchmarks/
+.docker_bash_history
